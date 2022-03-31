@@ -1,0 +1,111 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'me.champeau.mrjar' version "0.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = 'com.github.gotson.nightmonkeys'
+version = '0.1.0'
+description = 'NightMonkeys :: ImageIO :: JPEG XL plugin'
+
+multiRelease {
+    targetVersions 8, 18
+}
+
+compileJava18Java {
+    options.compilerArgs += ["--add-modules", "jdk.incubator.foreign"]
+}
+compileJava18TestJava {
+    options.compilerArgs += ["--add-modules", "jdk.incubator.foreign"]
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+def libraryPath = ''
+if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) libraryPath = "/usr/local/lib/"
+
+java18Test {
+    jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+    if (!libraryPath.isBlank())
+        systemProperty "java.library.path", libraryPath
+}
+
+def noLibTestTask = tasks.register('noLibTest', Test) {
+    description = 'Runs tests without lib'
+    group = 'verification'
+
+    classpath = jar.destinationDirectory.asFileTree +
+            configurations[sourceSets.java18.runtimeClasspathConfigurationName] +
+            configurations[sourceSets.test.runtimeClasspathConfigurationName] +
+            sourceSets.test.output
+    testClassesDirs = sourceSets.test.output.classesDirs
+
+    jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(18)
+    }
+
+    dependsOn jar
+}
+
+tasks.named('check') {
+    dependsOn(noLibTestTask)
+}
+
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    java18Implementation 'org.slf4j:slf4j-api:1.7.30'
+
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.5'
+    testImplementation 'org.mockito:mockito-core:4.4.0'
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = project.name
+                description = project.description
+                url = 'https://github.com/gotson/NightMonkeys'
+                licenses {
+                    license {
+                        name = 'MIT'
+                        url = 'https://github.com/gotson/NightMonkeys/LICENSE.md'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'gotson'
+                        name = 'Gauthier Roebroeck'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/gotson/NightMonkeys.git'
+                }
+            }
+        }
+    }
+}
