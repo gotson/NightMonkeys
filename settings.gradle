@@ -1,0 +1,2 @@
+rootProject.name = 'NightMonkeys'
+include(':imageio-jxl')
