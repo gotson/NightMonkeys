@@ -1,0 +1,36 @@
+name: CI
+
+on: [ pull_request, push ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+      fail-fast: false
+    name: Test ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install libraries for Linux/Mac
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+        run: brew install jpeg-xl
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '18'
+      - uses: gradle/gradle-build-action@v2
+        env:
+          LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib
+        with:
+          arguments: build
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+      - name: Upload Unit Test Reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports-${{ matrix.os }}
+          path: '**/build/reports/tests/'
