@@ -27,15 +27,8 @@ tasks.withType(Test) {
     useJUnitPlatform()
 }
 
-import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
-
-def libraryPath = ''
-if (DefaultNativePlatform.currentOperatingSystem.isMacOsX()) libraryPath = "/usr/local/lib/"
-
 java18Test {
     jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
-    if (!libraryPath.isBlank())
-        systemProperty "java.library.path", libraryPath
 }
 
 def noLibTestTask = tasks.register('noLibTest', Test) {
@@ -49,6 +42,7 @@ def noLibTestTask = tasks.register('noLibTest', Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
 
     jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+    systemProperty "java.library.path", ''
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(18)
     }
