@@ -9,7 +9,6 @@ repositories {
 }
 
 group = 'com.github.gotson.nightmonkeys'
-version = '0.1.0'
 description = 'NightMonkeys :: ImageIO :: JPEG XL plugin'
 
 multiRelease {
