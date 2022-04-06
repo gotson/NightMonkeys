@@ -1,4 +1,5 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gotson/NightMonkeys/CI?style=flat-square)](https://github.com/gotson/NightMonkeys/actions/workflows/ci.yml)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.gotson.nightmonkeys/imageio.jxl?label=maven-snapshot&server=https%3A%2F%2Foss.sonatype.org&style=flat-square)](https://oss.sonatype.org/content/repositories/snapshots/com/github/gotson/nightmonkeys/)
 
 # NightMonkeys
 
@@ -33,21 +34,21 @@ In order for the plugins to run properly, you will need to:
 <tr>
     <td>Gradle</td>
     <td>
-        <pre>runtimeOnly "com.github.gotson:nightmonkeys-imageio-{plugin}:{version}"</pre>
+        <pre>runtimeOnly "com.github.gotson.nightmonkeys:imageio-{plugin}:{version}"</pre>
     </td>
 </tr>
 <tr>
     <td>Gradle (Kotlin DSL)</td>
     <td>
-        <pre>runtimeOnly("com.github.gotson:nightmonkeys-imageio-{plugin}:{version}")</pre>
+        <pre>runtimeOnly("com.github.gotson.nightmonkeys:imageio-{plugin}:{version}")</pre>
         </td>
 </tr>
 <tr>
     <td>Maven</td>
     <td>
         <pre>&lt;dependency&gt;
-    &lt;groupId&gt;com.github.gotson&lt;/groupId&gt;
-    &lt;artifactId&gt;nightmonkeys-imageio-{plugin}&lt;/artifactId&gt;
+    &lt;groupId&gt;com.github.gotson.nightmonkeys&lt;/groupId&gt;
+    &lt;artifactId&gt;imageio-{plugin}&lt;/artifactId&gt;
     &lt;version&gt;{version}&lt;/version&gt;
     &lt;scope&gt;runtime&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
