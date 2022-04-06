@@ -1,7 +1,6 @@
 package com.github.gotson.nightmonkeys.jxl.imageio.plugins;
 
 import com.github.gotson.nightmonkeys.jxl.TestUtils;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
@@ -10,8 +9,7 @@ import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.function.Supplier;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,16 +17,28 @@ class JpegXlImageReaderTest {
 
     @Test
     public void testReaderIsRegistered() {
-        Supplier<List<ImageReader>> getReaderIter =
-            () -> Lists.newArrayList(ImageIO.getImageReadersBySuffix("jxl"));
-        assertThat(getReaderIter.get()).isNotEmpty();
-        assertThat(getReaderIter.get()).hasAtLeastOneElementOfType(JxlImageReader.class);
-        getReaderIter = () -> Lists.newArrayList(ImageIO.getImageReadersByMIMEType("image/jxl"));
-        assertThat(getReaderIter.get()).isNotEmpty();
-        assertThat(getReaderIter.get()).hasAtLeastOneElementOfType(JxlImageReader.class);
-        getReaderIter = () -> Lists.newArrayList(ImageIO.getImageReadersByFormatName("jxl"));
-        assertThat(getReaderIter.get()).isNotEmpty();
-        assertThat(getReaderIter.get()).hasAtLeastOneElementOfType(JxlImageReader.class);
+        ArrayList<ImageReader> readers = new ArrayList<>();
+        ImageIO.getImageReadersBySuffix("jxl").forEachRemaining(readers::add);
+
+        assertThat(readers)
+            .isNotEmpty()
+            .hasAtLeastOneElementOfType(JxlImageReader.class);
+
+
+        readers.clear();
+        ImageIO.getImageReadersByMIMEType("image/jxl").forEachRemaining(readers::add);
+
+        assertThat(readers)
+            .isNotEmpty()
+            .hasAtLeastOneElementOfType(JxlImageReader.class);
+
+
+        readers.clear();
+        ImageIO.getImageReadersByFormatName("jxl").forEachRemaining(readers::add);
+
+        assertThat(readers)
+            .isNotEmpty()
+            .hasAtLeastOneElementOfType(JxlImageReader.class);
     }
 
     private JxlImageReader getReader(String fixtureFile) throws IOException {
