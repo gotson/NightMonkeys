@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'me.champeau.mrjar' version "0.1"
+    id 'me.champeau.mrjar' version '0.1'
 }
 
 repositories {
@@ -101,4 +101,18 @@ publishing {
             }
         }
     }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Version': "$project.version",
+                'Implementation-Vendor': "NightMonkeys"
+        )
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
