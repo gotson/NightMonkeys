@@ -1,0 +1,67 @@
+apply plugin: 'maven-publish'
+apply plugin: 'java-library'
+apply plugin: 'signing'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Version': "$project.version",
+                'Implementation-Vendor': "NightMonkeys"
+        )
+    }
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = project.name
+                description = project.description
+                url = 'https://github.com/gotson/NightMonkeys'
+                inceptionYear = '2022'
+
+                licenses {
+                    license {
+                        name = 'MIT'
+                        url = 'https://github.com/gotson/NightMonkeys/LICENSE.md'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'gotson'
+                        name = 'Gauthier Roebroeck'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/gotson/NightMonkeys.git'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    required { false }
+    def signingKey = findProperty('signingKey')
+    def signingPassword = findProperty('signingPassword')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
+}

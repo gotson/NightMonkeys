@@ -1,0 +1,16 @@
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.5'
+    testImplementation 'org.mockito:mockito-core:4.4.0'
+}

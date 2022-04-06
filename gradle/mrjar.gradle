@@ -1,0 +1,44 @@
+apply plugin: 'me.champeau.mrjar'
+
+multiRelease {
+    targetVersions 8, 18
+}
+
+compileJava18Java {
+    options.compilerArgs += ["--add-modules", "jdk.incubator.foreign"]
+}
+
+compileJava18TestJava {
+    options.compilerArgs += ["--add-modules", "jdk.incubator.foreign"]
+}
+
+java18Test {
+    jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+}
+
+def noLibTestTask = tasks.register('noLibTest', Test) {
+    description = 'Runs tests without lib'
+    group = 'verification'
+
+    classpath = jar.destinationDirectory.asFileTree +
+            configurations[sourceSets.java18.runtimeClasspathConfigurationName] +
+            configurations[sourceSets.test.runtimeClasspathConfigurationName] +
+            sourceSets.test.output
+    testClassesDirs = sourceSets.test.output.classesDirs
+
+    jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+    systemProperty "java.library.path", ''
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(18)
+    }
+
+    dependsOn jar
+}
+
+tasks.named('check') {
+    dependsOn(noLibTestTask)
+}
+
+dependencies {
+    java18Implementation 'org.slf4j:slf4j-api:1.7.30'
+}
