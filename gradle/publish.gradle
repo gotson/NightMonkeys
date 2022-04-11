@@ -34,7 +34,7 @@ publishing {
             }
             pom {
                 name = project.name
-                description = project.description
+                description = 'NightMonkeys :: ImageIO'
                 url = 'https://github.com/gotson/NightMonkeys'
                 inceptionYear = '2022'
 
