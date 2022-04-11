@@ -29,11 +29,13 @@ jobs:
       - name: Install libraries for Linux/Mac
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: brew install jpeg-xl
-      - uses: actions/setup-java@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '18'
-      - uses: gradle/gradle-build-action@v2
+      - name: Gradle build
+        uses: gradle/gradle-build-action@v2
         env:
           LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib
         with:
@@ -92,17 +94,13 @@ jobs:
           echo "Current version: ${{ needs.version.outputs.version_current }}, should release: ${{ needs.version.outputs.version_next }}"
       - name: Update version in gradle.properties
         run: echo "version=${{ needs.version.outputs.version_next }}" > gradle.properties
-      - uses: EndBug/add-and-commit@v9
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        with:
-          message: 'chore(release): ${{ needs.version.outputs.version_next }} [skip ci]'
-          default_author: github_actions
-      - uses: actions/setup-java@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '18'
-      - uses: gradle/gradle-build-action@v2
-        name: Nexus publish
+      - name: Nexus publish
+        uses: gradle/gradle-build-action@v2
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
@@ -110,9 +108,15 @@ jobs:
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.MAVENCENTRAL_PASSWORD }}
         with:
           arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
-      - uses: gradle/gradle-build-action@v2
+      - name: Release commit and push
+        uses: EndBug/add-and-commit@v9
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        name: JReleaser full release
+        with:
+          message: 'chore(release): ${{ needs.version.outputs.version_next }} [skip ci]'
+          default_author: github_actions
+      - name: JReleaser full release
+        uses: gradle/gradle-build-action@v2
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
