@@ -1,5 +1,6 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/gotson/NightMonkeys/CI?style=flat-square)](https://github.com/gotson/NightMonkeys/actions/workflows/ci.yml)
-[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.gotson.nightmonkeys/imageio-jxl?label=maven-snapshot&server=https%3A%2F%2Foss.sonatype.org&style=flat-square)](https://oss.sonatype.org/content/repositories/snapshots/com/github/gotson/nightmonkeys/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.gotson.nightmonkeys/imageio-jxl?color=blue&style=flat-square)](https://search.maven.org/search?q=g:com.github.gotson.nightmonkeys)
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/com.github.gotson.nightmonkeys/imageio-jxl?color=blue&label=maven-snapshot&server=https%3A%2F%2Foss.sonatype.org&style=flat-square)](https://oss.sonatype.org/content/repositories/snapshots/com/github/gotson/nightmonkeys/)
 
 # NightMonkeys
 
