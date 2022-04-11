@@ -1,6 +1,20 @@
 name: CI
 
-on: [ pull_request, push ]
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Bump type'
+        required: false
+        default: 'next'
+        type: choice
+        options:
+          - 'next'
+          - 'major'
+          - 'minor'
+          - 'patch'
 
 jobs:
   test:
@@ -34,3 +48,72 @@ jobs:
         with:
           name: test-reports-${{ matrix.os }}
           path: '**/build/reports/tests/'
+
+  version:
+    runs-on: macos-latest
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    outputs:
+      version_current: ${{ steps.versions.outputs.version_current }}
+      version_next: ${{ steps.versions.outputs.version_next }}
+      should_release: ${{ steps.versions.outputs.should_release }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install svu
+        run: brew install caarlos0/tap/svu
+      - name: Compute next version by dispatch
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          echo "VERSION_NEXT=`svu --pattern="v[0-9]*" --strip-prefix ${{ github.event.inputs.bump }}`" | tee -a $GITHUB_ENV
+          echo "VERSION_NEXT_SUFFIX=`svu --pattern="v[0-9]*" --strip-prefix ${{ github.event.inputs.bump }}`" | tee -a $GITHUB_ENV
+      - name: Compute next version by push
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          echo "VERSION_NEXT=`svu --pattern="v[0-9]*" --strip-prefix next`" | tee -a $GITHUB_ENV
+          echo "VERSION_NEXT_SUFFIX=`svu --pattern="v[0-9]*" --strip-prefix --suffix SNAPSHOT next`" | tee -a $GITHUB_ENV
+      - name: Set Versions
+        id: versions
+        run: |
+          echo "::set-output name=version_current::`svu --pattern="v[0-9]*" --strip-prefix current`"
+          echo "::set-output name=version_next::${{ env.VERSION_NEXT_SUFFIX }}"
+          [[ `svu --pattern="v[0-9]*" --strip-prefix current` != ${{ env.VERSION_NEXT }} ]] && echo "::set-output name=should_release::true" || echo
+
+  release:
+    needs: [ version, test ]
+    runs-on: ubuntu-latest
+    if: ${{ needs.version.outputs.should_release }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Display versions
+        run: |
+          echo "Current version: ${{ needs.version.outputs.version_current }}, should release: ${{ needs.version.outputs.version_next }}"
+      - name: Update version in gradle.properties
+        run: echo "version=${{ needs.version.outputs.version_next }}" > gradle.properties
+      - uses: EndBug/add-and-commit@v9
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        with:
+          message: 'chore(release): ${{ needs.version.outputs.version_next }} [skip ci]'
+          default_author: github_actions
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '18'
+      - uses: gradle/gradle-build-action@v2
+        name: Nexus publish
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.MAVENCENTRAL_USER }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.MAVENCENTRAL_PASSWORD }}
+        with:
+          arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository
+      - uses: gradle/gradle-build-action@v2
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        name: JReleaser full release
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          arguments: jreleaserFullRelease
