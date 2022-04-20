@@ -53,7 +53,7 @@ jobs:
 
   version:
     runs-on: macos-latest
-    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}
     outputs:
       version_current: ${{ steps.versions.outputs.version_current }}
       version_next: ${{ steps.versions.outputs.version_next }}
