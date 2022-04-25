@@ -1,13 +1,13 @@
 package com.github.gotson.nightmonkeys.jxl;
 
+import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlColorProfileTarget;
+import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlDataType;
 import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlDecoderStatus;
+import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlEndianness;
 import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlSignature;
 import com.github.gotson.nightmonkeys.jxl.lib.panama.JxlBasicInfo;
 import com.github.gotson.nightmonkeys.jxl.lib.panama.JxlPixelFormat;
 import com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h;
-import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlColorProfileTarget;
-import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlDataType;
-import com.github.gotson.nightmonkeys.jxl.lib.enums.JxlEndianness;
 import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.ResourceScope;
@@ -23,10 +23,10 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
 import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_INT;
 import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_LONG;
 
@@ -36,16 +36,6 @@ import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_LONG;
 public class JpegXl {
 
     private static final Logger LOG = LoggerFactory.getLogger(JpegXl.class);
-
-    private static byte[] byteArrayFromStream(ImageInputStream stream) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        final byte[] buf = new byte[8192];
-        int n;
-        while (0 < (n = stream.read(buf))) {
-            bos.write(buf, 0, n);
-        }
-        return bos.toByteArray();
-    }
 
     public static boolean canDecode(final ImageInputStream stream) throws JxlException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
@@ -83,7 +73,8 @@ public class JpegXl {
 
                 decode_h.JxlDecoderSetKeepOrientation(dec, 1);
 
-                if (JxlDecoderStatus.JXL_DEC_SUCCESS != JxlDecoderStatus.fromId(decode_h.JxlDecoderSubscribeEvents(dec, JxlDecoderStatus.JXL_DEC_BASIC_INFO.intValue() | JxlDecoderStatus.JXL_DEC_COLOR_ENCODING.intValue()))) {
+                if (JxlDecoderStatus.JXL_DEC_SUCCESS != JxlDecoderStatus.fromId(
+                    decode_h.JxlDecoderSubscribeEvents(dec, JxlDecoderStatus.JXL_DEC_BASIC_INFO.intValue() | JxlDecoderStatus.JXL_DEC_COLOR_ENCODING.intValue()))) {
                     throw new JxlException("JxlDecoderSubscribeEvents failed");
                 }
 
@@ -116,14 +107,16 @@ public class JpegXl {
                     } else if (status == JxlDecoderStatus.JXL_DEC_COLOR_ENCODING) {
                         // Get the ICC color profile of the pixel data
                         var iccSize = SegmentAllocator.nativeAllocator(scope).allocate(C_LONG, 0);
-                        if (JxlDecoderStatus.JXL_DEC_SUCCESS != JxlDecoderStatus.fromId(decode_h.JxlDecoderGetICCProfileSize(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(), iccSize))) {
+                        if (JxlDecoderStatus.JXL_DEC_SUCCESS != JxlDecoderStatus.fromId(
+                            decode_h.JxlDecoderGetICCProfileSize(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(), iccSize))) {
                             throw new JxlException("JxlDecoderGetICCProfileSize failed");
                         }
 
                         iccProfile = ByteBuffer.allocateDirect(iccSize.get(C_INT, 0));
                         if (JxlDecoderStatus.JXL_DEC_SUCCESS !=
                             JxlDecoderStatus.fromId(
-                                decode_h.JxlDecoderGetColorAsICCProfile(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(), MemorySegment.ofByteBuffer(iccProfile),
+                                decode_h.JxlDecoderGetColorAsICCProfile(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(),
+                                    MemorySegment.ofByteBuffer(iccProfile),
                                     iccSize.get(C_LONG, 0)))) {
                             throw new JxlException("JxlDecoderGetColorAsICCProfile failed");
                         }
