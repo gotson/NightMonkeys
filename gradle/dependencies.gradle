@@ -3,6 +3,8 @@ tasks.withType(Test) {
 }
 
 dependencies {
+    implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.2'
+    java18Implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.2'
     implementation project(':imageio-common')
     java18Implementation project(':imageio-common')
 

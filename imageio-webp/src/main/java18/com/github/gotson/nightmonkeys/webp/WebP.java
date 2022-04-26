@@ -86,6 +86,7 @@ public class WebP {
         }
     }
 
+    // TODO: use incremental decoder and publish progress update
     public static BufferedImage decode(final ImageInputStream stream, final BasicInfo info) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             var config = WebPDecoderConfig.allocate(scope);
