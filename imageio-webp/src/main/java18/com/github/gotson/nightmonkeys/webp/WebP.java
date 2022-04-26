@@ -87,7 +87,7 @@ public class WebP {
     }
 
     // TODO: use incremental decoder and publish progress update
-    public static BufferedImage decode(final ImageInputStream stream, final BasicInfo info) throws WebpException {
+    public static void decode(final ImageInputStream stream, final BasicInfo info, final WritableRaster raster) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             var config = WebPDecoderConfig.allocate(scope);
             if (decode_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
@@ -121,20 +121,13 @@ public class WebP {
                 throw new WebpException("Couldn't decode: " + statusCode);
             }
 
-            ColorModel colorModel = info.hasAlpha() ?
-                new DirectColorModel(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000)
-                : new DirectColorModel(24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
-            var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
-
             var pixels = MemorySegment.ofAddress(WebPRGBABuffer.rgba$get(rgba), (long) info.width() * info.height() * 4, scope).asByteBuffer().asIntBuffer();
             var pixelsArray = new int[info.width() * info.height()];
             pixels.get(pixelsArray);
-            var db = new DataBufferInt(pixelsArray, info.width() * info.height());
-            var raster = WritableRaster.createWritableRaster(sampleModel, db, null);
+
+            raster.setDataElements(0, 0, info.width(), info.height(), pixelsArray);
 
             decode_h.WebPFreeDecBuffer(output);
-
-            return new BufferedImage(colorModel, raster, colorModel.isAlphaPremultiplied(), null);
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }

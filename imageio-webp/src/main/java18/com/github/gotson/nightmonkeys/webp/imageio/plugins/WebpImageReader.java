@@ -4,6 +4,7 @@ import com.github.gotson.nightmonkeys.webp.BasicInfo;
 import com.github.gotson.nightmonkeys.webp.WebP;
 import com.github.gotson.nightmonkeys.webp.WebpException;
 import com.twelvemonkeys.imageio.ImageReaderBase;
+import com.twelvemonkeys.imageio.util.RasterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +86,6 @@ public class WebpImageReader extends ImageReaderBase {
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IOException {
         readInfo(imageIndex);
 
-        // TODO: extract that code from WebP.java
         ColorModel colorModel = info.hasAlpha() ?
             new DirectColorModel(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000)
             : new DirectColorModel(24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
@@ -98,13 +98,16 @@ public class WebpImageReader extends ImageReaderBase {
     @Override
     public BufferedImage read(int imageIndex, ImageReadParam param) throws IOException {
         readInfo(imageIndex);
-        BufferedImage destination;
+
+        int width = getWidth(imageIndex);
+        int height = getHeight(imageIndex);
+        BufferedImage destination = getDestination(param, getImageTypes(imageIndex), width, height);
 
         processImageStarted(imageIndex);
         processImageProgress(0F);
 
         try {
-            destination = WebP.decode((ImageInputStream) getInput(), info);
+            WebP.decode((ImageInputStream) getInput(), info, destination.getRaster());
         } catch (WebpException e) {
             throw new IOException(e);
         }
