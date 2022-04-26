@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install libraries for Linux/Mac
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-        run: brew install jpeg-xl
+        run: brew install webp jpeg-xl
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
