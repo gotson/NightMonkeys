@@ -18,7 +18,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest ]
@@ -38,6 +38,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         env:
           LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib
+          JAVA_LIBRARY_PATH: /usr/local/lib/
         with:
           arguments: build
           gradle-home-cache-includes: |
