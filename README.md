@@ -16,9 +16,10 @@ This lets you add the dependencies in your project whatever the JDK used, and st
 
 ## Supported formats
 
-| Plugin             | Format                              | Read | Write | Metadata | Notes |
-|--------------------|-------------------------------------|------|-------|----------|-------|
-| [jxl](imageio-jxl) | [Jpeg XL](https://jpeg.org/jpegxl/) | ✔    | -     | -        |       |
+| Plugin               | Format                                           | Read | Write | Metadata | Notes |
+|----------------------|--------------------------------------------------|------|-------|----------|-------|
+| [jxl](imageio-jxl)   | [Jpeg XL](https://jpeg.org/jpegxl/)              | ✔    | -     | -        |       |
+| [webp](imageio-webp) | [WebP](https://developers.google.com/speed/webp) | ✔    | -     | -        |       |
 
 
 ## Requirements
