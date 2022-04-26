@@ -12,6 +12,9 @@ nexusPublishing {
 
 allprojects {
     group = 'com.github.gotson.nightmonkeys'
+    repositories {
+        mavenCentral()
+    }
 }
 
 subprojects {
