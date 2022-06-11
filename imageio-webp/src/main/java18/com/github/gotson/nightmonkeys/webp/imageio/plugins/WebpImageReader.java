@@ -4,7 +4,6 @@ import com.github.gotson.nightmonkeys.webp.BasicInfo;
 import com.github.gotson.nightmonkeys.webp.WebP;
 import com.github.gotson.nightmonkeys.webp.WebpException;
 import com.twelvemonkeys.imageio.ImageReaderBase;
-import com.twelvemonkeys.imageio.util.RasterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +106,7 @@ public class WebpImageReader extends ImageReaderBase {
         processImageProgress(0F);
 
         try {
-            WebP.decode((ImageInputStream) getInput(), destination.getRaster(), param);
+            WebP.decode((ImageInputStream) getInput(), info, destination.getRaster(), param);
         } catch (WebpException e) {
             throw new IOException(e);
         }
