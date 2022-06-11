@@ -2,11 +2,14 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
-import java.lang.invoke.MethodHandle;
+import jdk.incubator.foreign.GroupLayout;
+import jdk.incubator.foreign.MemoryAddress;
+import jdk.incubator.foreign.MemoryLayout;
+import jdk.incubator.foreign.MemorySegment;
+import jdk.incubator.foreign.ResourceScope;
+import jdk.incubator.foreign.SegmentAllocator;
+
 import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
 public class WebPDecoderOptions {
 
     static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
@@ -74,74 +77,101 @@ public class WebPDecoderOptions {
     public static int use_cropping$get(MemorySegment seg, long index) {
         return (int)WebPDecoderOptions.use_cropping$VH.get(seg.asSlice(index*sizeof()));
     }
+
     public static void use_cropping$set(MemorySegment seg, long index, int x) {
-        WebPDecoderOptions.use_cropping$VH.set(seg.asSlice(index*sizeof()), x);
+        WebPDecoderOptions.use_cropping$VH.set(seg.asSlice(index * sizeof()), x);
     }
+
     static final VarHandle crop_left$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("crop_left"));
+
     public static VarHandle crop_left$VH() {
         return WebPDecoderOptions.crop_left$VH;
     }
+
     public static int crop_left$get(MemorySegment seg) {
-        return (int)WebPDecoderOptions.crop_left$VH.get(seg);
+        return (int) WebPDecoderOptions.crop_left$VH.get(seg);
     }
-    public static void crop_left$set( MemorySegment seg, int x) {
-        WebPDecoderOptions.crop_left$VH.set(seg, x);
+
+    public static void crop_left$set(MemorySegment seg, int left) {
+        WebPDecoderOptions.crop_left$VH.set(seg, left);
     }
+
     public static int crop_left$get(MemorySegment seg, long index) {
-        return (int)WebPDecoderOptions.crop_left$VH.get(seg.asSlice(index*sizeof()));
+        return (int) WebPDecoderOptions.crop_left$VH.get(seg.asSlice(index * sizeof()));
     }
+
     public static void crop_left$set(MemorySegment seg, long index, int x) {
-        WebPDecoderOptions.crop_left$VH.set(seg.asSlice(index*sizeof()), x);
+        WebPDecoderOptions.crop_left$VH.set(seg.asSlice(index * sizeof()), x);
     }
+
     static final VarHandle crop_top$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("crop_top"));
+
     public static VarHandle crop_top$VH() {
         return WebPDecoderOptions.crop_top$VH;
     }
+
     public static int crop_top$get(MemorySegment seg) {
-        return (int)WebPDecoderOptions.crop_top$VH.get(seg);
+        return (int) WebPDecoderOptions.crop_top$VH.get(seg);
     }
-    public static void crop_top$set( MemorySegment seg, int x) {
-        WebPDecoderOptions.crop_top$VH.set(seg, x);
+
+    public static void crop_top$set(MemorySegment seg, int top) {
+        WebPDecoderOptions.crop_top$VH.set(seg, top);
     }
+
     public static int crop_top$get(MemorySegment seg, long index) {
-        return (int)WebPDecoderOptions.crop_top$VH.get(seg.asSlice(index*sizeof()));
+        return (int) WebPDecoderOptions.crop_top$VH.get(seg.asSlice(index * sizeof()));
     }
+
     public static void crop_top$set(MemorySegment seg, long index, int x) {
-        WebPDecoderOptions.crop_top$VH.set(seg.asSlice(index*sizeof()), x);
+        WebPDecoderOptions.crop_top$VH.set(seg.asSlice(index * sizeof()), x);
     }
+
     static final VarHandle crop_width$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("crop_width"));
+
     public static VarHandle crop_width$VH() {
         return WebPDecoderOptions.crop_width$VH;
     }
+
     public static int crop_width$get(MemorySegment seg) {
-        return (int)WebPDecoderOptions.crop_width$VH.get(seg);
+        return (int) WebPDecoderOptions.crop_width$VH.get(seg);
     }
-    public static void crop_width$set( MemorySegment seg, int x) {
-        WebPDecoderOptions.crop_width$VH.set(seg, x);
+
+    public static void crop_width$set(MemorySegment seg, int width) {
+        WebPDecoderOptions.crop_width$VH.set(seg, width);
     }
+
     public static int crop_width$get(MemorySegment seg, long index) {
-        return (int)WebPDecoderOptions.crop_width$VH.get(seg.asSlice(index*sizeof()));
+        return (int) WebPDecoderOptions.crop_width$VH.get(seg.asSlice(index * sizeof()));
     }
+
     public static void crop_width$set(MemorySegment seg, long index, int x) {
-        WebPDecoderOptions.crop_width$VH.set(seg.asSlice(index*sizeof()), x);
+        WebPDecoderOptions.crop_width$VH.set(seg.asSlice(index * sizeof()), x);
     }
+
     static final VarHandle crop_height$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("crop_height"));
+
     public static VarHandle crop_height$VH() {
         return WebPDecoderOptions.crop_height$VH;
     }
+
     public static int crop_height$get(MemorySegment seg) {
-        return (int)WebPDecoderOptions.crop_height$VH.get(seg);
+        return (int) WebPDecoderOptions.crop_height$VH.get(seg);
     }
-    public static void crop_height$set( MemorySegment seg, int x) {
-        WebPDecoderOptions.crop_height$VH.set(seg, x);
+
+    public static void crop_height$set(MemorySegment seg, int height) {
+        WebPDecoderOptions.crop_height$VH.set(seg, height);
     }
+
     public static int crop_height$get(MemorySegment seg, long index) {
-        return (int)WebPDecoderOptions.crop_height$VH.get(seg.asSlice(index*sizeof()));
+        return (int) WebPDecoderOptions.crop_height$VH.get(seg.asSlice(index * sizeof()));
     }
+
     public static void crop_height$set(MemorySegment seg, long index, int x) {
-        WebPDecoderOptions.crop_height$VH.set(seg.asSlice(index*sizeof()), x);
+        WebPDecoderOptions.crop_height$VH.set(seg.asSlice(index * sizeof()), x);
     }
+
     static final VarHandle use_scaling$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("use_scaling"));
+
     public static VarHandle use_scaling$VH() {
         return WebPDecoderOptions.use_scaling$VH;
     }
