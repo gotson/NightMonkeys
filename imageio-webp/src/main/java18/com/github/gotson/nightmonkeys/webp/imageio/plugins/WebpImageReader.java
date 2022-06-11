@@ -107,7 +107,7 @@ public class WebpImageReader extends ImageReaderBase {
         processImageProgress(0F);
 
         try {
-            WebP.decode((ImageInputStream) getInput(), info, destination.getRaster());
+            WebP.decode((ImageInputStream) getInput(), destination.getRaster(), param);
         } catch (WebpException e) {
             throw new IOException(e);
         }
