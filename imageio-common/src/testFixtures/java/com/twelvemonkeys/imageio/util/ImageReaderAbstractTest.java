@@ -606,6 +606,10 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
             try {
                 assertImageDataEquals("Images differ", roi, image);
             } catch (AssertionError e) {
+                File tempRoi = File.createTempFile("junit-roi-", ".png");
+                System.err.println("tempRoi.getAbsolutePath(): " + tempRoi.getAbsolutePath());
+                ImageIO.write(roi, "PNG", tempRoi);
+
                 File tempExpected = File.createTempFile("junit-expected-", ".png");
                 System.err.println("tempExpected.getAbsolutePath(): " + tempExpected.getAbsolutePath());
 
