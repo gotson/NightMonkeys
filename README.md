@@ -16,45 +16,54 @@ This lets you add the dependencies in your project whatever the JDK used, and st
 
 ## Supported formats
 
-| Plugin               | Format                                           | Read | Write | Metadata | Notes |
-|----------------------|--------------------------------------------------|------|-------|----------|-------|
-| [jxl](imageio-jxl)   | [Jpeg XL](https://jpeg.org/jpegxl/)              | ✔    | -     | -        |       |
-| [webp](imageio-webp) | [WebP](https://developers.google.com/speed/webp) | ✔    | -     | -        |       |
+| Plugin               | Format                                           | Read | Write | Metadata | TwelveMonkeys Tests | Notes                              |
+|----------------------|--------------------------------------------------|------|-------|----------|---------------------|------------------------------------|
+| [jxl](imageio-jxl)   | [Jpeg XL](https://jpeg.org/jpegxl/)              | ✔    | -     | -        | -                   |                                    |
+| [webp](imageio-webp) | [WebP](https://developers.google.com/speed/webp) | ✔    | -     | -        | ✔                   | See limitations in the plugin page |
 
+When possible, the plugins will use the extensive test suite
+from [TwelveMonkeys](https://github.com/haraldk/TwelveMonkeys), which covers much more test cases than simple
+decoding/encoding.
 
 ## Requirements
 
 In order for the plugins to run properly, you will need to:
-- Run Java with the following options: `--add-modules jdk.incubator.foreign --enable-native-access=ALL-UNNAMED`
-- Make sure the path to the directory containing the native libraries is contained in the Java system property `java.library.path` (check also [this](https://stackoverflow.com/questions/20038789/default-java-library-path)).
-  - For Linux, normally it works fine when installed from a package manager. You can add the libraries' path to the `LD_LIBRARY_PATH` environment variable.
+
+- Run Java with the following options:
+
+```
+--add-modules jdk.incubator.foreign --enable-native-access=ALL-UNNAMED
+```
+
+- Make sure the path to the directory containing the native libraries is contained in the Java system
+  property `java.library.path` (check
+  also [this](https://stackoverflow.com/questions/20038789/default-java-library-path)).
+  - For Linux, normally it works fine when installed from a package manager. You can add the libraries' path to
+    the `LD_LIBRARY_PATH` environment variable.
   - For Mac, if using HomeBrew, you will need to set `JAVA_LIBRARY_PATH` to `/usr/local/lib/`.
 
 ## Installation
 
-<table>
-<tr>
-    <td>Gradle</td>
-    <td>
-        <pre>runtimeOnly "com.github.gotson.nightmonkeys:imageio-{plugin}:{version}"</pre>
-    </td>
-</tr>
-<tr>
-    <td>Gradle (Kotlin DSL)</td>
-    <td>
-        <pre>runtimeOnly("com.github.gotson.nightmonkeys:imageio-{plugin}:{version}")</pre>
-        </td>
-</tr>
-<tr>
-    <td>Maven</td>
-    <td>
-        <pre>&lt;dependency&gt;
-    &lt;groupId&gt;com.github.gotson.nightmonkeys&lt;/groupId&gt;
-    &lt;artifactId&gt;imageio-{plugin}&lt;/artifactId&gt;
-    &lt;version&gt;{version}&lt;/version&gt;
-    &lt;scope&gt;runtime&lt;/scope&gt;
-&lt;/dependency&gt;</pre>
-    </td>
-</tr>
-</table>
+### Gradle
 
+```groovy
+runtimeOnly "com.github.gotson.nightmonkeys:imageio-{plugin}:{version}"
+```
+
+### Gradle (Kotlin DSL)
+
+```kotlin
+runtimeOnly("com.github.gotson.nightmonkeys:imageio-{plugin}:{version}")
+```
+
+### Maven
+
+```xml
+
+<dependency>
+  <groupId>com.github.gotson.nightmonkeys</groupId>
+  <artifactId>imageio-{plugin}</artifactId>
+  <version>{version}</version>
+  <scope>runtime</scope>
+</dependency>
+```
