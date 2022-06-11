@@ -4,6 +4,7 @@ import com.github.gotson.nightmonkeys.webp.lib.enums.VP8StatusCode;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPBitstreamFeatures;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecBuffer;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderConfig;
+import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderOptions;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPRGBABuffer;
 import com.github.gotson.nightmonkeys.webp.lib.panama.decode_h;
 import jdk.incubator.foreign.MemoryAddress;
@@ -12,11 +13,8 @@ import jdk.incubator.foreign.ResourceScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageReadParam;
 import javax.imageio.stream.ImageInputStream;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DataBufferInt;
-import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 
@@ -87,7 +85,7 @@ public class WebP {
     }
 
     // TODO: use incremental decoder and publish progress update
-    public static void decode(final ImageInputStream stream, final BasicInfo info, final WritableRaster raster) throws WebpException {
+    public static void decode(final ImageInputStream stream, final WritableRaster raster, ImageReadParam param) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             var config = WebPDecoderConfig.allocate(scope);
             if (decode_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
@@ -107,25 +105,34 @@ public class WebP {
                 throw new WebpException("Couldn't get WebpFeatures: " + statusCode);
             }
 
+            // TODO: setup decoder options to support cropping and scaling
+            var options = WebPDecoderConfig.options$slice(config);
+            if(param != null && param.getSourceRegion() != null) {
+                WebPDecoderOptions.crop_height$set(options, param.getSourceRegion().height);
+                WebPDecoderOptions.crop_width$set(options, param.getSourceRegion().width);
+                WebPDecoderOptions.crop_left$set(options, param.getSourceRegion().x);
+                WebPDecoderOptions.crop_top$set(options, param.getSourceRegion().y);
+            }
+
             var output = WebPDecoderConfig.output$slice(config);
             WebPDecBuffer.colorspace$set(output, decode_h.MODE_ARGB());
-            WebPDecBuffer.width$set(output, info.width());
-            WebPDecBuffer.height$set(output, info.height());
+            WebPDecBuffer.width$set(output, raster.getWidth());
+            WebPDecBuffer.height$set(output, raster.getHeight());
 
             var rgba = WebPDecBuffer.u$slice(output);
-            WebPRGBABuffer.stride$set(rgba, info.width() * 4);
-            WebPRGBABuffer.size$set(rgba, (long) info.width() * info.height() * 4);
+            WebPRGBABuffer.stride$set(rgba, raster.getWidth() * 4);
+            WebPRGBABuffer.size$set(rgba, (long) raster.getWidth() * raster.getHeight() * 4);
 
             statusCode = VP8StatusCode.fromId(decode_h.WebPDecode(data, webpData.length, config));
             if (statusCode != VP8StatusCode.VP8_STATUS_OK) {
                 throw new WebpException("Couldn't decode: " + statusCode);
             }
 
-            var pixels = MemorySegment.ofAddress(WebPRGBABuffer.rgba$get(rgba), (long) info.width() * info.height() * 4, scope).asByteBuffer().asIntBuffer();
-            var pixelsArray = new int[info.width() * info.height()];
+            var pixels = MemorySegment.ofAddress(WebPRGBABuffer.rgba$get(rgba), (long) raster.getWidth() * raster.getHeight() * 4, scope).asByteBuffer().asIntBuffer();
+            var pixelsArray = new int[raster.getWidth() * raster.getHeight()];
             pixels.get(pixelsArray);
 
-            raster.setDataElements(0, 0, info.width(), info.height(), pixelsArray);
+            raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsArray);
 
             decode_h.WebPFreeDecBuffer(output);
         } catch (IOException e) {
