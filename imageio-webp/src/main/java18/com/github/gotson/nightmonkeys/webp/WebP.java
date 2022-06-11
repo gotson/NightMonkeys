@@ -85,7 +85,7 @@ public class WebP {
     }
 
     // TODO: use incremental decoder and publish progress update
-    public static void decode(final ImageInputStream stream, final WritableRaster raster, ImageReadParam param) throws WebpException {
+    public static void decode(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             var config = WebPDecoderConfig.allocate(scope);
             if (decode_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
@@ -107,11 +107,19 @@ public class WebP {
 
             // TODO: setup decoder options to support cropping and scaling
             var options = WebPDecoderConfig.options$slice(config);
-            if(param != null && param.getSourceRegion() != null) {
-                WebPDecoderOptions.crop_height$set(options, param.getSourceRegion().height);
-                WebPDecoderOptions.crop_width$set(options, param.getSourceRegion().width);
-                WebPDecoderOptions.crop_left$set(options, param.getSourceRegion().x);
-                WebPDecoderOptions.crop_top$set(options, param.getSourceRegion().y);
+            if (param != null) {
+                if (param.getSourceRegion() != null) {
+                    WebPDecoderOptions.use_cropping$set(options, 1);
+                    WebPDecoderOptions.crop_height$set(options, param.getSourceRegion().height);
+                    WebPDecoderOptions.crop_width$set(options, param.getSourceRegion().width);
+                    WebPDecoderOptions.crop_left$set(options, param.getSourceRegion().x);
+                    WebPDecoderOptions.crop_top$set(options, param.getSourceRegion().y);
+                }
+            }
+            if (info.width() != raster.getWidth() || info.height() != raster.getHeight()) {
+                WebPDecoderOptions.use_scaling$set(options, 1);
+                WebPDecoderOptions.scaled_height$set(options, raster.getHeight());
+                WebPDecoderOptions.scaled_width$set(options, raster.getWidth());
             }
 
             var output = WebPDecoderConfig.output$slice(config);
