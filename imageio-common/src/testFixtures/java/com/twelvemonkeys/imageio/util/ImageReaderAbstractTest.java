@@ -235,6 +235,9 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
 
             try {
                 image = reader.read(i);
+                File tempActual = File.createTempFile("junit-", ".png");
+                System.out.println("tempActual.getAbsolutePath(): " + tempActual.getAbsolutePath());
+                ImageIO.write(image, "PNG", tempActual);
             } catch (Exception e) {
                 e.printStackTrace();
                 failBecause(String.format("Image %s index %s could not be read: %s", data.getInput(), i, e), e);
