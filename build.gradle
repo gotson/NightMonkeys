@@ -18,8 +18,8 @@ allprojects {
 }
 
 subprojects {
-    if(it.name != 'imageio-common') {
-        apply from: "${rootDir}/gradle/publish.gradle"
+    apply from: "${rootDir}/gradle/publish.gradle"
+    if (it.name != 'imageio-common') {
         apply from: "${rootDir}/gradle/mrjar.gradle"
         apply from: "${rootDir}/gradle/dependencies.gradle"
     }
