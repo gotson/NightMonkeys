@@ -1,17 +1,17 @@
 package com.github.gotson.nightmonkeys.webp.lib.enums;
 
 
-import com.github.gotson.nightmonkeys.webp.lib.panama.decode_h;
+import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
 
 public enum VP8StatusCode {
-    VP8_STATUS_OK(decode_h.VP8_STATUS_OK()),
-    VP8_STATUS_OUT_OF_MEMORY(decode_h.VP8_STATUS_OUT_OF_MEMORY()),
-    VP8_STATUS_INVALID_PARAM(decode_h.VP8_STATUS_INVALID_PARAM()),
-    VP8_STATUS_BITSTREAM_ERROR(decode_h.VP8_STATUS_BITSTREAM_ERROR()),
-    VP8_STATUS_UNSUPPORTED_FEATURE(decode_h.VP8_STATUS_UNSUPPORTED_FEATURE()),
-    VP8_STATUS_SUSPENDED(decode_h.VP8_STATUS_SUSPENDED()),
-    VP8_STATUS_USER_ABORT(decode_h.VP8_STATUS_USER_ABORT()),
-    VP8_STATUS_NOT_ENOUGH_DATA(decode_h.VP8_STATUS_NOT_ENOUGH_DATA());
+    VP8_STATUS_OK(demux_h.VP8_STATUS_OK()),
+    VP8_STATUS_OUT_OF_MEMORY(demux_h.VP8_STATUS_OUT_OF_MEMORY()),
+    VP8_STATUS_INVALID_PARAM(demux_h.VP8_STATUS_INVALID_PARAM()),
+    VP8_STATUS_BITSTREAM_ERROR(demux_h.VP8_STATUS_BITSTREAM_ERROR()),
+    VP8_STATUS_UNSUPPORTED_FEATURE(demux_h.VP8_STATUS_UNSUPPORTED_FEATURE()),
+    VP8_STATUS_SUSPENDED(demux_h.VP8_STATUS_SUSPENDED()),
+    VP8_STATUS_USER_ABORT(demux_h.VP8_STATUS_USER_ABORT()),
+    VP8_STATUS_NOT_ENOUGH_DATA(demux_h.VP8_STATUS_NOT_ENOUGH_DATA());
 
     private final int val;
 

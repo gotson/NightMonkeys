@@ -2,19 +2,58 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$18 {
 
-    static final MemorySegment PRIXFAST8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhX");
-    static final MemorySegment PRIdFAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hd");
-    static final MemorySegment PRIiFAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hi");
-    static final MemorySegment PRIoFAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ho");
-    static final MemorySegment PRIuFAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hu");
-    static final MemorySegment PRIxFAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hx");
+    static final FunctionDescriptor WebPDemux$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemux$MH = RuntimeHelper.downcallHandle(
+        "WebPDemux",
+        constants$18.WebPDemux$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxPartial$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxPartial$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxPartial",
+        constants$18.WebPDemuxPartial$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxDelete$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxDelete$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxDelete",
+        constants$18.WebPDemuxDelete$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxGetI$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle WebPDemuxGetI$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxGetI",
+        constants$18.WebPDemuxGetI$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxGetFrame$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxGetFrame$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxGetFrame",
+        constants$18.WebPDemuxGetFrame$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxNextFrame$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxNextFrame$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxNextFrame",
+        constants$18.WebPDemuxNextFrame$FUNC, false
+    );
 }
 
 

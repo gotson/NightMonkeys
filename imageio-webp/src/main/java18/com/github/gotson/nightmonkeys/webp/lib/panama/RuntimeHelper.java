@@ -5,26 +5,22 @@ import jdk.incubator.foreign.Addressable;
 import jdk.incubator.foreign.CLinker;
 import jdk.incubator.foreign.FunctionDescriptor;
 import jdk.incubator.foreign.GroupLayout;
-import jdk.incubator.foreign.NativeSymbol;
-import jdk.incubator.foreign.SymbolLookup;
 import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemoryLayout;
 import jdk.incubator.foreign.MemorySegment;
+import jdk.incubator.foreign.NativeSymbol;
 import jdk.incubator.foreign.ResourceScope;
 import jdk.incubator.foreign.SegmentAllocator;
+import jdk.incubator.foreign.SymbolLookup;
 import jdk.incubator.foreign.ValueLayout;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-import static jdk.incubator.foreign.CLinker.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+import static jdk.incubator.foreign.ValueLayout.ADDRESS;
+import static jdk.incubator.foreign.ValueLayout.JAVA_DOUBLE;
+import static jdk.incubator.foreign.ValueLayout.JAVA_LONG;
 
 final class RuntimeHelper {
 
@@ -38,7 +34,7 @@ final class RuntimeHelper {
             (size, align) -> MemorySegment.allocateNative(size, align, ResourceScope.newImplicitScope());
 
     static {
-        System.loadLibrary("webp");
+        System.loadLibrary("webpdemux");
         SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
         SYMBOL_LOOKUP = name -> loaderLookup.lookup(name).or(() -> LINKER.lookup(name));
     }

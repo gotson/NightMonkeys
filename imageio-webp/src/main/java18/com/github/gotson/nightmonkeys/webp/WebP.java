@@ -6,7 +6,7 @@ import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecBuffer;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderConfig;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderOptions;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPRGBABuffer;
-import com.github.gotson.nightmonkeys.webp.lib.panama.decode_h;
+import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
 import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.ResourceScope;
@@ -38,17 +38,24 @@ public class WebP {
             var data = MemorySegment.allocateNative(webpData.length, scope);
             data.copyFrom(MemorySegment.ofArray(webpData));
 
-            return decode_h.WebPGetInfo(data, webpData.length, MemoryAddress.NULL, MemoryAddress.NULL) > 0;
+            return demux_h.WebPGetInfo(data, webpData.length, MemoryAddress.NULL, MemoryAddress.NULL) > 0;
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }
     }
 
-    public static String getLibVersion() {
-        int versionInt = decode_h.WebPGetDecoderVersion();
-        int major = (versionInt >> 16) & 0xFF;
-        int minor = (versionInt >> 8) & 0xFF;
-        int patch = versionInt & 0xFF;
+    public static String getDecoderVersion() {
+        return parseVersionInt(demux_h.WebPGetDecoderVersion());
+    }
+
+    public static String getDemuxVersion() {
+        return parseVersionInt(demux_h.WebPGetDemuxVersion());
+    }
+
+    private static String parseVersionInt(int version) {
+        int major = (version >> 16) & 0xFF;
+        int minor = (version >> 8) & 0xFF;
+        int patch = version & 0xFF;
         return String.format("%d.%d.%d", major, minor, patch);
     }
 
@@ -63,7 +70,7 @@ public class WebP {
             data.copyFrom(MemorySegment.ofArray(webpData));
 
             var features = WebPBitstreamFeatures.allocate(scope);
-            var statusCode = VP8StatusCode.fromId(decode_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
+            var statusCode = VP8StatusCode.fromId(demux_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
 
             if (statusCode == VP8StatusCode.VP8_STATUS_OK) {
                 return new BasicInfo(
@@ -88,7 +95,7 @@ public class WebP {
     public static void decode(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             var config = WebPDecoderConfig.allocate(scope);
-            if (decode_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
+            if (demux_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
                 throw new WebpException("Could not init decoder config");
             }
 
@@ -100,7 +107,7 @@ public class WebP {
             data.copyFrom(MemorySegment.ofArray(webpData));
 
             var features = WebPDecoderConfig.input$slice(config);
-            var statusCode = VP8StatusCode.fromId(decode_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
+            var statusCode = VP8StatusCode.fromId(demux_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
             if (statusCode != VP8StatusCode.VP8_STATUS_OK) {
                 throw new WebpException("Couldn't get WebpFeatures: " + statusCode);
             }
@@ -123,7 +130,7 @@ public class WebP {
             }
 
             var output = WebPDecoderConfig.output$slice(config);
-            WebPDecBuffer.colorspace$set(output, decode_h.MODE_ARGB());
+            WebPDecBuffer.colorspace$set(output, demux_h.MODE_ARGB());
             WebPDecBuffer.width$set(output, raster.getWidth());
             WebPDecBuffer.height$set(output, raster.getHeight());
 
@@ -131,7 +138,7 @@ public class WebP {
             WebPRGBABuffer.stride$set(rgba, raster.getWidth() * 4);
             WebPRGBABuffer.size$set(rgba, (long) raster.getWidth() * raster.getHeight() * 4);
 
-            statusCode = VP8StatusCode.fromId(decode_h.WebPDecode(data, webpData.length, config));
+            statusCode = VP8StatusCode.fromId(demux_h.WebPDecode(data, webpData.length, config));
             if (statusCode != VP8StatusCode.VP8_STATUS_OK) {
                 throw new WebpException("Couldn't decode: " + statusCode);
             }
@@ -142,7 +149,7 @@ public class WebP {
 
             raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsArray);
 
-            decode_h.WebPFreeDecBuffer(output);
+            demux_h.WebPFreeDecBuffer(output);
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }

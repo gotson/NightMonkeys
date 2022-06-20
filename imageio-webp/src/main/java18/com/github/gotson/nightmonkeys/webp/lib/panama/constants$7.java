@@ -2,11 +2,9 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
 class constants$7 {
 
     static final FunctionDescriptor WebPInitDecoderConfig$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
@@ -34,9 +32,33 @@ class constants$7 {
         "WebPDecode",
         constants$7.WebPDecode$FUNC, false
     );
-    static final MemorySegment __DARWIN_SUF_64_BIT_INO_T$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("$INODE64");
-    static final MemorySegment __DARWIN_SUF_1050$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("$1050");
-    static final MemorySegment __DARWIN_SUF_EXTSN$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("$DARWIN_EXTSN");
+    static final FunctionDescriptor memchr$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memchr$MH = RuntimeHelper.downcallHandle(
+        "memchr",
+        constants$7.memchr$FUNC, false
+    );
+    static final FunctionDescriptor memcmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memcmp$MH = RuntimeHelper.downcallHandle(
+        "memcmp",
+        constants$7.memcmp$FUNC, false
+    );
+    static final FunctionDescriptor memcpy$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memcpy$MH = RuntimeHelper.downcallHandle(
+        "memcpy",
+        constants$7.memcpy$FUNC, false
+    );
 }
 
 

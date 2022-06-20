@@ -2,19 +2,64 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$14 {
 
-    static final MemorySegment PRIXLEAST8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhX");
-    static final MemorySegment PRIdLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hd");
-    static final MemorySegment PRIiLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hi");
-    static final MemorySegment PRIoLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ho");
-    static final MemorySegment PRIuLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hu");
-    static final MemorySegment PRIxLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hx");
+    static final FunctionDescriptor strlcpy$FUNC = FunctionDescriptor.of(Constants$root.C_LONG_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strlcpy$MH = RuntimeHelper.downcallHandle(
+        "strlcpy",
+        constants$14.strlcpy$FUNC, false
+    );
+    static final FunctionDescriptor strmode$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strmode$MH = RuntimeHelper.downcallHandle(
+        "strmode",
+        constants$14.strmode$FUNC, false
+    );
+    static final FunctionDescriptor strsep$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strsep$MH = RuntimeHelper.downcallHandle(
+        "strsep",
+        constants$14.strsep$FUNC, false
+    );
+    static final FunctionDescriptor swab$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle swab$MH = RuntimeHelper.downcallHandle(
+        "swab",
+        constants$14.swab$FUNC, false
+    );
+    static final FunctionDescriptor timingsafe_bcmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle timingsafe_bcmp$MH = RuntimeHelper.downcallHandle(
+        "timingsafe_bcmp",
+        constants$14.timingsafe_bcmp$FUNC, false
+    );
+    static final FunctionDescriptor strsignal_r$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strsignal_r$MH = RuntimeHelper.downcallHandle(
+        "strsignal_r",
+        constants$14.strsignal_r$FUNC, false
+    );
 }
 
 

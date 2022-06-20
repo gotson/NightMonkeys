@@ -2,19 +2,62 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$8 {
 
-    static final MemoryAddress __DARWIN_NULL$ADDR = MemoryAddress.ofLong(0L);
-    static final MemoryAddress NULL$ADDR = MemoryAddress.ofLong(0L);
-    static final MemorySegment __PRI_8_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hh");
-    static final MemorySegment __PRI_64_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ll");
-    static final MemorySegment __SCN_64_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ll");
-    static final MemorySegment __PRI_MAX_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("j");
+    static final FunctionDescriptor memmove$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memmove$MH = RuntimeHelper.downcallHandle(
+        "memmove",
+        constants$8.memmove$FUNC, false
+    );
+    static final FunctionDescriptor memset$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memset$MH = RuntimeHelper.downcallHandle(
+        "memset",
+        constants$8.memset$FUNC, false
+    );
+    static final FunctionDescriptor strcat$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strcat$MH = RuntimeHelper.downcallHandle(
+        "strcat",
+        constants$8.strcat$FUNC, false
+    );
+    static final FunctionDescriptor strchr$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle strchr$MH = RuntimeHelper.downcallHandle(
+        "strchr",
+        constants$8.strchr$FUNC, false
+    );
+    static final FunctionDescriptor strcmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strcmp$MH = RuntimeHelper.downcallHandle(
+        "strcmp",
+        constants$8.strcmp$FUNC, false
+    );
+    static final FunctionDescriptor strcoll$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strcoll$MH = RuntimeHelper.downcallHandle(
+        "strcoll",
+        constants$8.strcoll$FUNC, false
+    );
 }
 
 
