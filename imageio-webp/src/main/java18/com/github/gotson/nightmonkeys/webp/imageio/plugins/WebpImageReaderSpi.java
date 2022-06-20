@@ -54,8 +54,7 @@ public class WebpImageReaderSpi extends ImageReaderSpi {
     private boolean loadLibrary() {
         if (!libLoaded) {
             try {
-                String libVersion = WebP.getLibVersion();
-                LOGGER.info("Loaded libwebp v{}", libVersion);
+                LOGGER.info("Loaded libwebp: decoder v{}, demux v{}", WebP.getDecoderVersion(), WebP.getDemuxVersion());
                 libLoaded = true;
             } catch (UnsatisfiedLinkError e) {
                 LOGGER.warn("Could not load libwebp, plugin will be disabled. {}", e.getMessage());

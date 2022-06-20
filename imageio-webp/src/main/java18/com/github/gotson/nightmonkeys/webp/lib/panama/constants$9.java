@@ -2,19 +2,60 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$9 {
 
-    static final MemorySegment __SCN_MAX_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("j");
-    static final MemorySegment PRId8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhd");
-    static final MemorySegment PRIi8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhi");
-    static final MemorySegment PRIo8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hho");
-    static final MemorySegment PRIu8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhu");
-    static final MemorySegment PRIx8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhx");
+    static final FunctionDescriptor strcpy$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strcpy$MH = RuntimeHelper.downcallHandle(
+        "strcpy",
+        constants$9.strcpy$FUNC, false
+    );
+    static final FunctionDescriptor strcspn$FUNC = FunctionDescriptor.of(Constants$root.C_LONG_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strcspn$MH = RuntimeHelper.downcallHandle(
+        "strcspn",
+        constants$9.strcspn$FUNC, false
+    );
+    static final FunctionDescriptor strerror$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle strerror$MH = RuntimeHelper.downcallHandle(
+        "strerror",
+        constants$9.strerror$FUNC, false
+    );
+    static final FunctionDescriptor strlen$FUNC = FunctionDescriptor.of(Constants$root.C_LONG_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strlen$MH = RuntimeHelper.downcallHandle(
+        "strlen",
+        constants$9.strlen$FUNC, false
+    );
+    static final FunctionDescriptor strncat$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strncat$MH = RuntimeHelper.downcallHandle(
+        "strncat",
+        constants$9.strncat$FUNC, false
+    );
+    static final FunctionDescriptor strncmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strncmp$MH = RuntimeHelper.downcallHandle(
+        "strncmp",
+        constants$9.strncmp$FUNC, false
+    );
 }
 
 

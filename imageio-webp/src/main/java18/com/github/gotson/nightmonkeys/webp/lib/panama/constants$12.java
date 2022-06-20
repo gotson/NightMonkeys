@@ -2,19 +2,64 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$12 {
 
-    static final MemorySegment PRIX32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("X");
-    static final MemorySegment PRId64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lld");
-    static final MemorySegment PRIi64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lli");
-    static final MemorySegment PRIo64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llo");
-    static final MemorySegment PRIu64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llu");
-    static final MemorySegment PRIx64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llx");
+    static final FunctionDescriptor stpncpy$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle stpncpy$MH = RuntimeHelper.downcallHandle(
+        "stpncpy",
+        constants$12.stpncpy$FUNC, false
+    );
+    static final FunctionDescriptor strndup$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strndup$MH = RuntimeHelper.downcallHandle(
+        "strndup",
+        constants$12.strndup$FUNC, false
+    );
+    static final FunctionDescriptor strnlen$FUNC = FunctionDescriptor.of(Constants$root.C_LONG_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strnlen$MH = RuntimeHelper.downcallHandle(
+        "strnlen",
+        constants$12.strnlen$FUNC, false
+    );
+    static final FunctionDescriptor strsignal$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle strsignal$MH = RuntimeHelper.downcallHandle(
+        "strsignal",
+        constants$12.strsignal$FUNC, false
+    );
+    static final FunctionDescriptor memset_s$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT,
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memset_s$MH = RuntimeHelper.downcallHandle(
+        "memset_s",
+        constants$12.memset_s$FUNC, false
+    );
+    static final FunctionDescriptor memmem$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle memmem$MH = RuntimeHelper.downcallHandle(
+        "memmem",
+        constants$12.memmem$FUNC, false
+    );
 }
 
 

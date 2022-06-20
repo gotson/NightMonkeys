@@ -2,19 +2,57 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$19 {
 
-    static final MemorySegment PRIXFAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hX");
-    static final MemorySegment PRIdFAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("d");
-    static final MemorySegment PRIiFAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("i");
-    static final MemorySegment PRIoFAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("o");
-    static final MemorySegment PRIuFAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("u");
-    static final MemorySegment PRIxFAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("x");
+    static final FunctionDescriptor WebPDemuxPrevFrame$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxPrevFrame$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxPrevFrame",
+        constants$19.WebPDemuxPrevFrame$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxReleaseIterator$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxReleaseIterator$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxReleaseIterator",
+        constants$19.WebPDemuxReleaseIterator$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxGetChunk$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxGetChunk$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxGetChunk",
+        constants$19.WebPDemuxGetChunk$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxNextChunk$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxNextChunk$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxNextChunk",
+        constants$19.WebPDemuxNextChunk$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxPrevChunk$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxPrevChunk$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxPrevChunk",
+        constants$19.WebPDemuxPrevChunk$FUNC, false
+    );
+    static final FunctionDescriptor WebPDemuxReleaseChunkIterator$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPDemuxReleaseChunkIterator$MH = RuntimeHelper.downcallHandle(
+        "WebPDemuxReleaseChunkIterator",
+        constants$19.WebPDemuxReleaseChunkIterator$FUNC, false
+    );
 }
 
 

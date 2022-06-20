@@ -2,14 +2,27 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
-public class decode_h  {
+import jdk.incubator.foreign.Addressable;
+import jdk.incubator.foreign.MemoryAddress;
+import jdk.incubator.foreign.MemorySegment;
+import jdk.incubator.foreign.ResourceScope;
+import jdk.incubator.foreign.SegmentAllocator;
 
-    /* package-private */ decode_h() {}
+import java.lang.invoke.MethodHandle;
+
+import static jdk.incubator.foreign.ValueLayout.OfAddress;
+import static jdk.incubator.foreign.ValueLayout.OfByte;
+import static jdk.incubator.foreign.ValueLayout.OfDouble;
+import static jdk.incubator.foreign.ValueLayout.OfFloat;
+import static jdk.incubator.foreign.ValueLayout.OfInt;
+import static jdk.incubator.foreign.ValueLayout.OfLong;
+import static jdk.incubator.foreign.ValueLayout.OfShort;
+
+public class demux_h {
+
+    /* package-private */ demux_h() {
+    }
+
     public static OfByte C_CHAR = Constants$root.C_CHAR$LAYOUT;
     public static OfShort C_SHORT = Constants$root.C_SHORT$LAYOUT;
     public static OfInt C_INT = Constants$root.C_INT$LAYOUT;
@@ -18,8 +31,9 @@ public class decode_h  {
     public static OfFloat C_FLOAT = Constants$root.C_FLOAT$LAYOUT;
     public static OfDouble C_DOUBLE = Constants$root.C_DOUBLE$LAYOUT;
     public static OfAddress C_POINTER = Constants$root.C_POINTER$LAYOUT;
+
     public static int __DARWIN_ONLY_64_BIT_INO_T() {
-        return (int)0L;
+        return (int) 0L;
     }
     public static int __DARWIN_ONLY_UNIX_CONFORMANCE() {
         return (int)1L;
@@ -690,15 +704,31 @@ public class decode_h  {
     public static int INT32_MAX() {
         return (int)2147483647L;
     }
+
     public static int UINT8_MAX() {
-        return (int)255L;
+        return (int) 255L;
     }
+
     public static int UINT16_MAX() {
-        return (int)65535L;
+        return (int) 65535L;
     }
+
     public static int WEBP_DECODER_ABI_VERSION() {
-        return (int)521L;
+        return (int) 521L;
     }
+
+    public static int _USE_FORTIFY_LEVEL() {
+        return (int) 2L;
+    }
+
+    public static int __HAS_FIXED_CHK_PROTOTYPES() {
+        return (int) 1L;
+    }
+
+    public static int WEBP_DEMUX_ABI_VERSION() {
+        return (int) 263L;
+    }
+
     public static OfShort __int16_t = Constants$root.C_SHORT$LAYOUT;
     public static OfInt __int32_t = Constants$root.C_INT$LAYOUT;
     public static OfLong __int64_t = Constants$root.C_LONG_LONG$LAYOUT;
@@ -1292,25 +1322,1219 @@ public class decode_h  {
         }
     }
     public static MethodHandle WebPDecode$MH() {
-        return RuntimeHelper.requireNonNull(constants$7.WebPDecode$MH,"WebPDecode");
+        return RuntimeHelper.requireNonNull(constants$7.WebPDecode$MH, "WebPDecode");
     }
-    public static int WebPDecode ( Addressable data,  long data_size,  Addressable config) {
+
+    public static int WebPDecode(Addressable data, long data_size, Addressable config) {
         var mh$ = RuntimeHelper.requireNonNull(constants$7.WebPDecode$MH, "WebPDecode");
         try {
-            return (int)mh$.invokeExact(data, data_size, config);
+            return (int) mh$.invokeExact(data, data_size, config);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
     }
+
+    public static MethodHandle memchr$MH() {
+        return RuntimeHelper.requireNonNull(constants$7.memchr$MH, "memchr");
+    }
+
+    public static MemoryAddress memchr(Addressable __s, int __c, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$7.memchr$MH, "memchr");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s, __c, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memcmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$7.memcmp$MH, "memcmp");
+    }
+
+    public static int memcmp(Addressable __s1, Addressable __s2, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$7.memcmp$MH, "memcmp");
+        try {
+            return (int) mh$.invokeExact(__s1, __s2, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memcpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$7.memcpy$MH, "memcpy");
+    }
+
+    public static MemoryAddress memcpy(Addressable __dst, Addressable __src, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$7.memcpy$MH, "memcpy");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memmove$MH() {
+        return RuntimeHelper.requireNonNull(constants$8.memmove$MH, "memmove");
+    }
+
+    public static MemoryAddress memmove(Addressable __dst, Addressable __src, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$8.memmove$MH, "memmove");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memset$MH() {
+        return RuntimeHelper.requireNonNull(constants$8.memset$MH, "memset");
+    }
+
+    public static MemoryAddress memset(Addressable __b, int __c, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$8.memset$MH, "memset");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__b, __c, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcat$MH() {
+        return RuntimeHelper.requireNonNull(constants$8.strcat$MH, "strcat");
+    }
+
+    public static MemoryAddress strcat(Addressable __s1, Addressable __s2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$8.strcat$MH, "strcat");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s1, __s2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strchr$MH() {
+        return RuntimeHelper.requireNonNull(constants$8.strchr$MH, "strchr");
+    }
+
+    public static MemoryAddress strchr(Addressable __s, int __c) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$8.strchr$MH, "strchr");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s, __c);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$8.strcmp$MH, "strcmp");
+    }
+
+    public static int strcmp(Addressable __s1, Addressable __s2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$8.strcmp$MH, "strcmp");
+        try {
+            return (int) mh$.invokeExact(__s1, __s2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcoll$MH() {
+        return RuntimeHelper.requireNonNull(constants$8.strcoll$MH, "strcoll");
+    }
+
+    public static int strcoll(Addressable __s1, Addressable __s2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$8.strcoll$MH, "strcoll");
+        try {
+            return (int) mh$.invokeExact(__s1, __s2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$9.strcpy$MH, "strcpy");
+    }
+
+    public static MemoryAddress strcpy(Addressable __dst, Addressable __src) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$9.strcpy$MH, "strcpy");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcspn$MH() {
+        return RuntimeHelper.requireNonNull(constants$9.strcspn$MH, "strcspn");
+    }
+
+    public static long strcspn(Addressable __s, Addressable __charset) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$9.strcspn$MH, "strcspn");
+        try {
+            return (long) mh$.invokeExact(__s, __charset);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strerror$MH() {
+        return RuntimeHelper.requireNonNull(constants$9.strerror$MH, "strerror");
+    }
+
+    public static MemoryAddress strerror(int __errnum) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$9.strerror$MH, "strerror");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__errnum);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strlen$MH() {
+        return RuntimeHelper.requireNonNull(constants$9.strlen$MH, "strlen");
+    }
+
+    public static long strlen(Addressable __s) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$9.strlen$MH, "strlen");
+        try {
+            return (long) mh$.invokeExact(__s);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strncat$MH() {
+        return RuntimeHelper.requireNonNull(constants$9.strncat$MH, "strncat");
+    }
+
+    public static MemoryAddress strncat(Addressable __s1, Addressable __s2, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$9.strncat$MH, "strncat");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s1, __s2, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strncmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$9.strncmp$MH, "strncmp");
+    }
+
+    public static int strncmp(Addressable __s1, Addressable __s2, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$9.strncmp$MH, "strncmp");
+        try {
+            return (int) mh$.invokeExact(__s1, __s2, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strncpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$10.strncpy$MH, "strncpy");
+    }
+
+    public static MemoryAddress strncpy(Addressable __dst, Addressable __src, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$10.strncpy$MH, "strncpy");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strpbrk$MH() {
+        return RuntimeHelper.requireNonNull(constants$10.strpbrk$MH, "strpbrk");
+    }
+
+    public static MemoryAddress strpbrk(Addressable __s, Addressable __charset) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$10.strpbrk$MH, "strpbrk");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s, __charset);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strrchr$MH() {
+        return RuntimeHelper.requireNonNull(constants$10.strrchr$MH, "strrchr");
+    }
+
+    public static MemoryAddress strrchr(Addressable __s, int __c) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$10.strrchr$MH, "strrchr");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s, __c);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strspn$MH() {
+        return RuntimeHelper.requireNonNull(constants$10.strspn$MH, "strspn");
+    }
+
+    public static long strspn(Addressable __s, Addressable __charset) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$10.strspn$MH, "strspn");
+        try {
+            return (long) mh$.invokeExact(__s, __charset);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strstr$MH() {
+        return RuntimeHelper.requireNonNull(constants$10.strstr$MH, "strstr");
+    }
+
+    public static MemoryAddress strstr(Addressable __big, Addressable __little) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$10.strstr$MH, "strstr");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__big, __little);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strtok$MH() {
+        return RuntimeHelper.requireNonNull(constants$10.strtok$MH, "strtok");
+    }
+
+    public static MemoryAddress strtok(Addressable __str, Addressable __sep) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$10.strtok$MH, "strtok");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__str, __sep);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strxfrm$MH() {
+        return RuntimeHelper.requireNonNull(constants$11.strxfrm$MH, "strxfrm");
+    }
+
+    public static long strxfrm(Addressable __s1, Addressable __s2, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$11.strxfrm$MH, "strxfrm");
+        try {
+            return (long) mh$.invokeExact(__s1, __s2, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strtok_r$MH() {
+        return RuntimeHelper.requireNonNull(constants$11.strtok_r$MH, "strtok_r");
+    }
+
+    public static MemoryAddress strtok_r(Addressable __str, Addressable __sep, Addressable __lasts) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$11.strtok_r$MH, "strtok_r");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__str, __sep, __lasts);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strerror_r$MH() {
+        return RuntimeHelper.requireNonNull(constants$11.strerror_r$MH, "strerror_r");
+    }
+
+    public static int strerror_r(int __errnum, Addressable __strerrbuf, long __buflen) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$11.strerror_r$MH, "strerror_r");
+        try {
+            return (int) mh$.invokeExact(__errnum, __strerrbuf, __buflen);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strdup$MH() {
+        return RuntimeHelper.requireNonNull(constants$11.strdup$MH, "strdup");
+    }
+
+    public static MemoryAddress strdup(Addressable __s1) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$11.strdup$MH, "strdup");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s1);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memccpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$11.memccpy$MH, "memccpy");
+    }
+
+    public static MemoryAddress memccpy(Addressable __dst, Addressable __src, int __c, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$11.memccpy$MH, "memccpy");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src, __c, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle stpcpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$11.stpcpy$MH, "stpcpy");
+    }
+
+    public static MemoryAddress stpcpy(Addressable __dst, Addressable __src) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$11.stpcpy$MH, "stpcpy");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle stpncpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$12.stpncpy$MH, "stpncpy");
+    }
+
+    public static MemoryAddress stpncpy(Addressable __dst, Addressable __src, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$12.stpncpy$MH, "stpncpy");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__dst, __src, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strndup$MH() {
+        return RuntimeHelper.requireNonNull(constants$12.strndup$MH, "strndup");
+    }
+
+    public static MemoryAddress strndup(Addressable __s1, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$12.strndup$MH, "strndup");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__s1, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strnlen$MH() {
+        return RuntimeHelper.requireNonNull(constants$12.strnlen$MH, "strnlen");
+    }
+
+    public static long strnlen(Addressable __s1, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$12.strnlen$MH, "strnlen");
+        try {
+            return (long) mh$.invokeExact(__s1, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strsignal$MH() {
+        return RuntimeHelper.requireNonNull(constants$12.strsignal$MH, "strsignal");
+    }
+
+    public static MemoryAddress strsignal(int __sig) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$12.strsignal$MH, "strsignal");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__sig);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static OfInt errno_t = Constants$root.C_INT$LAYOUT;
+
+    public static MethodHandle memset_s$MH() {
+        return RuntimeHelper.requireNonNull(constants$12.memset_s$MH, "memset_s");
+    }
+
+    public static int memset_s(Addressable __s, long __smax, int __c, long __n) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$12.memset_s$MH, "memset_s");
+        try {
+            return (int) mh$.invokeExact(__s, __smax, __c, __n);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static OfLong ssize_t = Constants$root.C_LONG_LONG$LAYOUT;
+
+    public static MethodHandle memmem$MH() {
+        return RuntimeHelper.requireNonNull(constants$12.memmem$MH, "memmem");
+    }
+
+    public static MemoryAddress memmem(Addressable __big, long __big_len, Addressable __little, long __little_len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$12.memmem$MH, "memmem");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__big, __big_len, __little, __little_len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memset_pattern4$MH() {
+        return RuntimeHelper.requireNonNull(constants$13.memset_pattern4$MH, "memset_pattern4");
+    }
+
+    public static void memset_pattern4(Addressable __b, Addressable __pattern4, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$13.memset_pattern4$MH, "memset_pattern4");
+        try {
+            mh$.invokeExact(__b, __pattern4, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memset_pattern8$MH() {
+        return RuntimeHelper.requireNonNull(constants$13.memset_pattern8$MH, "memset_pattern8");
+    }
+
+    public static void memset_pattern8(Addressable __b, Addressable __pattern8, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$13.memset_pattern8$MH, "memset_pattern8");
+        try {
+            mh$.invokeExact(__b, __pattern8, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle memset_pattern16$MH() {
+        return RuntimeHelper.requireNonNull(constants$13.memset_pattern16$MH, "memset_pattern16");
+    }
+
+    public static void memset_pattern16(Addressable __b, Addressable __pattern16, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$13.memset_pattern16$MH, "memset_pattern16");
+        try {
+            mh$.invokeExact(__b, __pattern16, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcasestr$MH() {
+        return RuntimeHelper.requireNonNull(constants$13.strcasestr$MH, "strcasestr");
+    }
+
+    public static MemoryAddress strcasestr(Addressable __big, Addressable __little) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$13.strcasestr$MH, "strcasestr");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__big, __little);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strnstr$MH() {
+        return RuntimeHelper.requireNonNull(constants$13.strnstr$MH, "strnstr");
+    }
+
+    public static MemoryAddress strnstr(Addressable __big, Addressable __little, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$13.strnstr$MH, "strnstr");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__big, __little, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strlcat$MH() {
+        return RuntimeHelper.requireNonNull(constants$13.strlcat$MH, "strlcat");
+    }
+
+    public static long strlcat(Addressable __dst, Addressable __source, long __size) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$13.strlcat$MH, "strlcat");
+        try {
+            return (long) mh$.invokeExact(__dst, __source, __size);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strlcpy$MH() {
+        return RuntimeHelper.requireNonNull(constants$14.strlcpy$MH, "strlcpy");
+    }
+
+    public static long strlcpy(Addressable __dst, Addressable __source, long __size) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$14.strlcpy$MH, "strlcpy");
+        try {
+            return (long) mh$.invokeExact(__dst, __source, __size);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strmode$MH() {
+        return RuntimeHelper.requireNonNull(constants$14.strmode$MH, "strmode");
+    }
+
+    public static void strmode(int __mode, Addressable __bp) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$14.strmode$MH, "strmode");
+        try {
+            mh$.invokeExact(__mode, __bp);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strsep$MH() {
+        return RuntimeHelper.requireNonNull(constants$14.strsep$MH, "strsep");
+    }
+
+    public static MemoryAddress strsep(Addressable __stringp, Addressable __delim) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$14.strsep$MH, "strsep");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(__stringp, __delim);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle swab$MH() {
+        return RuntimeHelper.requireNonNull(constants$14.swab$MH, "swab");
+    }
+
+    public static void swab(Addressable x0, Addressable x1, long x2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$14.swab$MH, "swab");
+        try {
+            mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle timingsafe_bcmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$14.timingsafe_bcmp$MH, "timingsafe_bcmp");
+    }
+
+    public static int timingsafe_bcmp(Addressable __b1, Addressable __b2, long __len) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$14.timingsafe_bcmp$MH, "timingsafe_bcmp");
+        try {
+            return (int) mh$.invokeExact(__b1, __b2, __len);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strsignal_r$MH() {
+        return RuntimeHelper.requireNonNull(constants$14.strsignal_r$MH, "strsignal_r");
+    }
+
+    public static int strsignal_r(int __sig, Addressable __strsignalbuf, long __buflen) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$14.strsignal_r$MH, "strsignal_r");
+        try {
+            return (int) mh$.invokeExact(__sig, __strsignalbuf, __buflen);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle bcmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$15.bcmp$MH, "bcmp");
+    }
+
+    public static int bcmp(Addressable x0, Addressable x1, long x2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$15.bcmp$MH, "bcmp");
+        try {
+            return (int) mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle bcopy$MH() {
+        return RuntimeHelper.requireNonNull(constants$15.bcopy$MH, "bcopy");
+    }
+
+    public static void bcopy(Addressable x0, Addressable x1, long x2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$15.bcopy$MH, "bcopy");
+        try {
+            mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle bzero$MH() {
+        return RuntimeHelper.requireNonNull(constants$15.bzero$MH, "bzero");
+    }
+
+    public static void bzero(Addressable x0, long x1) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$15.bzero$MH, "bzero");
+        try {
+            mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle index$MH() {
+        return RuntimeHelper.requireNonNull(constants$15.index$MH, "index");
+    }
+
+    public static MemoryAddress index(Addressable x0, int x1) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$15.index$MH, "index");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle rindex$MH() {
+        return RuntimeHelper.requireNonNull(constants$15.rindex$MH, "rindex");
+    }
+
+    public static MemoryAddress rindex(Addressable x0, int x1) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$15.rindex$MH, "rindex");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle ffs$MH() {
+        return RuntimeHelper.requireNonNull(constants$15.ffs$MH, "ffs");
+    }
+
+    public static int ffs(int x0) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$15.ffs$MH, "ffs");
+        try {
+            return (int) mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strcasecmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$16.strcasecmp$MH, "strcasecmp");
+    }
+
+    public static int strcasecmp(Addressable x0, Addressable x1) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$16.strcasecmp$MH, "strcasecmp");
+        try {
+            return (int) mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle strncasecmp$MH() {
+        return RuntimeHelper.requireNonNull(constants$16.strncasecmp$MH, "strncasecmp");
+    }
+
+    public static int strncasecmp(Addressable x0, Addressable x1, long x2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$16.strncasecmp$MH, "strncasecmp");
+        try {
+            return (int) mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle ffsl$MH() {
+        return RuntimeHelper.requireNonNull(constants$16.ffsl$MH, "ffsl");
+    }
+
+    public static int ffsl(long x0) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$16.ffsl$MH, "ffsl");
+        try {
+            return (int) mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle ffsll$MH() {
+        return RuntimeHelper.requireNonNull(constants$16.ffsll$MH, "ffsll");
+    }
+
+    public static int ffsll(long x0) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$16.ffsll$MH, "ffsll");
+        try {
+            return (int) mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle fls$MH() {
+        return RuntimeHelper.requireNonNull(constants$16.fls$MH, "fls");
+    }
+
+    public static int fls(int x0) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$16.fls$MH, "fls");
+        try {
+            return (int) mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle flsl$MH() {
+        return RuntimeHelper.requireNonNull(constants$16.flsl$MH, "flsl");
+    }
+
+    public static int flsl(long x0) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$16.flsl$MH, "flsl");
+        try {
+            return (int) mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle flsll$MH() {
+        return RuntimeHelper.requireNonNull(constants$17.flsll$MH, "flsll");
+    }
+
+    public static int flsll(long x0) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$17.flsll$MH, "flsll");
+        try {
+            return (int) mh$.invokeExact(x0);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static int ANIMATION_FLAG() {
+        return (int) 2L;
+    }
+
+    public static int XMP_FLAG() {
+        return (int) 4L;
+    }
+
+    public static int EXIF_FLAG() {
+        return (int) 8L;
+    }
+
+    public static int ALPHA_FLAG() {
+        return (int) 16L;
+    }
+
+    public static int ICCP_FLAG() {
+        return (int) 32L;
+    }
+
+    public static int ALL_VALID_FLAGS() {
+        return (int) 62L;
+    }
+
+    public static int WEBP_MUX_DISPOSE_NONE() {
+        return (int) 0L;
+    }
+
+    public static int WEBP_MUX_DISPOSE_BACKGROUND() {
+        return (int) 1L;
+    }
+
+    public static int WEBP_MUX_BLEND() {
+        return (int) 0L;
+    }
+
+    public static int WEBP_MUX_NO_BLEND() {
+        return (int) 1L;
+    }
+
+    public static MethodHandle WebPDataInit$MH() {
+        return RuntimeHelper.requireNonNull(constants$17.WebPDataInit$MH, "WebPDataInit");
+    }
+
+    public static void WebPDataInit(Addressable webp_data) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$17.WebPDataInit$MH, "WebPDataInit");
+        try {
+            mh$.invokeExact(webp_data);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDataClear$MH() {
+        return RuntimeHelper.requireNonNull(constants$17.WebPDataClear$MH, "WebPDataClear");
+    }
+
+    public static void WebPDataClear(Addressable webp_data) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$17.WebPDataClear$MH, "WebPDataClear");
+        try {
+            mh$.invokeExact(webp_data);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDataCopy$MH() {
+        return RuntimeHelper.requireNonNull(constants$17.WebPDataCopy$MH, "WebPDataCopy");
+    }
+
+    public static int WebPDataCopy(Addressable src, Addressable dst) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$17.WebPDataCopy$MH, "WebPDataCopy");
+        try {
+            return (int) mh$.invokeExact(src, dst);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPGetDemuxVersion$MH() {
+        return RuntimeHelper.requireNonNull(constants$17.WebPGetDemuxVersion$MH, "WebPGetDemuxVersion");
+    }
+
+    public static int WebPGetDemuxVersion() {
+        var mh$ = RuntimeHelper.requireNonNull(constants$17.WebPGetDemuxVersion$MH, "WebPGetDemuxVersion");
+        try {
+            return (int) mh$.invokeExact();
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static int WEBP_DEMUX_PARSE_ERROR() {
+        return (int) -1L;
+    }
+
+    public static int WEBP_DEMUX_PARSING_HEADER() {
+        return (int) 0L;
+    }
+
+    public static int WEBP_DEMUX_PARSED_HEADER() {
+        return (int) 1L;
+    }
+
+    public static int WEBP_DEMUX_DONE() {
+        return (int) 2L;
+    }
+
+    public static MethodHandle WebPDemuxInternal$MH() {
+        return RuntimeHelper.requireNonNull(constants$17.WebPDemuxInternal$MH, "WebPDemuxInternal");
+    }
+
+    public static MemoryAddress WebPDemuxInternal(Addressable x0, int x1, Addressable x2, int x3) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$17.WebPDemuxInternal$MH, "WebPDemuxInternal");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(x0, x1, x2, x3);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemux$MH() {
+        return RuntimeHelper.requireNonNull(constants$18.WebPDemux$MH, "WebPDemux");
+    }
+
+    public static MemoryAddress WebPDemux(Addressable data) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$18.WebPDemux$MH, "WebPDemux");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(data);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxPartial$MH() {
+        return RuntimeHelper.requireNonNull(constants$18.WebPDemuxPartial$MH, "WebPDemuxPartial");
+    }
+
+    public static MemoryAddress WebPDemuxPartial(Addressable data, Addressable state) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$18.WebPDemuxPartial$MH, "WebPDemuxPartial");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(data, state);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxDelete$MH() {
+        return RuntimeHelper.requireNonNull(constants$18.WebPDemuxDelete$MH, "WebPDemuxDelete");
+    }
+
+    public static void WebPDemuxDelete(Addressable dmux) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$18.WebPDemuxDelete$MH, "WebPDemuxDelete");
+        try {
+            mh$.invokeExact(dmux);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static int WEBP_FF_FORMAT_FLAGS() {
+        return (int) 0L;
+    }
+
+    public static int WEBP_FF_CANVAS_WIDTH() {
+        return (int) 1L;
+    }
+
+    public static int WEBP_FF_CANVAS_HEIGHT() {
+        return (int) 2L;
+    }
+
+    public static int WEBP_FF_LOOP_COUNT() {
+        return (int) 3L;
+    }
+
+    public static int WEBP_FF_BACKGROUND_COLOR() {
+        return (int) 4L;
+    }
+
+    public static int WEBP_FF_FRAME_COUNT() {
+        return (int) 5L;
+    }
+
+    public static MethodHandle WebPDemuxGetI$MH() {
+        return RuntimeHelper.requireNonNull(constants$18.WebPDemuxGetI$MH, "WebPDemuxGetI");
+    }
+
+    public static int WebPDemuxGetI(Addressable dmux, int feature) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$18.WebPDemuxGetI$MH, "WebPDemuxGetI");
+        try {
+            return (int) mh$.invokeExact(dmux, feature);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxGetFrame$MH() {
+        return RuntimeHelper.requireNonNull(constants$18.WebPDemuxGetFrame$MH, "WebPDemuxGetFrame");
+    }
+
+    public static int WebPDemuxGetFrame(Addressable dmux, int frame_number, Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$18.WebPDemuxGetFrame$MH, "WebPDemuxGetFrame");
+        try {
+            return (int) mh$.invokeExact(dmux, frame_number, iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxNextFrame$MH() {
+        return RuntimeHelper.requireNonNull(constants$18.WebPDemuxNextFrame$MH, "WebPDemuxNextFrame");
+    }
+
+    public static int WebPDemuxNextFrame(Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$18.WebPDemuxNextFrame$MH, "WebPDemuxNextFrame");
+        try {
+            return (int) mh$.invokeExact(iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxPrevFrame$MH() {
+        return RuntimeHelper.requireNonNull(constants$19.WebPDemuxPrevFrame$MH, "WebPDemuxPrevFrame");
+    }
+
+    public static int WebPDemuxPrevFrame(Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$19.WebPDemuxPrevFrame$MH, "WebPDemuxPrevFrame");
+        try {
+            return (int) mh$.invokeExact(iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxReleaseIterator$MH() {
+        return RuntimeHelper.requireNonNull(constants$19.WebPDemuxReleaseIterator$MH, "WebPDemuxReleaseIterator");
+    }
+
+    public static void WebPDemuxReleaseIterator(Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$19.WebPDemuxReleaseIterator$MH, "WebPDemuxReleaseIterator");
+        try {
+            mh$.invokeExact(iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxGetChunk$MH() {
+        return RuntimeHelper.requireNonNull(constants$19.WebPDemuxGetChunk$MH, "WebPDemuxGetChunk");
+    }
+
+    public static int WebPDemuxGetChunk(Addressable dmux, Addressable fourcc, int chunk_number, Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$19.WebPDemuxGetChunk$MH, "WebPDemuxGetChunk");
+        try {
+            return (int) mh$.invokeExact(dmux, fourcc, chunk_number, iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxNextChunk$MH() {
+        return RuntimeHelper.requireNonNull(constants$19.WebPDemuxNextChunk$MH, "WebPDemuxNextChunk");
+    }
+
+    public static int WebPDemuxNextChunk(Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$19.WebPDemuxNextChunk$MH, "WebPDemuxNextChunk");
+        try {
+            return (int) mh$.invokeExact(iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxPrevChunk$MH() {
+        return RuntimeHelper.requireNonNull(constants$19.WebPDemuxPrevChunk$MH, "WebPDemuxPrevChunk");
+    }
+
+    public static int WebPDemuxPrevChunk(Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$19.WebPDemuxPrevChunk$MH, "WebPDemuxPrevChunk");
+        try {
+            return (int) mh$.invokeExact(iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPDemuxReleaseChunkIterator$MH() {
+        return RuntimeHelper.requireNonNull(constants$19.WebPDemuxReleaseChunkIterator$MH, "WebPDemuxReleaseChunkIterator");
+    }
+
+    public static void WebPDemuxReleaseChunkIterator(Addressable iter) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$19.WebPDemuxReleaseChunkIterator$MH, "WebPDemuxReleaseChunkIterator");
+        try {
+            mh$.invokeExact(iter);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderOptionsInitInternal$MH() {
+        return RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderOptionsInitInternal$MH, "WebPAnimDecoderOptionsInitInternal");
+    }
+
+    public static int WebPAnimDecoderOptionsInitInternal(Addressable x0, int x1) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderOptionsInitInternal$MH, "WebPAnimDecoderOptionsInitInternal");
+        try {
+            return (int) mh$.invokeExact(x0, x1);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderOptionsInit$MH() {
+        return RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderOptionsInit$MH, "WebPAnimDecoderOptionsInit");
+    }
+
+    public static int WebPAnimDecoderOptionsInit(Addressable dec_options) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderOptionsInit$MH, "WebPAnimDecoderOptionsInit");
+        try {
+            return (int) mh$.invokeExact(dec_options);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderNewInternal$MH() {
+        return RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderNewInternal$MH, "WebPAnimDecoderNewInternal");
+    }
+
+    public static MemoryAddress WebPAnimDecoderNewInternal(Addressable x0, Addressable x1, int x2) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderNewInternal$MH, "WebPAnimDecoderNewInternal");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(x0, x1, x2);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderNew$MH() {
+        return RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderNew$MH, "WebPAnimDecoderNew");
+    }
+
+    public static MemoryAddress WebPAnimDecoderNew(Addressable webp_data, Addressable dec_options) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderNew$MH, "WebPAnimDecoderNew");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(webp_data, dec_options);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderGetInfo$MH() {
+        return RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderGetInfo$MH, "WebPAnimDecoderGetInfo");
+    }
+
+    public static int WebPAnimDecoderGetInfo(Addressable dec, Addressable info) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderGetInfo$MH, "WebPAnimDecoderGetInfo");
+        try {
+            return (int) mh$.invokeExact(dec, info);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderGetNext$MH() {
+        return RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderGetNext$MH, "WebPAnimDecoderGetNext");
+    }
+
+    public static int WebPAnimDecoderGetNext(Addressable dec, Addressable buf, Addressable timestamp) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$20.WebPAnimDecoderGetNext$MH, "WebPAnimDecoderGetNext");
+        try {
+            return (int) mh$.invokeExact(dec, buf, timestamp);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderHasMoreFrames$MH() {
+        return RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderHasMoreFrames$MH, "WebPAnimDecoderHasMoreFrames");
+    }
+
+    public static int WebPAnimDecoderHasMoreFrames(Addressable dec) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderHasMoreFrames$MH, "WebPAnimDecoderHasMoreFrames");
+        try {
+            return (int) mh$.invokeExact(dec);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderReset$MH() {
+        return RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderReset$MH, "WebPAnimDecoderReset");
+    }
+
+    public static void WebPAnimDecoderReset(Addressable dec) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderReset$MH, "WebPAnimDecoderReset");
+        try {
+            mh$.invokeExact(dec);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderGetDemuxer$MH() {
+        return RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderGetDemuxer$MH, "WebPAnimDecoderGetDemuxer");
+    }
+
+    public static MemoryAddress WebPAnimDecoderGetDemuxer(Addressable dec) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderGetDemuxer$MH, "WebPAnimDecoderGetDemuxer");
+        try {
+            return (jdk.incubator.foreign.MemoryAddress) mh$.invokeExact(dec);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle WebPAnimDecoderDelete$MH() {
+        return RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderDelete$MH, "WebPAnimDecoderDelete");
+    }
+
+    public static void WebPAnimDecoderDelete(Addressable dec) {
+        var mh$ = RuntimeHelper.requireNonNull(constants$21.WebPAnimDecoderDelete$MH, "WebPAnimDecoderDelete");
+        try {
+            mh$.invokeExact(dec);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     public static MemorySegment __DARWIN_SUF_64_BIT_INO_T() {
-        return constants$7.__DARWIN_SUF_64_BIT_INO_T$SEGMENT;
+        return constants$21.__DARWIN_SUF_64_BIT_INO_T$SEGMENT;
     }
+
     public static MemorySegment __DARWIN_SUF_1050() {
-        return constants$7.__DARWIN_SUF_1050$SEGMENT;
+        return constants$21.__DARWIN_SUF_1050$SEGMENT;
     }
+
     public static MemorySegment __DARWIN_SUF_EXTSN() {
-        return constants$7.__DARWIN_SUF_EXTSN$SEGMENT;
+        return constants$22.__DARWIN_SUF_EXTSN$SEGMENT;
     }
+
     public static long __DARWIN_C_ANSI() {
         return 4096L;
     }
@@ -1321,7 +2545,7 @@ public class decode_h  {
         return 900000L;
     }
     public static MemoryAddress __DARWIN_NULL() {
-        return constants$8.__DARWIN_NULL$ADDR;
+        return constants$22.__DARWIN_NULL$ADDR;
     }
     public static int __DARWIN_WCHAR_MAX() {
         return (int)2147483647L;
@@ -1333,487 +2557,487 @@ public class decode_h  {
         return (int)-1L;
     }
     public static MemoryAddress NULL() {
-        return constants$8.NULL$ADDR;
+        return constants$22.NULL$ADDR;
     }
     public static long USER_ADDR_NULL() {
         return 0L;
     }
     public static MemorySegment __PRI_8_LENGTH_MODIFIER__() {
-        return constants$8.__PRI_8_LENGTH_MODIFIER__$SEGMENT;
+        return constants$22.__PRI_8_LENGTH_MODIFIER__$SEGMENT;
     }
     public static MemorySegment __PRI_64_LENGTH_MODIFIER__() {
-        return constants$8.__PRI_64_LENGTH_MODIFIER__$SEGMENT;
+        return constants$22.__PRI_64_LENGTH_MODIFIER__$SEGMENT;
     }
     public static MemorySegment __SCN_64_LENGTH_MODIFIER__() {
-        return constants$8.__SCN_64_LENGTH_MODIFIER__$SEGMENT;
+        return constants$22.__SCN_64_LENGTH_MODIFIER__$SEGMENT;
     }
     public static MemorySegment __PRI_MAX_LENGTH_MODIFIER__() {
-        return constants$8.__PRI_MAX_LENGTH_MODIFIER__$SEGMENT;
+        return constants$23.__PRI_MAX_LENGTH_MODIFIER__$SEGMENT;
     }
     public static MemorySegment __SCN_MAX_LENGTH_MODIFIER__() {
-        return constants$9.__SCN_MAX_LENGTH_MODIFIER__$SEGMENT;
+        return constants$23.__SCN_MAX_LENGTH_MODIFIER__$SEGMENT;
     }
     public static MemorySegment PRId8() {
-        return constants$9.PRId8$SEGMENT;
+        return constants$23.PRId8$SEGMENT;
     }
     public static MemorySegment PRIi8() {
-        return constants$9.PRIi8$SEGMENT;
+        return constants$23.PRIi8$SEGMENT;
     }
     public static MemorySegment PRIo8() {
-        return constants$9.PRIo8$SEGMENT;
+        return constants$23.PRIo8$SEGMENT;
     }
     public static MemorySegment PRIu8() {
-        return constants$9.PRIu8$SEGMENT;
+        return constants$23.PRIu8$SEGMENT;
     }
     public static MemorySegment PRIx8() {
-        return constants$9.PRIx8$SEGMENT;
+        return constants$24.PRIx8$SEGMENT;
     }
     public static MemorySegment PRIX8() {
-        return constants$10.PRIX8$SEGMENT;
+        return constants$24.PRIX8$SEGMENT;
     }
     public static MemorySegment PRId16() {
-        return constants$10.PRId16$SEGMENT;
+        return constants$24.PRId16$SEGMENT;
     }
     public static MemorySegment PRIi16() {
-        return constants$10.PRIi16$SEGMENT;
+        return constants$24.PRIi16$SEGMENT;
     }
     public static MemorySegment PRIo16() {
-        return constants$10.PRIo16$SEGMENT;
+        return constants$24.PRIo16$SEGMENT;
     }
     public static MemorySegment PRIu16() {
-        return constants$10.PRIu16$SEGMENT;
+        return constants$24.PRIu16$SEGMENT;
     }
     public static MemorySegment PRIx16() {
-        return constants$10.PRIx16$SEGMENT;
+        return constants$25.PRIx16$SEGMENT;
     }
     public static MemorySegment PRIX16() {
-        return constants$11.PRIX16$SEGMENT;
+        return constants$25.PRIX16$SEGMENT;
     }
     public static MemorySegment PRId32() {
-        return constants$11.PRId32$SEGMENT;
+        return constants$25.PRId32$SEGMENT;
     }
     public static MemorySegment PRIi32() {
-        return constants$11.PRIi32$SEGMENT;
+        return constants$25.PRIi32$SEGMENT;
     }
     public static MemorySegment PRIo32() {
-        return constants$11.PRIo32$SEGMENT;
+        return constants$25.PRIo32$SEGMENT;
     }
     public static MemorySegment PRIu32() {
-        return constants$11.PRIu32$SEGMENT;
+        return constants$25.PRIu32$SEGMENT;
     }
     public static MemorySegment PRIx32() {
-        return constants$11.PRIx32$SEGMENT;
+        return constants$26.PRIx32$SEGMENT;
     }
     public static MemorySegment PRIX32() {
-        return constants$12.PRIX32$SEGMENT;
+        return constants$26.PRIX32$SEGMENT;
     }
     public static MemorySegment PRId64() {
-        return constants$12.PRId64$SEGMENT;
+        return constants$26.PRId64$SEGMENT;
     }
     public static MemorySegment PRIi64() {
-        return constants$12.PRIi64$SEGMENT;
+        return constants$26.PRIi64$SEGMENT;
     }
     public static MemorySegment PRIo64() {
-        return constants$12.PRIo64$SEGMENT;
+        return constants$26.PRIo64$SEGMENT;
     }
     public static MemorySegment PRIu64() {
-        return constants$12.PRIu64$SEGMENT;
+        return constants$26.PRIu64$SEGMENT;
     }
     public static MemorySegment PRIx64() {
-        return constants$12.PRIx64$SEGMENT;
+        return constants$27.PRIx64$SEGMENT;
     }
     public static MemorySegment PRIX64() {
-        return constants$13.PRIX64$SEGMENT;
+        return constants$27.PRIX64$SEGMENT;
     }
     public static MemorySegment PRIdLEAST8() {
-        return constants$13.PRIdLEAST8$SEGMENT;
+        return constants$27.PRIdLEAST8$SEGMENT;
     }
     public static MemorySegment PRIiLEAST8() {
-        return constants$13.PRIiLEAST8$SEGMENT;
+        return constants$27.PRIiLEAST8$SEGMENT;
     }
     public static MemorySegment PRIoLEAST8() {
-        return constants$13.PRIoLEAST8$SEGMENT;
+        return constants$27.PRIoLEAST8$SEGMENT;
     }
     public static MemorySegment PRIuLEAST8() {
-        return constants$13.PRIuLEAST8$SEGMENT;
+        return constants$27.PRIuLEAST8$SEGMENT;
     }
     public static MemorySegment PRIxLEAST8() {
-        return constants$13.PRIxLEAST8$SEGMENT;
+        return constants$28.PRIxLEAST8$SEGMENT;
     }
     public static MemorySegment PRIXLEAST8() {
-        return constants$14.PRIXLEAST8$SEGMENT;
+        return constants$28.PRIXLEAST8$SEGMENT;
     }
     public static MemorySegment PRIdLEAST16() {
-        return constants$14.PRIdLEAST16$SEGMENT;
+        return constants$28.PRIdLEAST16$SEGMENT;
     }
     public static MemorySegment PRIiLEAST16() {
-        return constants$14.PRIiLEAST16$SEGMENT;
+        return constants$28.PRIiLEAST16$SEGMENT;
     }
     public static MemorySegment PRIoLEAST16() {
-        return constants$14.PRIoLEAST16$SEGMENT;
+        return constants$28.PRIoLEAST16$SEGMENT;
     }
     public static MemorySegment PRIuLEAST16() {
-        return constants$14.PRIuLEAST16$SEGMENT;
+        return constants$28.PRIuLEAST16$SEGMENT;
     }
     public static MemorySegment PRIxLEAST16() {
-        return constants$14.PRIxLEAST16$SEGMENT;
+        return constants$29.PRIxLEAST16$SEGMENT;
     }
     public static MemorySegment PRIXLEAST16() {
-        return constants$15.PRIXLEAST16$SEGMENT;
+        return constants$29.PRIXLEAST16$SEGMENT;
     }
     public static MemorySegment PRIdLEAST32() {
-        return constants$15.PRIdLEAST32$SEGMENT;
+        return constants$29.PRIdLEAST32$SEGMENT;
     }
     public static MemorySegment PRIiLEAST32() {
-        return constants$15.PRIiLEAST32$SEGMENT;
+        return constants$29.PRIiLEAST32$SEGMENT;
     }
     public static MemorySegment PRIoLEAST32() {
-        return constants$15.PRIoLEAST32$SEGMENT;
+        return constants$29.PRIoLEAST32$SEGMENT;
     }
     public static MemorySegment PRIuLEAST32() {
-        return constants$15.PRIuLEAST32$SEGMENT;
+        return constants$29.PRIuLEAST32$SEGMENT;
     }
     public static MemorySegment PRIxLEAST32() {
-        return constants$15.PRIxLEAST32$SEGMENT;
+        return constants$30.PRIxLEAST32$SEGMENT;
     }
     public static MemorySegment PRIXLEAST32() {
-        return constants$16.PRIXLEAST32$SEGMENT;
+        return constants$30.PRIXLEAST32$SEGMENT;
     }
     public static MemorySegment PRIdLEAST64() {
-        return constants$16.PRIdLEAST64$SEGMENT;
+        return constants$30.PRIdLEAST64$SEGMENT;
     }
     public static MemorySegment PRIiLEAST64() {
-        return constants$16.PRIiLEAST64$SEGMENT;
+        return constants$30.PRIiLEAST64$SEGMENT;
     }
     public static MemorySegment PRIoLEAST64() {
-        return constants$16.PRIoLEAST64$SEGMENT;
+        return constants$30.PRIoLEAST64$SEGMENT;
     }
     public static MemorySegment PRIuLEAST64() {
-        return constants$16.PRIuLEAST64$SEGMENT;
+        return constants$30.PRIuLEAST64$SEGMENT;
     }
     public static MemorySegment PRIxLEAST64() {
-        return constants$16.PRIxLEAST64$SEGMENT;
+        return constants$31.PRIxLEAST64$SEGMENT;
     }
     public static MemorySegment PRIXLEAST64() {
-        return constants$17.PRIXLEAST64$SEGMENT;
+        return constants$31.PRIXLEAST64$SEGMENT;
     }
     public static MemorySegment PRIdFAST8() {
-        return constants$17.PRIdFAST8$SEGMENT;
+        return constants$31.PRIdFAST8$SEGMENT;
     }
     public static MemorySegment PRIiFAST8() {
-        return constants$17.PRIiFAST8$SEGMENT;
+        return constants$31.PRIiFAST8$SEGMENT;
     }
     public static MemorySegment PRIoFAST8() {
-        return constants$17.PRIoFAST8$SEGMENT;
+        return constants$31.PRIoFAST8$SEGMENT;
     }
     public static MemorySegment PRIuFAST8() {
-        return constants$17.PRIuFAST8$SEGMENT;
+        return constants$31.PRIuFAST8$SEGMENT;
     }
     public static MemorySegment PRIxFAST8() {
-        return constants$17.PRIxFAST8$SEGMENT;
+        return constants$32.PRIxFAST8$SEGMENT;
     }
     public static MemorySegment PRIXFAST8() {
-        return constants$18.PRIXFAST8$SEGMENT;
+        return constants$32.PRIXFAST8$SEGMENT;
     }
     public static MemorySegment PRIdFAST16() {
-        return constants$18.PRIdFAST16$SEGMENT;
+        return constants$32.PRIdFAST16$SEGMENT;
     }
     public static MemorySegment PRIiFAST16() {
-        return constants$18.PRIiFAST16$SEGMENT;
+        return constants$32.PRIiFAST16$SEGMENT;
     }
     public static MemorySegment PRIoFAST16() {
-        return constants$18.PRIoFAST16$SEGMENT;
+        return constants$32.PRIoFAST16$SEGMENT;
     }
     public static MemorySegment PRIuFAST16() {
-        return constants$18.PRIuFAST16$SEGMENT;
+        return constants$32.PRIuFAST16$SEGMENT;
     }
     public static MemorySegment PRIxFAST16() {
-        return constants$18.PRIxFAST16$SEGMENT;
+        return constants$33.PRIxFAST16$SEGMENT;
     }
     public static MemorySegment PRIXFAST16() {
-        return constants$19.PRIXFAST16$SEGMENT;
+        return constants$33.PRIXFAST16$SEGMENT;
     }
     public static MemorySegment PRIdFAST32() {
-        return constants$19.PRIdFAST32$SEGMENT;
+        return constants$33.PRIdFAST32$SEGMENT;
     }
     public static MemorySegment PRIiFAST32() {
-        return constants$19.PRIiFAST32$SEGMENT;
+        return constants$33.PRIiFAST32$SEGMENT;
     }
     public static MemorySegment PRIoFAST32() {
-        return constants$19.PRIoFAST32$SEGMENT;
+        return constants$33.PRIoFAST32$SEGMENT;
     }
     public static MemorySegment PRIuFAST32() {
-        return constants$19.PRIuFAST32$SEGMENT;
+        return constants$33.PRIuFAST32$SEGMENT;
     }
     public static MemorySegment PRIxFAST32() {
-        return constants$19.PRIxFAST32$SEGMENT;
+        return constants$34.PRIxFAST32$SEGMENT;
     }
     public static MemorySegment PRIXFAST32() {
-        return constants$20.PRIXFAST32$SEGMENT;
+        return constants$34.PRIXFAST32$SEGMENT;
     }
     public static MemorySegment PRIdFAST64() {
-        return constants$20.PRIdFAST64$SEGMENT;
+        return constants$34.PRIdFAST64$SEGMENT;
     }
     public static MemorySegment PRIiFAST64() {
-        return constants$20.PRIiFAST64$SEGMENT;
+        return constants$34.PRIiFAST64$SEGMENT;
     }
     public static MemorySegment PRIoFAST64() {
-        return constants$20.PRIoFAST64$SEGMENT;
+        return constants$34.PRIoFAST64$SEGMENT;
     }
     public static MemorySegment PRIuFAST64() {
-        return constants$20.PRIuFAST64$SEGMENT;
+        return constants$34.PRIuFAST64$SEGMENT;
     }
     public static MemorySegment PRIxFAST64() {
-        return constants$20.PRIxFAST64$SEGMENT;
+        return constants$35.PRIxFAST64$SEGMENT;
     }
     public static MemorySegment PRIXFAST64() {
-        return constants$21.PRIXFAST64$SEGMENT;
+        return constants$35.PRIXFAST64$SEGMENT;
     }
     public static MemorySegment PRIdPTR() {
-        return constants$21.PRIdPTR$SEGMENT;
+        return constants$35.PRIdPTR$SEGMENT;
     }
     public static MemorySegment PRIiPTR() {
-        return constants$21.PRIiPTR$SEGMENT;
+        return constants$35.PRIiPTR$SEGMENT;
     }
     public static MemorySegment PRIoPTR() {
-        return constants$21.PRIoPTR$SEGMENT;
+        return constants$35.PRIoPTR$SEGMENT;
     }
     public static MemorySegment PRIuPTR() {
-        return constants$21.PRIuPTR$SEGMENT;
+        return constants$35.PRIuPTR$SEGMENT;
     }
     public static MemorySegment PRIxPTR() {
-        return constants$21.PRIxPTR$SEGMENT;
+        return constants$36.PRIxPTR$SEGMENT;
     }
     public static MemorySegment PRIXPTR() {
-        return constants$22.PRIXPTR$SEGMENT;
+        return constants$36.PRIXPTR$SEGMENT;
     }
     public static MemorySegment PRIdMAX() {
-        return constants$22.PRIdMAX$SEGMENT;
+        return constants$36.PRIdMAX$SEGMENT;
     }
     public static MemorySegment PRIiMAX() {
-        return constants$22.PRIiMAX$SEGMENT;
+        return constants$36.PRIiMAX$SEGMENT;
     }
     public static MemorySegment PRIoMAX() {
-        return constants$22.PRIoMAX$SEGMENT;
+        return constants$36.PRIoMAX$SEGMENT;
     }
     public static MemorySegment PRIuMAX() {
-        return constants$22.PRIuMAX$SEGMENT;
+        return constants$36.PRIuMAX$SEGMENT;
     }
     public static MemorySegment PRIxMAX() {
-        return constants$22.PRIxMAX$SEGMENT;
+        return constants$37.PRIxMAX$SEGMENT;
     }
     public static MemorySegment PRIXMAX() {
-        return constants$23.PRIXMAX$SEGMENT;
+        return constants$37.PRIXMAX$SEGMENT;
     }
     public static MemorySegment SCNd8() {
-        return constants$23.SCNd8$SEGMENT;
+        return constants$37.SCNd8$SEGMENT;
     }
     public static MemorySegment SCNi8() {
-        return constants$23.SCNi8$SEGMENT;
+        return constants$37.SCNi8$SEGMENT;
     }
     public static MemorySegment SCNo8() {
-        return constants$23.SCNo8$SEGMENT;
+        return constants$37.SCNo8$SEGMENT;
     }
     public static MemorySegment SCNu8() {
-        return constants$23.SCNu8$SEGMENT;
+        return constants$37.SCNu8$SEGMENT;
     }
     public static MemorySegment SCNx8() {
-        return constants$23.SCNx8$SEGMENT;
+        return constants$38.SCNx8$SEGMENT;
     }
     public static MemorySegment SCNd16() {
-        return constants$24.SCNd16$SEGMENT;
+        return constants$38.SCNd16$SEGMENT;
     }
     public static MemorySegment SCNi16() {
-        return constants$24.SCNi16$SEGMENT;
+        return constants$38.SCNi16$SEGMENT;
     }
     public static MemorySegment SCNo16() {
-        return constants$24.SCNo16$SEGMENT;
+        return constants$38.SCNo16$SEGMENT;
     }
     public static MemorySegment SCNu16() {
-        return constants$24.SCNu16$SEGMENT;
+        return constants$38.SCNu16$SEGMENT;
     }
     public static MemorySegment SCNx16() {
-        return constants$24.SCNx16$SEGMENT;
+        return constants$38.SCNx16$SEGMENT;
     }
     public static MemorySegment SCNd32() {
-        return constants$24.SCNd32$SEGMENT;
+        return constants$39.SCNd32$SEGMENT;
     }
     public static MemorySegment SCNi32() {
-        return constants$25.SCNi32$SEGMENT;
+        return constants$39.SCNi32$SEGMENT;
     }
     public static MemorySegment SCNo32() {
-        return constants$25.SCNo32$SEGMENT;
+        return constants$39.SCNo32$SEGMENT;
     }
     public static MemorySegment SCNu32() {
-        return constants$25.SCNu32$SEGMENT;
+        return constants$39.SCNu32$SEGMENT;
     }
     public static MemorySegment SCNx32() {
-        return constants$25.SCNx32$SEGMENT;
+        return constants$39.SCNx32$SEGMENT;
     }
     public static MemorySegment SCNd64() {
-        return constants$25.SCNd64$SEGMENT;
+        return constants$39.SCNd64$SEGMENT;
     }
     public static MemorySegment SCNi64() {
-        return constants$25.SCNi64$SEGMENT;
+        return constants$40.SCNi64$SEGMENT;
     }
     public static MemorySegment SCNo64() {
-        return constants$26.SCNo64$SEGMENT;
+        return constants$40.SCNo64$SEGMENT;
     }
     public static MemorySegment SCNu64() {
-        return constants$26.SCNu64$SEGMENT;
+        return constants$40.SCNu64$SEGMENT;
     }
     public static MemorySegment SCNx64() {
-        return constants$26.SCNx64$SEGMENT;
+        return constants$40.SCNx64$SEGMENT;
     }
     public static MemorySegment SCNdLEAST8() {
-        return constants$26.SCNdLEAST8$SEGMENT;
+        return constants$40.SCNdLEAST8$SEGMENT;
     }
     public static MemorySegment SCNiLEAST8() {
-        return constants$26.SCNiLEAST8$SEGMENT;
+        return constants$40.SCNiLEAST8$SEGMENT;
     }
     public static MemorySegment SCNoLEAST8() {
-        return constants$26.SCNoLEAST8$SEGMENT;
+        return constants$41.SCNoLEAST8$SEGMENT;
     }
     public static MemorySegment SCNuLEAST8() {
-        return constants$27.SCNuLEAST8$SEGMENT;
+        return constants$41.SCNuLEAST8$SEGMENT;
     }
     public static MemorySegment SCNxLEAST8() {
-        return constants$27.SCNxLEAST8$SEGMENT;
+        return constants$41.SCNxLEAST8$SEGMENT;
     }
     public static MemorySegment SCNdLEAST16() {
-        return constants$27.SCNdLEAST16$SEGMENT;
+        return constants$41.SCNdLEAST16$SEGMENT;
     }
     public static MemorySegment SCNiLEAST16() {
-        return constants$27.SCNiLEAST16$SEGMENT;
+        return constants$41.SCNiLEAST16$SEGMENT;
     }
     public static MemorySegment SCNoLEAST16() {
-        return constants$27.SCNoLEAST16$SEGMENT;
+        return constants$41.SCNoLEAST16$SEGMENT;
     }
     public static MemorySegment SCNuLEAST16() {
-        return constants$27.SCNuLEAST16$SEGMENT;
+        return constants$42.SCNuLEAST16$SEGMENT;
     }
     public static MemorySegment SCNxLEAST16() {
-        return constants$28.SCNxLEAST16$SEGMENT;
+        return constants$42.SCNxLEAST16$SEGMENT;
     }
     public static MemorySegment SCNdLEAST32() {
-        return constants$28.SCNdLEAST32$SEGMENT;
+        return constants$42.SCNdLEAST32$SEGMENT;
     }
     public static MemorySegment SCNiLEAST32() {
-        return constants$28.SCNiLEAST32$SEGMENT;
+        return constants$42.SCNiLEAST32$SEGMENT;
     }
     public static MemorySegment SCNoLEAST32() {
-        return constants$28.SCNoLEAST32$SEGMENT;
+        return constants$42.SCNoLEAST32$SEGMENT;
     }
     public static MemorySegment SCNuLEAST32() {
-        return constants$28.SCNuLEAST32$SEGMENT;
+        return constants$42.SCNuLEAST32$SEGMENT;
     }
     public static MemorySegment SCNxLEAST32() {
-        return constants$28.SCNxLEAST32$SEGMENT;
+        return constants$43.SCNxLEAST32$SEGMENT;
     }
     public static MemorySegment SCNdLEAST64() {
-        return constants$29.SCNdLEAST64$SEGMENT;
+        return constants$43.SCNdLEAST64$SEGMENT;
     }
     public static MemorySegment SCNiLEAST64() {
-        return constants$29.SCNiLEAST64$SEGMENT;
+        return constants$43.SCNiLEAST64$SEGMENT;
     }
     public static MemorySegment SCNoLEAST64() {
-        return constants$29.SCNoLEAST64$SEGMENT;
+        return constants$43.SCNoLEAST64$SEGMENT;
     }
     public static MemorySegment SCNuLEAST64() {
-        return constants$29.SCNuLEAST64$SEGMENT;
+        return constants$43.SCNuLEAST64$SEGMENT;
     }
     public static MemorySegment SCNxLEAST64() {
-        return constants$29.SCNxLEAST64$SEGMENT;
+        return constants$43.SCNxLEAST64$SEGMENT;
     }
     public static MemorySegment SCNdFAST8() {
-        return constants$29.SCNdFAST8$SEGMENT;
+        return constants$44.SCNdFAST8$SEGMENT;
     }
     public static MemorySegment SCNiFAST8() {
-        return constants$30.SCNiFAST8$SEGMENT;
+        return constants$44.SCNiFAST8$SEGMENT;
     }
     public static MemorySegment SCNoFAST8() {
-        return constants$30.SCNoFAST8$SEGMENT;
+        return constants$44.SCNoFAST8$SEGMENT;
     }
     public static MemorySegment SCNuFAST8() {
-        return constants$30.SCNuFAST8$SEGMENT;
+        return constants$44.SCNuFAST8$SEGMENT;
     }
     public static MemorySegment SCNxFAST8() {
-        return constants$30.SCNxFAST8$SEGMENT;
+        return constants$44.SCNxFAST8$SEGMENT;
     }
     public static MemorySegment SCNdFAST16() {
-        return constants$30.SCNdFAST16$SEGMENT;
+        return constants$44.SCNdFAST16$SEGMENT;
     }
     public static MemorySegment SCNiFAST16() {
-        return constants$30.SCNiFAST16$SEGMENT;
+        return constants$45.SCNiFAST16$SEGMENT;
     }
     public static MemorySegment SCNoFAST16() {
-        return constants$31.SCNoFAST16$SEGMENT;
+        return constants$45.SCNoFAST16$SEGMENT;
     }
     public static MemorySegment SCNuFAST16() {
-        return constants$31.SCNuFAST16$SEGMENT;
+        return constants$45.SCNuFAST16$SEGMENT;
     }
     public static MemorySegment SCNxFAST16() {
-        return constants$31.SCNxFAST16$SEGMENT;
+        return constants$45.SCNxFAST16$SEGMENT;
     }
     public static MemorySegment SCNdFAST32() {
-        return constants$31.SCNdFAST32$SEGMENT;
+        return constants$45.SCNdFAST32$SEGMENT;
     }
     public static MemorySegment SCNiFAST32() {
-        return constants$31.SCNiFAST32$SEGMENT;
+        return constants$45.SCNiFAST32$SEGMENT;
     }
     public static MemorySegment SCNoFAST32() {
-        return constants$31.SCNoFAST32$SEGMENT;
+        return constants$46.SCNoFAST32$SEGMENT;
     }
     public static MemorySegment SCNuFAST32() {
-        return constants$32.SCNuFAST32$SEGMENT;
+        return constants$46.SCNuFAST32$SEGMENT;
     }
     public static MemorySegment SCNxFAST32() {
-        return constants$32.SCNxFAST32$SEGMENT;
+        return constants$46.SCNxFAST32$SEGMENT;
     }
     public static MemorySegment SCNdFAST64() {
-        return constants$32.SCNdFAST64$SEGMENT;
+        return constants$46.SCNdFAST64$SEGMENT;
     }
     public static MemorySegment SCNiFAST64() {
-        return constants$32.SCNiFAST64$SEGMENT;
+        return constants$46.SCNiFAST64$SEGMENT;
     }
     public static MemorySegment SCNoFAST64() {
-        return constants$32.SCNoFAST64$SEGMENT;
+        return constants$46.SCNoFAST64$SEGMENT;
     }
     public static MemorySegment SCNuFAST64() {
-        return constants$32.SCNuFAST64$SEGMENT;
+        return constants$47.SCNuFAST64$SEGMENT;
     }
     public static MemorySegment SCNxFAST64() {
-        return constants$33.SCNxFAST64$SEGMENT;
+        return constants$47.SCNxFAST64$SEGMENT;
     }
     public static MemorySegment SCNdPTR() {
-        return constants$33.SCNdPTR$SEGMENT;
+        return constants$47.SCNdPTR$SEGMENT;
     }
     public static MemorySegment SCNiPTR() {
-        return constants$33.SCNiPTR$SEGMENT;
+        return constants$47.SCNiPTR$SEGMENT;
     }
     public static MemorySegment SCNoPTR() {
-        return constants$33.SCNoPTR$SEGMENT;
+        return constants$47.SCNoPTR$SEGMENT;
     }
     public static MemorySegment SCNuPTR() {
-        return constants$33.SCNuPTR$SEGMENT;
+        return constants$47.SCNuPTR$SEGMENT;
     }
     public static MemorySegment SCNxPTR() {
-        return constants$33.SCNxPTR$SEGMENT;
+        return constants$48.SCNxPTR$SEGMENT;
     }
     public static MemorySegment SCNdMAX() {
-        return constants$34.SCNdMAX$SEGMENT;
+        return constants$48.SCNdMAX$SEGMENT;
     }
     public static MemorySegment SCNiMAX() {
-        return constants$34.SCNiMAX$SEGMENT;
+        return constants$48.SCNiMAX$SEGMENT;
     }
     public static MemorySegment SCNoMAX() {
-        return constants$34.SCNoMAX$SEGMENT;
+        return constants$48.SCNoMAX$SEGMENT;
     }
     public static MemorySegment SCNuMAX() {
-        return constants$34.SCNuMAX$SEGMENT;
+        return constants$48.SCNuMAX$SEGMENT;
     }
     public static MemorySegment SCNxMAX() {
-        return constants$34.SCNxMAX$SEGMENT;
+        return constants$48.SCNxMAX$SEGMENT;
     }
     public static int __MAC_OS_X_VERSION_MIN_REQUIRED() {
         return (int)101600L;

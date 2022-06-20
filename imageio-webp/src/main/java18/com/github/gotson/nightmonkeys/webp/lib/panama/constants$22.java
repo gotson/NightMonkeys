@@ -2,19 +2,17 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+import jdk.incubator.foreign.MemoryAddress;
+import jdk.incubator.foreign.MemorySegment;
+
 class constants$22 {
 
-    static final MemorySegment PRIXPTR$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lX");
-    static final MemorySegment PRIdMAX$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("jd");
-    static final MemorySegment PRIiMAX$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ji");
-    static final MemorySegment PRIoMAX$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("jo");
-    static final MemorySegment PRIuMAX$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ju");
-    static final MemorySegment PRIxMAX$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("jx");
+    static final MemorySegment __DARWIN_SUF_EXTSN$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("$DARWIN_EXTSN");
+    static final MemoryAddress __DARWIN_NULL$ADDR = MemoryAddress.ofLong(0L);
+    static final MemoryAddress NULL$ADDR = MemoryAddress.ofLong(0L);
+    static final MemorySegment __PRI_8_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hh");
+    static final MemorySegment __PRI_64_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ll");
+    static final MemorySegment __SCN_64_LENGTH_MODIFIER__$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("ll");
 }
 
 

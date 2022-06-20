@@ -2,19 +2,16 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+import jdk.incubator.foreign.MemorySegment;
+
 class constants$26 {
 
-    static final MemorySegment SCNo64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llo");
-    static final MemorySegment SCNu64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llu");
-    static final MemorySegment SCNx64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llx");
-    static final MemorySegment SCNdLEAST8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhd");
-    static final MemorySegment SCNiLEAST8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhi");
-    static final MemorySegment SCNoLEAST8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hho");
+    static final MemorySegment PRIx32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("x");
+    static final MemorySegment PRIX32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("X");
+    static final MemorySegment PRId64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lld");
+    static final MemorySegment PRIi64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lli");
+    static final MemorySegment PRIo64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llo");
+    static final MemorySegment PRIu64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llu");
 }
 
 

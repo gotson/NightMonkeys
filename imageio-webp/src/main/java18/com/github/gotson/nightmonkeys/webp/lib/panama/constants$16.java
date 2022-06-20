@@ -2,19 +2,57 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$16 {
 
-    static final MemorySegment PRIXLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("X");
-    static final MemorySegment PRIdLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lld");
-    static final MemorySegment PRIiLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lli");
-    static final MemorySegment PRIoLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llo");
-    static final MemorySegment PRIuLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llu");
-    static final MemorySegment PRIxLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llx");
+    static final FunctionDescriptor strcasecmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle strcasecmp$MH = RuntimeHelper.downcallHandle(
+        "strcasecmp",
+        constants$16.strcasecmp$FUNC, false
+    );
+    static final FunctionDescriptor strncasecmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle strncasecmp$MH = RuntimeHelper.downcallHandle(
+        "strncasecmp",
+        constants$16.strncasecmp$FUNC, false
+    );
+    static final FunctionDescriptor ffsl$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle ffsl$MH = RuntimeHelper.downcallHandle(
+        "ffsl",
+        constants$16.ffsl$FUNC, false
+    );
+    static final FunctionDescriptor ffsll$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle ffsll$MH = RuntimeHelper.downcallHandle(
+        "ffsll",
+        constants$16.ffsll$FUNC, false
+    );
+    static final FunctionDescriptor fls$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle fls$MH = RuntimeHelper.downcallHandle(
+        "fls",
+        constants$16.fls$FUNC, false
+    );
+    static final FunctionDescriptor flsl$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle flsl$MH = RuntimeHelper.downcallHandle(
+        "flsl",
+        constants$16.flsl$FUNC, false
+    );
 }
 
 

@@ -2,19 +2,61 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$15 {
 
-    static final MemorySegment PRIXLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hX");
-    static final MemorySegment PRIdLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("d");
-    static final MemorySegment PRIiLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("i");
-    static final MemorySegment PRIoLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("o");
-    static final MemorySegment PRIuLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("u");
-    static final MemorySegment PRIxLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("x");
+    static final FunctionDescriptor bcmp$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle bcmp$MH = RuntimeHelper.downcallHandle(
+        "bcmp",
+        constants$15.bcmp$FUNC, false
+    );
+    static final FunctionDescriptor bcopy$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle bcopy$MH = RuntimeHelper.downcallHandle(
+        "bcopy",
+        constants$15.bcopy$FUNC, false
+    );
+    static final FunctionDescriptor bzero$FUNC = FunctionDescriptor.ofVoid(
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG_LONG$LAYOUT
+    );
+    static final MethodHandle bzero$MH = RuntimeHelper.downcallHandle(
+        "bzero",
+        constants$15.bzero$FUNC, false
+    );
+    static final FunctionDescriptor index$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle index$MH = RuntimeHelper.downcallHandle(
+        "index",
+        constants$15.index$FUNC, false
+    );
+    static final FunctionDescriptor rindex$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle rindex$MH = RuntimeHelper.downcallHandle(
+        "rindex",
+        constants$15.rindex$FUNC, false
+    );
+    static final FunctionDescriptor ffs$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle ffs$MH = RuntimeHelper.downcallHandle(
+        "ffs",
+        constants$15.ffs$FUNC, false
+    );
 }
 
 

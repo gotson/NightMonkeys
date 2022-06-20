@@ -2,19 +2,61 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
+import jdk.incubator.foreign.FunctionDescriptor;
+
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+
 class constants$20 {
 
-    static final MemorySegment PRIXFAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("X");
-    static final MemorySegment PRIdFAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lld");
-    static final MemorySegment PRIiFAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lli");
-    static final MemorySegment PRIoFAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llo");
-    static final MemorySegment PRIuFAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llu");
-    static final MemorySegment PRIxFAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llx");
+    static final FunctionDescriptor WebPAnimDecoderOptionsInitInternal$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle WebPAnimDecoderOptionsInitInternal$MH = RuntimeHelper.downcallHandle(
+        "WebPAnimDecoderOptionsInitInternal",
+        constants$20.WebPAnimDecoderOptionsInitInternal$FUNC, false
+    );
+    static final FunctionDescriptor WebPAnimDecoderOptionsInit$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPAnimDecoderOptionsInit$MH = RuntimeHelper.downcallHandle(
+        "WebPAnimDecoderOptionsInit",
+        constants$20.WebPAnimDecoderOptionsInit$FUNC, false
+    );
+    static final FunctionDescriptor WebPAnimDecoderNewInternal$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_INT$LAYOUT
+    );
+    static final MethodHandle WebPAnimDecoderNewInternal$MH = RuntimeHelper.downcallHandle(
+        "WebPAnimDecoderNewInternal",
+        constants$20.WebPAnimDecoderNewInternal$FUNC, false
+    );
+    static final FunctionDescriptor WebPAnimDecoderNew$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPAnimDecoderNew$MH = RuntimeHelper.downcallHandle(
+        "WebPAnimDecoderNew",
+        constants$20.WebPAnimDecoderNew$FUNC, false
+    );
+    static final FunctionDescriptor WebPAnimDecoderGetInfo$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPAnimDecoderGetInfo$MH = RuntimeHelper.downcallHandle(
+        "WebPAnimDecoderGetInfo",
+        constants$20.WebPAnimDecoderGetInfo$FUNC, false
+    );
+    static final FunctionDescriptor WebPAnimDecoderGetNext$FUNC = FunctionDescriptor.of(Constants$root.C_INT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
+    );
+    static final MethodHandle WebPAnimDecoderGetNext$MH = RuntimeHelper.downcallHandle(
+        "WebPAnimDecoderGetNext",
+        constants$20.WebPAnimDecoderGetNext$FUNC, false
+    );
 }
 
 

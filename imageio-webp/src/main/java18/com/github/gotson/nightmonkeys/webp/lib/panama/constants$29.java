@@ -2,19 +2,16 @@
 
 package com.github.gotson.nightmonkeys.webp.lib.panama;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.VarHandle;
-import java.nio.ByteOrder;
-import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.ValueLayout.*;
+import jdk.incubator.foreign.MemorySegment;
+
 class constants$29 {
 
-    static final MemorySegment SCNdLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lld");
-    static final MemorySegment SCNiLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("lli");
-    static final MemorySegment SCNoLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llo");
-    static final MemorySegment SCNuLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llu");
-    static final MemorySegment SCNxLEAST64$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("llx");
-    static final MemorySegment SCNdFAST8$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hhd");
+    static final MemorySegment PRIxLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hx");
+    static final MemorySegment PRIXLEAST16$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("hX");
+    static final MemorySegment PRIdLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("d");
+    static final MemorySegment PRIiLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("i");
+    static final MemorySegment PRIoLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("o");
+    static final MemorySegment PRIuLEAST32$SEGMENT = RuntimeHelper.CONSTANT_ALLOCATOR.allocateUtf8String("u");
 }
 
 
