@@ -1319,10 +1319,10 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
         reader.dispose();
     }
 
-    @Test
-    public void testSetDestination() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getTestData")
+    public void testSetDestination(TestData data) throws IOException {
         ImageReader reader = createReader();
-        TestData data = getTestData().get(0);
         reader.setInput(data.getInputStream());
 
         ImageReadParam param = reader.getDefaultReadParam();
@@ -1345,10 +1345,10 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
         reader.dispose();
     }
 
-    @Test
-    public void testSetDestinationRaw() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getTestData")
+    public void testSetDestinationRaw(TestData data) throws IOException {
         ImageReader reader = createReader();
-        TestData data = getTestData().get(0);
         reader.setInput(data.getInputStream());
 
         ImageReadParam param = reader.getDefaultReadParam();
