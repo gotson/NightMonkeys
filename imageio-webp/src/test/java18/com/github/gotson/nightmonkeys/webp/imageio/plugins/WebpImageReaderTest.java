@@ -1,12 +1,12 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
 import com.twelvemonkeys.imageio.util.ImageReaderAbstractTest;
+import org.apache.commons.collections4.IteratorUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
-import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.Dimension;
@@ -80,7 +80,6 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
         super.testReadWithSubsampleParamPixels();
     }
 
-    @Disabled("TODO: ICC profile is not handled yet")
     @Test
     public void testReadAndApplyICCProfile() throws IOException {
         WebpImageReader reader = createReader();
@@ -90,7 +89,8 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
 
             // We'll read a small portion of the image into a destination type that use sRGB
             ImageReadParam param = new ImageReadParam();
-            param.setDestinationType(ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_3BYTE_BGR));
+            var imageTypes = IteratorUtils.toList(reader.getImageTypes(0));
+            param.setDestinationType(imageTypes.get(imageTypes.size() - 1));
             param.setSourceRegion(new Rectangle(20, 20));
 
             BufferedImage image = reader.read(0, param);
@@ -109,8 +109,7 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
 
             BufferedImage image = reader.read(0, null);
             assertRGBEquals("RGB values differ, incorrect Y'CbCr -> RGB conversion", 0xFF72AED5, image.getRGB(80, 80), 1);
-        }
-        finally {
+        } finally {
             reader.dispose();
         }
     }

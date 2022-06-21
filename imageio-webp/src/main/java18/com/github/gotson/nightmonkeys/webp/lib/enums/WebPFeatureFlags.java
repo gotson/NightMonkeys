@@ -3,6 +3,10 @@ package com.github.gotson.nightmonkeys.webp.lib.enums;
 
 import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
 
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
+
 public enum WebPFeatureFlags {
     ANIMATION_FLAG(demux_h.ANIMATION_FLAG()),
     XMP_FLAG(demux_h.XMP_FLAG()),
@@ -19,6 +23,12 @@ public enum WebPFeatureFlags {
 
     public int intValue() {
         return val;
+    }
+
+    public static EnumSet<WebPFeatureFlags> parseInt(int flags) {
+        return Arrays.stream(values())
+            .filter(type -> (flags & type.intValue()) == type.intValue())
+            .collect(Collectors.toCollection(() -> EnumSet.noneOf(WebPFeatureFlags.class)));
     }
 
     public static WebPFeatureFlags fromId(int id) {

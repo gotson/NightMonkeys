@@ -4,6 +4,7 @@ import com.github.gotson.nightmonkeys.webp.BasicInfo;
 import com.github.gotson.nightmonkeys.webp.WebP;
 import com.github.gotson.nightmonkeys.webp.WebpException;
 import com.twelvemonkeys.imageio.ImageReaderBase;
+import com.twelvemonkeys.imageio.color.ColorProfiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +13,18 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
+import java.awt.color.ICC_ColorSpace;
+import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DataBuffer;
 import java.awt.image.DirectColorModel;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 public class WebpImageReader extends ImageReaderBase {
 
@@ -82,6 +89,25 @@ public class WebpImageReader extends ImageReaderBase {
     }
 
     @Override
+    public ImageTypeSpecifier getRawImageType(int imageIndex) throws IOException {
+        readInfo(imageIndex);
+
+        if (info.iccProfile() != null) {
+            var colorModel = new ComponentColorModel(new ICC_ColorSpace(info.iccProfile()), info.hasAlpha(), false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_INT);
+            var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
+
+            return new ImageTypeSpecifier(colorModel, sampleModel);
+        }
+
+        ColorModel colorModel = info.hasAlpha() ?
+            new DirectColorModel(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000)
+            : new DirectColorModel(24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
+        var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
+
+        return new ImageTypeSpecifier(colorModel, sampleModel);
+    }
+
+    @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IOException {
         readInfo(imageIndex);
 
@@ -90,8 +116,10 @@ public class WebpImageReader extends ImageReaderBase {
             : new DirectColorModel(24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
         var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
 
-        return Collections.singletonList(new ImageTypeSpecifier(colorModel, sampleModel))
-            .iterator();
+        return List.of(
+            getRawImageType(imageIndex),
+            new ImageTypeSpecifier(colorModel, sampleModel)
+        ).iterator();
     }
 
     @Override
@@ -110,6 +138,8 @@ public class WebpImageReader extends ImageReaderBase {
         } catch (WebpException e) {
             throw new IOException(e);
         }
+
+        applyICCProfileIfNeeded(destination);
 
         if (abortRequested()) {
             processReadAborted();
@@ -139,5 +169,23 @@ public class WebpImageReader extends ImageReaderBase {
     @Override
     protected void resetMembers() {
         info = null;
+    }
+
+    private void applyICCProfileIfNeeded(final BufferedImage destination) {
+        if (info.iccProfile() != null) {
+            ColorModel colorModel = destination.getColorModel();
+            ICC_Profile destinationProfile = ((ICC_ColorSpace) colorModel.getColorSpace()).getProfile();
+
+            if (!info.iccProfile().equals(destinationProfile)) {
+                LOGGER.debug("Converting from " + info.iccProfile() + " to " + (ColorProfiles.isCS_sRGB(destinationProfile) ? "sRGB" : destinationProfile));
+
+                WritableRaster raster = colorModel.hasAlpha()
+                    ? destination.getRaster().createWritableChild(0, 0, destination.getWidth(), destination.getHeight(), 0, 0, new int[] {0, 1, 2})
+                    : destination.getRaster();
+
+                new ColorConvertOp(new ICC_Profile[] {info.iccProfile(), destinationProfile}, null)
+                    .filter(raster, raster);
+            }
+        }
     }
 }
