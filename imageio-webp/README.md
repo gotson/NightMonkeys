@@ -20,7 +20,9 @@ ImageReadParam param=reader.getDefaultReadParam();
     param.setSourceSubsampling(2,2,0,0);
 ```
 
-- The Demux API is not yet implemented, so animations, ICC profiles, EXIF and XMP are not supported.
+- The Demux API is partially implemented:
+  - Supported: ICC profile
+  - Unsupported: animations, EXIF and XMP
 
 - Source region will snap to even values. This is a limitation from `libwebp`. The following will not produce expected
   results:

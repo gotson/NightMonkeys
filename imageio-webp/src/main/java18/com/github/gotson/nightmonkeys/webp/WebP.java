@@ -1,7 +1,11 @@
 package com.github.gotson.nightmonkeys.webp;
 
 import com.github.gotson.nightmonkeys.webp.lib.enums.VP8StatusCode;
+import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFeatureFlags;
+import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFormatFeature;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPBitstreamFeatures;
+import com.github.gotson.nightmonkeys.webp.lib.panama.WebPChunkIterator;
+import com.github.gotson.nightmonkeys.webp.lib.panama.WebPData;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecBuffer;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderConfig;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderOptions;
@@ -10,11 +14,13 @@ import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
 import jdk.incubator.foreign.MemoryAddress;
 import jdk.incubator.foreign.MemorySegment;
 import jdk.incubator.foreign.ResourceScope;
+import jdk.incubator.foreign.SegmentAllocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageReadParam;
 import javax.imageio.stream.ImageInputStream;
+import java.awt.color.ICC_Profile;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 
@@ -25,8 +31,9 @@ import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFro
  */
 public class WebP {
     private static final int minDecoderAbi = Integer.parseInt("0200", 16);
+    private static final int minDemuxAbi = Integer.parseInt("0100", 16);
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebP.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebP.class);
 
     public static boolean canDecode(final ImageInputStream stream) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
@@ -62,12 +69,34 @@ public class WebP {
     public static BasicInfo getBasicInfo(final ImageInputStream stream) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             stream.mark();
-            var webpData = new byte[30];
-            stream.read(webpData);
+            var webpData = byteArrayFromStream(stream);
             stream.reset();
 
             var data = MemorySegment.allocateNative(webpData.length, scope);
             data.copyFrom(MemorySegment.ofArray(webpData));
+
+            var demuxData = WebPData.allocate(scope);
+            WebPData.bytes$set(demuxData, data.address());
+            WebPData.size$set(demuxData, webpData.length);
+
+            var demux = demux_h.WebPDemuxInternal(demuxData, 0, MemoryAddress.NULL, minDemuxAbi);
+            ICC_Profile iccProfile = null;
+            if (!demux.equals(MemoryAddress.NULL)) {
+                var flags = WebPFeatureFlags.parseInt(demux_h.WebPDemuxGetI(demux, WebPFormatFeature.WEBP_FF_FORMAT_FLAGS.intValue()));
+                var chunkIter = WebPChunkIterator.allocate(scope);
+
+                if (flags.contains(WebPFeatureFlags.ICCP_FLAG)) {
+                    demux_h.WebPDemuxGetChunk(demux, SegmentAllocator.nativeAllocator(scope).allocateUtf8String("ICCP"), 1, chunkIter);
+                    var chunkWebpData = WebPChunkIterator.chunk$slice(chunkIter);
+                    long size = WebPData.size$get(chunkWebpData);
+                    var iccData = new byte[(int) size];
+                    var chunkData = MemorySegment.ofAddress(WebPData.bytes$get(chunkWebpData), size, scope).asByteBuffer();
+                    chunkData.get(iccData);
+                    iccProfile = ICC_Profile.getInstance(iccData);
+                }
+                demux_h.WebPDemuxReleaseChunkIterator(chunkIter);
+                demux_h.WebPDemuxDelete(demux);
+            }
 
             var features = WebPBitstreamFeatures.allocate(scope);
             var statusCode = VP8StatusCode.fromId(demux_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
@@ -82,7 +111,8 @@ public class WebP {
                         case 2 -> BasicInfo.Format.LOSSLESS;
                         case 1 -> BasicInfo.Format.LOSSY;
                         default -> BasicInfo.Format.UNDEFINED_OR_MIXED;
-                    }
+                    },
+                    iccProfile
                 );
             }
             throw new WebpException("Couldn't get WebpFeatures: " + statusCode);
