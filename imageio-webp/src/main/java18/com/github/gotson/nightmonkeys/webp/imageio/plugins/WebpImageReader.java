@@ -5,6 +5,8 @@ import com.github.gotson.nightmonkeys.webp.WebP;
 import com.github.gotson.nightmonkeys.webp.WebpException;
 import com.twelvemonkeys.imageio.ImageReaderBase;
 import com.twelvemonkeys.imageio.color.ColorProfiles;
+import com.twelvemonkeys.imageio.color.ColorSpaces;
+import com.twelvemonkeys.imageio.util.ImageTypeSpecifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +20,7 @@ import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.ColorModel;
-import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
-import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.Iterator;
@@ -93,32 +93,20 @@ public class WebpImageReader extends ImageReaderBase {
         readInfo(imageIndex);
 
         if (info.iccProfile() != null) {
-            var colorModel = new ComponentColorModel(new ICC_ColorSpace(info.iccProfile()), info.hasAlpha(), false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_INT);
-            var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
-
-            return new ImageTypeSpecifier(colorModel, sampleModel);
+            ICC_ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
+            return ImageTypeSpecifiers.createPacked(colorSpace, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, DataBuffer.TYPE_INT, false);
         }
 
-        ColorModel colorModel = info.hasAlpha() ?
-            new DirectColorModel(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000)
-            : new DirectColorModel(24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
-        var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
-
-        return new ImageTypeSpecifier(colorModel, sampleModel);
+        return ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
     }
 
     @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IOException {
         readInfo(imageIndex);
 
-        ColorModel colorModel = info.hasAlpha() ?
-            new DirectColorModel(32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000)
-            : new DirectColorModel(24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
-        var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
-
         return List.of(
             getRawImageType(imageIndex),
-            new ImageTypeSpecifier(colorModel, sampleModel)
+            ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
         ).iterator();
     }
 
