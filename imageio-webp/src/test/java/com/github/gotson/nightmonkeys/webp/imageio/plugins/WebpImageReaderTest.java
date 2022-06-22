@@ -17,15 +17,15 @@ class WebpImageReaderTest {
         System.out.println("SPI file: " + ClassLoader.getSystemResource("META-INF/services/javax.imageio.spi.ImageReaderSpi"));
 
         ArrayList<ImageReader> readers = new ArrayList<>();
-        ImageIO.getImageReadersBySuffix("jxl").forEachRemaining(readers::add);
+        ImageIO.getImageReadersBySuffix("webp").forEachRemaining(readers::add);
 
         assertThat(readers).isEmpty();
 
-        ImageIO.getImageReadersByMIMEType("image/jxl").forEachRemaining(readers::add);
+        ImageIO.getImageReadersByMIMEType("image/webp").forEachRemaining(readers::add);
 
         assertThat(readers).isEmpty();
 
-        ImageIO.getImageReadersByFormatName("jxl").forEachRemaining(readers::add);
+        ImageIO.getImageReadersByFormatName("webp").forEachRemaining(readers::add);
 
         assertThat(readers).isEmpty();
     }
