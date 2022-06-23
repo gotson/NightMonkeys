@@ -88,13 +88,15 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
             reader.setInput(stream);
 
             // We'll read a small portion of the image into a destination type that use sRGB
-            ImageReadParam param = new ImageReadParam();
-            var imageTypes = IteratorUtils.toList(reader.getImageTypes(0));
-            param.setDestinationType(imageTypes.get(imageTypes.size() - 1));
-            param.setSourceRegion(new Rectangle(20, 20));
+            for (var imageType : IteratorUtils.toList(reader.getImageTypes(0))) {
+                ImageReadParam param = new ImageReadParam();
+                param.setDestinationType(imageType);
+                param.setSourceRegion(new Rectangle(20, 20));
 
-            BufferedImage image = reader.read(0, param);
-            assertRGBEquals("RGB values differ, incorrect ICC profile or conversion?", 0xFFEA9600, image.getRGB(10, 10), 8);
+                BufferedImage image = reader.read(0, param);
+                assertRGBEquals("RGB values differ, incorrect ICC profile or conversion?", 0xFFEA9600, image.getRGB(10, 10), 8);
+
+            }
         } finally {
             reader.dispose();
         }
