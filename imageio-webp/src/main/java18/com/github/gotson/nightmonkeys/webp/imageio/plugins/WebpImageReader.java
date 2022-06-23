@@ -23,8 +23,8 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class WebpImageReader extends ImageReaderBase {
 
@@ -104,10 +104,12 @@ public class WebpImageReader extends ImageReaderBase {
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IOException {
         readInfo(imageIndex);
 
-        return List.of(
-            getRawImageType(imageIndex),
-            ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
-        ).iterator();
+        var types = new ArrayList<ImageTypeSpecifier>();
+
+        if (info.iccProfile() != null) types.add(getRawImageType(imageIndex));
+        types.add(ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB));
+
+        return types.iterator();
     }
 
     @Override
