@@ -142,7 +142,6 @@ public class WebP {
                 throw new WebpException("Couldn't get WebpFeatures: " + statusCode);
             }
 
-            // TODO: setup decoder options to support cropping and scaling
             var options = WebPDecoderConfig.options$slice(config);
             if (param != null) {
                 if (param.getSourceRegion() != null) {
