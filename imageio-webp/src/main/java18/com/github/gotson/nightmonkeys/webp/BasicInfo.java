@@ -7,8 +7,8 @@ public record BasicInfo(
     int height,
     boolean hasAlpha,
     boolean hasAnimation,
-    Format format,
-    ICC_Profile iccProfile
+    ICC_Profile iccProfile,
+    int frameCount
 ) {
     enum Format {
         UNDEFINED_OR_MIXED,

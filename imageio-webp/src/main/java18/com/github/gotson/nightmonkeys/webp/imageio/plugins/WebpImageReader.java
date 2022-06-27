@@ -23,14 +23,18 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import static java.awt.color.ColorSpace.CS_sRGB;
 
 public class WebpImageReader extends ImageReaderBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebpImageReader.class);
 
     private BasicInfo info;
+
+    private List<ImageTypeSpecifier> imageTypes;
 
     protected WebpImageReader(ImageReaderSpi originatingProvider) {
         super(originatingProvider);
@@ -41,6 +45,21 @@ public class WebpImageReader extends ImageReaderBase {
 
             try {
                 info = WebP.getBasicInfo((ImageInputStream) input);
+                if (info.iccProfile() != null) {
+                    ICC_ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
+                    imageTypes = List.of(
+                        ImageTypeSpecifiers.createPacked(colorSpace, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, DataBuffer.TYPE_INT, false),
+                        ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
+                    );
+                } else if (info.hasAnimation()) {
+                    imageTypes = List.of(
+                        ImageTypeSpecifiers.createPacked(ColorSpaces.getColorSpace(CS_sRGB), 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff, DataBuffer.TYPE_INT, false)
+                    );
+                } else {
+                    imageTypes = List.of(
+                        ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
+                    );
+                }
             } catch (WebpException e) {
                 throw new IOException(e);
             }
@@ -62,16 +81,7 @@ public class WebpImageReader extends ImageReaderBase {
         assertInput();
         readInfo();
 
-        if (info.hasAnimation() && allowSearch) {
-            if (isSeekForwardOnly()) {
-                throw new IllegalStateException("Illegal combination of allowSearch with seekForwardOnly");
-            }
-
-            // TODO: handle animations
-            return 1;
-        }
-
-        return info.hasAnimation() ? -1 : 1;
+        return info.frameCount();
     }
 
     @Override
@@ -92,24 +102,14 @@ public class WebpImageReader extends ImageReaderBase {
     public ImageTypeSpecifier getRawImageType(int imageIndex) throws IOException {
         readInfo(imageIndex);
 
-        if (info.iccProfile() != null) {
-            ICC_ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
-            return ImageTypeSpecifiers.createPacked(colorSpace, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, DataBuffer.TYPE_INT, false);
-        }
-
-        return ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+        return imageTypes.get(0);
     }
 
     @Override
     public Iterator<ImageTypeSpecifier> getImageTypes(int imageIndex) throws IOException {
         readInfo(imageIndex);
 
-        var types = new ArrayList<ImageTypeSpecifier>();
-
-        if (info.iccProfile() != null) types.add(getRawImageType(imageIndex));
-        types.add(ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB));
-
-        return types.iterator();
+        return imageTypes.iterator();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class WebpImageReader extends ImageReaderBase {
         processImageProgress(0F);
 
         try {
-            WebP.decode((ImageInputStream) getInput(), info, destination.getRaster(), param);
+            WebP.decode((ImageInputStream) getInput(), info, destination.getRaster(), param, imageIndex);
         } catch (WebpException e) {
             throw new IOException(e);
         }
@@ -153,12 +153,14 @@ public class WebpImageReader extends ImageReaderBase {
     @Override
     public void setInput(Object input, boolean seekForwardOnly, boolean ignoreMetadata) {
         info = null;
+        imageTypes = null;
         super.setInput(input, seekForwardOnly, ignoreMetadata);
     }
 
     @Override
     protected void resetMembers() {
         info = null;
+        imageTypes = null;
     }
 
     private void applyICCProfileIfNeeded(final BufferedImage destination) {

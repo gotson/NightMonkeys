@@ -3,7 +3,8 @@ package com.github.gotson.nightmonkeys.webp;
 import com.github.gotson.nightmonkeys.webp.lib.enums.VP8StatusCode;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFeatureFlags;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFormatFeature;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPBitstreamFeatures;
+import com.github.gotson.nightmonkeys.webp.lib.panama.WebPAnimDecoderOptions;
+import com.github.gotson.nightmonkeys.webp.lib.panama.WebPAnimInfo;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPChunkIterator;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPData;
 import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecBuffer;
@@ -25,6 +26,8 @@ import java.awt.image.WritableRaster;
 import java.io.IOException;
 
 import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
+import static com.github.gotson.nightmonkeys.webp.lib.panama.demux_h.C_INT;
+import static com.github.gotson.nightmonkeys.webp.lib.panama.demux_h.C_POINTER;
 
 /**
  * Java bindings for libwebp via Foreign Linker API *
@@ -83,6 +86,11 @@ public class WebP {
             ICC_Profile iccProfile = null;
             if (!demux.equals(MemoryAddress.NULL)) {
                 var flags = WebPFeatureFlags.parseInt(demux_h.WebPDemuxGetI(demux, WebPFormatFeature.WEBP_FF_FORMAT_FLAGS.intValue()));
+
+                int width = demux_h.WebPDemuxGetI(demux, WebPFormatFeature.WEBP_FF_CANVAS_WIDTH.intValue());
+                int height = demux_h.WebPDemuxGetI(demux, WebPFormatFeature.WEBP_FF_CANVAS_HEIGHT.intValue());
+                int frameCount = flags.contains(WebPFeatureFlags.ANIMATION_FLAG) ? demux_h.WebPDemuxGetI(demux, WebPFormatFeature.WEBP_FF_FRAME_COUNT.intValue()) : 1;
+
                 var chunkIter = WebPChunkIterator.allocate(scope);
 
                 if (flags.contains(WebPFeatureFlags.ICCP_FLAG)) {
@@ -96,33 +104,33 @@ public class WebP {
                 }
                 demux_h.WebPDemuxReleaseChunkIterator(chunkIter);
                 demux_h.WebPDemuxDelete(demux);
-            }
 
-            var features = WebPBitstreamFeatures.allocate(scope);
-            var statusCode = VP8StatusCode.fromId(demux_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
-
-            if (statusCode == VP8StatusCode.VP8_STATUS_OK) {
                 return new BasicInfo(
-                    WebPBitstreamFeatures.width$get(features),
-                    WebPBitstreamFeatures.height$get(features),
-                    WebPBitstreamFeatures.has_alpha$get(features) > 0,
-                    WebPBitstreamFeatures.has_animation$get(features) > 0,
-                    switch (WebPBitstreamFeatures.format$get(features)) {
-                        case 2 -> BasicInfo.Format.LOSSLESS;
-                        case 1 -> BasicInfo.Format.LOSSY;
-                        default -> BasicInfo.Format.UNDEFINED_OR_MIXED;
-                    },
-                    iccProfile
+                    width,
+                    height,
+                    flags.contains(WebPFeatureFlags.ALPHA_FLAG),
+                    flags.contains(WebPFeatureFlags.ANIMATION_FLAG),
+                    iccProfile,
+                    frameCount
                 );
             }
-            throw new WebpException("Couldn't get WebpFeatures: " + statusCode);
+
+            throw new WebpException("Couldn't get basic information");
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }
     }
 
+    public static void decode(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param, int imageIndex) throws WebpException {
+        if (info.hasAnimation()) {
+            decodeAnim(stream, info, raster, param, imageIndex);
+        } else {
+            decodeVP8(stream, info, raster, param);
+        }
+    }
+
     // TODO: use incremental decoder and publish progress update
-    public static void decode(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param) throws WebpException {
+    public static void decodeVP8(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param) throws WebpException {
         try (ResourceScope scope = ResourceScope.newSharedScope()) {
             var config = WebPDecoderConfig.allocate(scope);
             if (demux_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
@@ -179,6 +187,52 @@ public class WebP {
             raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsArray);
 
             demux_h.WebPFreeDecBuffer(output);
+        } catch (IOException e) {
+            throw new WebpException("Couldn't get stream content", e);
+        }
+    }
+
+    public static void decodeAnim(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param, int imageIndex) throws WebpException {
+        try (ResourceScope scope = ResourceScope.newSharedScope()) {
+            stream.mark();
+            var webpData = byteArrayFromStream(stream);
+            stream.reset();
+
+            var data = MemorySegment.allocateNative(webpData.length, scope);
+            data.copyFrom(MemorySegment.ofArray(webpData));
+
+            var demuxData = WebPData.allocate(scope);
+            WebPData.bytes$set(demuxData, data.address());
+            WebPData.size$set(demuxData, webpData.length);
+
+            var dec_options = WebPAnimDecoderOptions.allocate(scope);
+            demux_h.WebPAnimDecoderOptionsInitInternal(dec_options, minDemuxAbi);
+            WebPAnimDecoderOptions.color_mode$set(dec_options, demux_h.MODE_RGBA());
+
+            var dec = demux_h.WebPAnimDecoderNewInternal(demuxData, dec_options, minDemuxAbi);
+            var anim_info = WebPAnimInfo.allocate(scope);
+            demux_h.WebPAnimDecoderGetInfo(dec, anim_info);
+
+            int i = 0;
+            var pixelsArray = new int[info.width() * info.height()];
+            do {
+                var buf = MemorySegment.allocateNative(C_POINTER, scope);
+                var timestamp = MemorySegment.allocateNative(C_INT, scope);
+                demux_h.WebPAnimDecoderGetNext(dec, buf, timestamp);
+                if (i == imageIndex) {
+                    MemorySegment.ofAddress(
+                        buf.get(C_POINTER, 0),
+                        (long) info.width() * info.height() * 4,
+                        scope
+                    ).asByteBuffer().asIntBuffer().get(pixelsArray);
+                    break;
+                }
+                i++;
+            } while (i <= imageIndex && demux_h.WebPAnimDecoderHasMoreFrames(dec) > 0);
+            demux_h.WebPAnimDecoderDelete(dec);
+
+            raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsArray);
+
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }

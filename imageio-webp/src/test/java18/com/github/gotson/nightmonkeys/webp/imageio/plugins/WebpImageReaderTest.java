@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -44,9 +45,10 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
             // Lossless
             new TestData(getClassLoaderResource("/webp/1_webp_ll.webp"), new Dimension(400, 301)),
             // Extended format: Alpha + VP8
-            new TestData(getClassLoaderResource("/webp/1_webp_a.webp"), new Dimension(400, 301))
+            new TestData(getClassLoaderResource("/webp/1_webp_a.webp"), new Dimension(400, 301)),
             // Extendad format: Anim
-//            new TestData(getClassLoaderResource("/webp/animated-webp-supported.webp"), new Dimension(400, 400))
+            new TestData(getClassLoaderResource("/webp/animated-webp-supported.webp"), Collections.nCopies(12, new Dimension(400, 400)), null),
+            new TestData(getClassLoaderResource("/webp/animated-banana.webp"), Collections.nCopies(8, new Dimension(990, 1050)), null)
         );
     }
 
