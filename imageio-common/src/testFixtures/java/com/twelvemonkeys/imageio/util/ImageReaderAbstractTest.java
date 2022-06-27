@@ -844,10 +844,10 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
         reader.dispose();
     }
 
-    @Test
-    public void testGetNumImages() throws IOException {
+    @ParameterizedTest
+    @MethodSource("getTestData")
+    public void testGetNumImages(TestData data) throws IOException {
         ImageReader reader = createReader();
-        TestData data = getTestData().get(0);
         reader.setInput(data.getInputStream());
         int num = -1;
         try {
