@@ -2,6 +2,7 @@ plugins {
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'me.champeau.mrjar' version '0.1' apply(false)
     id 'org.jreleaser' version '1.0.0'
+    id 'com.github.ben-manes.versions' version '0.42.0'
 }
 
 nexusPublishing {
@@ -10,10 +11,27 @@ nexusPublishing {
     }
 }
 
+def isNonStable = { String version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
+    def unstableKeyword = ['ALPHA', 'RC'].any { it -> version.toUpperCase().contains(it) }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    def isStable = stableKeyword || version ==~ regex
+    return unstableKeyword || !isStable
+}
+
 allprojects {
     group = 'com.github.gotson.nightmonkeys'
     repositories {
         mavenCentral()
+    }
+
+    apply plugin: 'com.github.ben-manes.versions'
+    tasks.named("dependencyUpdates").configure {
+        rejectVersionIf {
+            isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)
+        }
+        gradleReleaseChannel = 'current'
+        checkConstraints = true
     }
 }
 
