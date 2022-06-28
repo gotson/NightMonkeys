@@ -1,7 +1,7 @@
 plugins {
-    id 'io.github.gradle-nexus.publish-plugin' version '1.0.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'me.champeau.mrjar' version '0.1' apply(false)
-    id 'org.jreleaser' version '1.0.0-RC2'
+    id 'org.jreleaser' version '1.0.0'
 }
 
 nexusPublishing {

@@ -8,11 +8,11 @@ dependencies {
     implementation project(':imageio-common')
     java18Implementation project(':imageio-common')
 
-    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
 
     testImplementation(testFixtures(project(':imageio-common')))
-    testImplementation 'org.assertj:assertj-core:3.22.0'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.5'
-    testImplementation 'org.mockito:mockito-core:4.4.0'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.36'
+    testImplementation 'org.mockito:mockito-core:4.6.1'
 }
