@@ -16,6 +16,10 @@ java18Test {
     jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
 }
 
+configurations {
+    java18Implementation.extendsFrom(implementation)
+}
+
 def noLibTestTask = tasks.register('noLibTest', Test) {
     description = 'Runs tests without lib'
     group = 'verification'
@@ -37,8 +41,4 @@ def noLibTestTask = tasks.register('noLibTest', Test) {
 
 tasks.named('check') {
     dependsOn(noLibTestTask)
-}
-
-dependencies {
-    java18Implementation 'org.slf4j:slf4j-api:1.7.36'
 }

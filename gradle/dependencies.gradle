@@ -4,15 +4,13 @@ tasks.withType(Test) {
 
 dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.2'
-    java18Implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.2'
-    implementation project(':imageio-common')
-    java18Implementation project(':imageio-common')
-
     implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation project(':imageio-common')
 
     testImplementation(testFixtures(project(':imageio-common')))
     testImplementation 'org.assertj:assertj-core:3.23.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.slf4j:slf4j-simple:1.7.36'
     testImplementation 'org.mockito:mockito-core:4.6.1'
+    testImplementation 'org.apache.commons:commons-collections4:4.4'
 }
