@@ -24,7 +24,7 @@ def noLibTestTask = tasks.register('noLibTest', Test) {
     description = 'Runs tests without lib'
     group = 'verification'
 
-    classpath = jar.destinationDirectory.asFileTree +
+    classpath = files(jar.archiveFile.get().asFile) +
             configurations[sourceSets.java18.runtimeClasspathConfigurationName] +
             configurations[sourceSets.test.runtimeClasspathConfigurationName] +
             sourceSets.test.output
