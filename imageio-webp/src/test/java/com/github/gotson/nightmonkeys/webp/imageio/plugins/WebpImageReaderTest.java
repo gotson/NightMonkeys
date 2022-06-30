@@ -1,41 +1,24 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
-import org.apache.commons.collections4.IteratorUtils;
-import org.junit.jupiter.api.Test;
+import com.github.gotson.nightmonkeys.common.imageio.NoOpImageReaderAbstractTest;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.StreamSupport;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+class WebpImageReaderTest extends NoOpImageReaderAbstractTest<WebpImageReader> {
+    @Override
+    protected List<String> getFormatNames() {
+        return Arrays.asList("webp", "WebP");
+    }
 
-class WebpImageReaderTest {
+    @Override
+    protected List<String> getSuffixes() {
+        return Collections.singletonList("webp");
+    }
 
-    @Test
-    public void testReaderIsNotRegistered() throws IOException {
-        System.out.println("java.version: " + System.getProperty("java.version"));
-        System.out.println("java.library.path: " + System.getProperty("java.library.path"));
-        Enumeration<URL> spiFiles = ClassLoader.getSystemResources("META-INF/services/javax.imageio.spi.ImageReaderSpi");
-        Spliterator<URL> spliterator = Spliterators.spliteratorUnknownSize(IteratorUtils.asIterator(spiFiles), Spliterator.ORDERED);
-        StreamSupport.stream(spliterator, false).forEachOrdered(x -> System.out.println("SPI File: " + x));
-
-        ArrayList<ImageReader> readers = new ArrayList<>();
-        ImageIO.getImageReadersBySuffix("webp").forEachRemaining(readers::add);
-
-        assertThat(readers).isEmpty();
-
-        ImageIO.getImageReadersByMIMEType("image/webp").forEachRemaining(readers::add);
-
-        assertThat(readers).isEmpty();
-
-        ImageIO.getImageReadersByFormatName("webp").forEachRemaining(readers::add);
-
-        assertThat(readers).isEmpty();
+    @Override
+    protected List<String> getMIMETypes() {
+        return Collections.singletonList("image/webp");
     }
 }
