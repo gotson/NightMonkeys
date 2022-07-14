@@ -41,7 +41,7 @@ publishing {
                 licenses {
                     license {
                         name = 'MIT'
-                        url = 'https://github.com/gotson/NightMonkeys/LICENSE.md'
+                        url = 'https://github.com/gotson/NightMonkeys/blob/main/LICENSE'
                     }
                 }
                 developers {
