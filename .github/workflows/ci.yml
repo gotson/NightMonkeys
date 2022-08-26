@@ -30,7 +30,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: brew install webp jpeg-xl
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '18'
@@ -96,7 +96,7 @@ jobs:
       - name: Update version in gradle.properties
         run: echo "version=${{ needs.version.outputs.version_next }}" > gradle.properties
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '18'
