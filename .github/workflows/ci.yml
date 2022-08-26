@@ -47,7 +47,7 @@ jobs:
             jdks
       - name: Upload Unit Test Reports
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: test-reports-${{ matrix.os }}
           path: '**/build/reports/tests/'
