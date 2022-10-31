@@ -26,6 +26,9 @@ jobs:
     name: Test ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
       - name: Install libraries for Linux/Mac
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: brew install webp jpeg-xl
@@ -37,7 +40,7 @@ jobs:
       - name: Gradle build
         uses: gradle/gradle-build-action@v2
         env:
-          LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib
+          LD_LIBRARY_PATH: /home/linuxbrew/.linuxbrew/lib
           JAVA_LIBRARY_PATH: /usr/local/lib/
         with:
           arguments: build
@@ -63,6 +66,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
       - name: Install svu
         run: brew install caarlos0/tap/svu
       - name: Compute next version by dispatch
