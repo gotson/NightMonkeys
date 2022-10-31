@@ -4,13 +4,13 @@
 
 # NightMonkeys
 
-A collection of ImageIO plugins, adding support for newer image formats. NightMonkeys uses the newer Foreign Linker API available in JDK 18 to access native libraries.
+A collection of ImageIO plugins, adding support for newer image formats. NightMonkeys uses the newer Foreign Linker API available in JDK 19 to access native libraries.
 
 ## How it works
 
 NightMonkeys plugins are released as multi-release JARs:
-- with Java < 18, a no-op version of the plugin will unregister itself on load, basically doing nothing
-- with Java 18+, the plugin will be available
+- with Java < 19, a no-op version of the plugin will unregister itself on load, basically doing nothing
+- with Java 19+, the plugin will be available
 
 This lets you add the dependencies in your project whatever the JDK used, and still enable the plugin at runtime if the necessary JDK is used. 
 
@@ -32,7 +32,7 @@ In order for the plugins to run properly, you will need to:
 - Run Java with the following options:
 
 ```
---add-modules jdk.incubator.foreign --enable-native-access=ALL-UNNAMED
+--enable-preview --enable-native-access=ALL-UNNAMED
 ```
 
 - Make sure the path to the directory containing the native libraries is contained in the Java system
@@ -40,7 +40,7 @@ In order for the plugins to run properly, you will need to:
   also [this](https://stackoverflow.com/questions/20038789/default-java-library-path)).
   - For Linux, normally it works fine when installed from a package manager. You can add the libraries' path to
     the `LD_LIBRARY_PATH` environment variable.
-  - For Mac, if using HomeBrew, you will need to set `JAVA_LIBRARY_PATH` to `/usr/local/lib/`.
+  - For Mac, if using HomeBrew, you will need to set `JAVA_LIBRARY_PATH` to `/usr/local/lib/` or `/opt/homebrew/lib/`.
 
 ## Installation
 

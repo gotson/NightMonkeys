@@ -10,7 +10,7 @@ You will also need a version of Java to run Gradle. Gradle is configured to use 
 
 There are 3 test tasks per project:
 - `test`: will test the Java 8 classes
-- `java18Test`: will test the Java 18 classes
-- `noLibTest`: will test the Java 18 classes, but without the path to the libraries.
+- `java19Test`: will test the Java 19 classes
+- `noLibTest`: will test the Java 19 classes, but without the path to the libraries.
 
 Run `./gradlew check` to run them all.

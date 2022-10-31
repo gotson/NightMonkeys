@@ -1,12 +1,16 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
+import com.github.gotson.nightmonkeys.webp.WebP;
+import com.github.gotson.nightmonkeys.webp.WebpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.spi.ServiceRegistry;
 import javax.imageio.stream.ImageInputStream;
+import java.io.IOException;
 import java.util.Locale;
 
 public class WebpImageReaderSpi extends ImageReaderSpi {
@@ -19,6 +23,8 @@ public class WebpImageReaderSpi extends ImageReaderSpi {
     private static final String[] suffixes = {"webp"};
     private static final String[] MIMETypes = {"image/webp"};
     private static final String[] writerSpiNames = null;
+
+    private boolean libLoaded = false;
 
     /**
      * Construct the SPI. Boilerplate.
@@ -45,16 +51,44 @@ public class WebpImageReaderSpi extends ImageReaderSpi {
             null);
     }
 
+    private boolean loadLibrary() {
+        if (!libLoaded) {
+            try {
+                LOGGER.info("Loaded libwebp: decoder v{}, demux v{}", WebP.getDecoderVersion(), WebP.getDemuxVersion());
+                libLoaded = true;
+            } catch (UnsatisfiedLinkError e) {
+                LOGGER.warn("Could not load libwebp, plugin will be disabled. {}", e.getMessage());
+            } catch (NoClassDefFoundError e) {
+                LOGGER.warn("Missing Foreign Linker API, plugin will be disabled. Try adding JVM arguments: --enable-preview");
+            } catch (ExceptionInInitializerError e) {
+                LOGGER.warn("Native access is disabled, plugin will be disabled. Try adding JVM arguments: --enable-native-access=ALL-UNNAMED");
+            }
+        }
+        return libLoaded;
+    }
+
     @Override
     public void onRegistration(ServiceRegistry registry, Class<?> category) {
-        LOGGER.info("This plugin only supports Java 19, plugin will be disabled");
-        registry.deregisterServiceProvider(this);
+        if (!loadLibrary()) {
+            registry.deregisterServiceProvider(this);
+        }
         super.onRegistration(registry, category);
     }
 
     @Override
-    public boolean canDecodeInput(Object input) {
-        return false;
+    public boolean canDecodeInput(Object input) throws IOException {
+        if (!(input instanceof ImageInputStream)) {
+            input = ImageIO.createImageInputStream(input);
+        }
+        if (input == null) {
+            return false;
+        }
+
+        try {
+            return WebP.canDecode((ImageInputStream) input);
+        } catch (WebpException e) {
+            throw new IOException(e);
+        }
     }
 
     @Override

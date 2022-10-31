@@ -1,23 +1,23 @@
 apply plugin: 'me.champeau.mrjar'
 
 multiRelease {
-    targetVersions 8, 18
+    targetVersions 8, 19
 }
 
-compileJava18Java {
-    options.compilerArgs += ["--add-modules", "jdk.incubator.foreign"]
+compileJava19Java {
+    options.compilerArgs += ["--enable-preview"]
 }
 
-compileJava18TestJava {
-    options.compilerArgs += ["--add-modules", "jdk.incubator.foreign"]
+compileJava19TestJava {
+    options.compilerArgs += ["--enable-preview"]
 }
 
-java18Test {
-    jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+java19Test {
+    jvmArgs += ["--enable-preview", "--enable-native-access=ALL-UNNAMED"]
 }
 
 configurations {
-    java18Implementation.extendsFrom(implementation)
+    java19Implementation.extendsFrom(implementation)
 }
 
 def noLibTestTask = tasks.register('noLibTest', Test) {
@@ -25,15 +25,15 @@ def noLibTestTask = tasks.register('noLibTest', Test) {
     group = 'verification'
 
     classpath = files(jar.archiveFile.get().asFile) +
-            configurations[sourceSets.java18.runtimeClasspathConfigurationName] +
+            configurations[sourceSets.java19.runtimeClasspathConfigurationName] +
             configurations[sourceSets.test.runtimeClasspathConfigurationName] +
             sourceSets.test.output
     testClassesDirs = sourceSets.test.output.classesDirs
 
-    jvmArgs += ["--add-modules", "jdk.incubator.foreign", "--enable-native-access=ALL-UNNAMED"]
+    jvmArgs += ["--enable-preview", "--enable-native-access=ALL-UNNAMED"]
     systemProperty "java.library.path", ''
     javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(18)
+        languageVersion = JavaLanguageVersion.of(19)
     }
 
     dependsOn jar
