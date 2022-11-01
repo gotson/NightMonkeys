@@ -84,9 +84,9 @@ jobs:
       - name: Set Versions
         id: versions
         run: |
-          echo "::set-output name=version_current::`svu --pattern="v[0-9]*" --strip-prefix current`"
-          echo "::set-output name=version_next::${{ env.VERSION_NEXT_SUFFIX }}"
-          [[ `svu --pattern="v[0-9]*" --strip-prefix current` != ${{ env.VERSION_NEXT }} ]] && echo "::set-output name=should_release::true" || echo
+          echo "version_current=`svu --pattern="v[0-9]*" --strip-prefix current`" >> $GITHUB_OUTPUT
+          echo "version_next=${{ env.VERSION_NEXT_SUFFIX }}" >> $GITHUB_OUTPUT
+          [[ `svu --pattern="v[0-9]*" --strip-prefix current` != ${{ env.VERSION_NEXT }} ]] && echo "should_release=true" >> $GITHUB_OUTPUT || echo
 
   release:
     needs: [ version, test ]
