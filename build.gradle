@@ -55,6 +55,7 @@ jreleaser {
             changelog {
                 formatted = 'ALWAYS'
                 preset = 'conventional-commits'
+                skipMergeCommits = true
                 links = true
                 format = '- {{commitShortHash}} {{commitTitle}}'
                 contributors {
@@ -69,6 +70,17 @@ jreleaser {
                     key = 'perf'
                     labels = ['perf']
                     order = 25
+                }
+            }
+
+            issues {
+                enabled = true
+                comment = '🎉 This issue has been resolved in `{{tagName}}` ([Release Notes]({{releaseNotesUrl}}))'
+                applyMilestone = 'ALWAYS'
+                label {
+                    name = 'released'
+                    description = 'Issue has been released'
+                    color = '#ededed'
                 }
             }
         }
