@@ -44,6 +44,10 @@ subprojects {
 }
 
 jreleaser {
+    project {
+        description = 'NightMonkeys :: ImageIO'
+        copyright = 'Gauthier Roebroeck'
+    }
     release {
         github {
             discussionCategoryName = 'Announcements'
