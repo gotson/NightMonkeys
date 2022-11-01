@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-22.04, macos-12 ]
       fail-fast: false
     name: Test ${{ matrix.os }}
     steps:
@@ -30,7 +30,7 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
       - name: Install libraries for Linux/Mac
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+        if: contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos')
         run: brew install webp jpeg-xl
       - name: Setup Java
         uses: actions/setup-java@v3
