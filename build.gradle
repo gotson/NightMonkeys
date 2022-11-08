@@ -57,7 +57,7 @@ jreleaser {
                 preset = 'conventional-commits'
                 skipMergeCommits = true
                 links = true
-                format = '- {{commitShortHash}} {{commitTitle}}'
+                format = '- {{commitTitle}} ({{commitShortHash}})'
                 contributors {
                     enabled = false
                 }
