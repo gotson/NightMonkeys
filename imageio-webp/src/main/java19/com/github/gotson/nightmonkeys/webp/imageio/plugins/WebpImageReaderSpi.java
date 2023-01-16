@@ -58,10 +58,12 @@ public class WebpImageReaderSpi extends ImageReaderSpi {
                 libLoaded = true;
             } catch (UnsatisfiedLinkError e) {
                 LOGGER.warn("Could not load libwebp, plugin will be disabled. {}", e.getMessage());
-            } catch (NoClassDefFoundError e) {
+            } catch (NoClassDefFoundError | UnsupportedClassVersionError e) {
                 LOGGER.warn("Missing Foreign Linker API, plugin will be disabled. Try adding JVM arguments: --enable-preview");
             } catch (ExceptionInInitializerError e) {
                 LOGGER.warn("Native access is disabled, plugin will be disabled. Try adding JVM arguments: --enable-native-access=ALL-UNNAMED");
+            } catch (Exception e) {
+                LOGGER.warn("Unknown error", e);
             }
         }
         return libLoaded;
@@ -70,6 +72,7 @@ public class WebpImageReaderSpi extends ImageReaderSpi {
     @Override
     public void onRegistration(ServiceRegistry registry, Class<?> category) {
         if (!loadLibrary()) {
+            LOGGER.info("Deregistering service provider");
             registry.deregisterServiceProvider(this);
         }
         super.onRegistration(registry, category);
