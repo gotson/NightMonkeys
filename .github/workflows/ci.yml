@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '18'
+          java-version: '19'
       - name: Gradle build
         uses: gradle/gradle-build-action@v2
         env:
@@ -112,7 +112,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '18'
+          java-version: '19'
       - name: Nexus publish
         uses: gradle/gradle-build-action@v2
         env:
