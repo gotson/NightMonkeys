@@ -73,6 +73,11 @@ jreleaser {
                     labels = ['perf']
                     order = 25
                 }
+                labeler {
+                    label = 'perf'
+                    title = 'regex:^(?:perf(?:\\(.*\\))?!?):\\s.*'
+                    order = 120
+                }
             }
 
             issues {
