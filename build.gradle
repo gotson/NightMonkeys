@@ -78,6 +78,7 @@ jreleaser {
                     title = 'regex:^(?:perf(?:\\(.*\\))?!?):\\s.*'
                     order = 120
                 }
+                extraProperties.put('categorizeScopes', true)
             }
 
             issues {
