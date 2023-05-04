@@ -59,7 +59,6 @@ runtimeOnly("com.github.gotson.nightmonkeys:imageio-{plugin}:{version}")
 ### Maven
 
 ```xml
-
 <dependency>
   <groupId>com.github.gotson.nightmonkeys</groupId>
   <artifactId>imageio-{plugin}</artifactId>
