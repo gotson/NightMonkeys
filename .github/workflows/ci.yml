@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
     name: Test ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Homebrew
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
@@ -72,7 +72,7 @@ jobs:
       version_next: ${{ steps.versions.outputs.version_next }}
       should_release: ${{ steps.versions.outputs.should_release }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Homebrew
@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.version.outputs.should_release
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Display versions
