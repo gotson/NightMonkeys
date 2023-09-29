@@ -235,7 +235,7 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
 
             try {
                 image = reader.read(i);
-                File tempActual = File.createTempFile("junit-", ".png");
+                File tempActual = File.createTempFile("junit-testRead-", ".png");
                 System.out.println("tempActual.getAbsolutePath(): " + tempActual.getAbsolutePath());
                 ImageIO.write(image, "PNG", tempActual);
             } catch (Exception e) {
@@ -522,10 +522,10 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
                     Assertions.assertEquals((expectedRGB >> 8) & 0xff, (actualRGB >> 8) & 0xff, 5);
                     Assertions.assertEquals(expectedRGB & 0xff, actualRGB & 0xff, 5);
                 } catch (AssertionError e) {
-                    File tempExpected = File.createTempFile("junit-expected-", ".png");
+                    File tempExpected = File.createTempFile("junit-expected-subsample-", ".png");
                     System.err.println("tempExpected.getAbsolutePath(): " + tempExpected.getAbsolutePath());
                     ImageIO.write(expected, "PNG", tempExpected);
-                    File tempActual = File.createTempFile("junit-actual-", ".png");
+                    File tempActual = File.createTempFile("junit-actual-subsample-", ".png");
                     System.err.println("tempActual.getAbsolutePath(): " + tempActual.getAbsolutePath());
                     ImageIO.write(actual, "PNG", tempActual);
 
@@ -606,13 +606,12 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
             try {
                 assertImageDataEquals("Images differ", roi, image);
             } catch (AssertionError e) {
-                File tempRoi = File.createTempFile("junit-roi-", ".png");
+                File tempRoi = File.createTempFile("junit-subimage-roi-", ".png");
                 System.err.println("tempRoi.getAbsolutePath(): " + tempRoi.getAbsolutePath());
                 ImageIO.write(roi, "PNG", tempRoi);
 
-                File tempExpected = File.createTempFile("junit-expected-", ".png");
+                File tempExpected = File.createTempFile("junit-subimage-expected-", ".png");
                 System.err.println("tempExpected.getAbsolutePath(): " + tempExpected.getAbsolutePath());
-
                 Graphics2D graphics = original.createGraphics();
                 try {
                     graphics.setColor(Color.RED);
@@ -620,9 +619,9 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
                 } finally {
                     graphics.dispose();
                 }
-
                 ImageIO.write(original, "PNG", tempExpected);
-                File tempActual = File.createTempFile("junit-actual-", ".png");
+
+                File tempActual = File.createTempFile("junit-subimage-actual-", ".png");
                 System.err.println("tempActual.getAbsolutePath(): " + tempActual.getAbsolutePath());
                 ImageIO.write(image, "PNG", tempActual);
 
@@ -1401,9 +1400,9 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
                 // The problem is that the checkReadParamBandSettings throws IllegalArgumentException, which seems more appropriate...
                 String message = expected.getMessage().toLowerCase();
                 if (!(message.contains("destination") || message.contains("band size") || // For JDK classes
-                    ((destination.getType() == BufferedImage.TYPE_BYTE_BINARY ||
+                      ((destination.getType() == BufferedImage.TYPE_BYTE_BINARY ||
                         destination.getType() == BufferedImage.TYPE_BYTE_INDEXED) &&
-                        message.contains("indexcolormodel")))) {
+                       message.contains("indexcolormodel")))) {
                     failBecause(
                         "Wrong message: " + message + " for type " + destination.getType(), expected
                     );
@@ -1435,7 +1434,7 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
                 // TODO: This is thrown by ImageReader.getDestination. But are we happy with that?
                 String message = expected.getMessage().toLowerCase();
                 if (!(message.contains("destination") && message.contains("type")
-                    || message.contains("num source & dest bands differ"))) {
+                      || message.contains("num source & dest bands differ"))) {
                     // Allow this to bubble up, due to a bug in the Sun PNGImageReader
                     throw expected;
                 }
@@ -1574,10 +1573,14 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
                 int numImages = reader.getNumImages(true);
 
                 for (int i = 0; i < numImages; i++) {
-                    int numThumbnails = reader.getNumThumbnails(0);
+                    int numThumbnails = reader.getNumThumbnails(i);
 
                     for (int t = 0; t < numThumbnails; t++) {
-                        BufferedImage thumbnail = reader.readThumbnail(0, t);
+                        BufferedImage thumbnail = reader.readThumbnail(i, t);
+
+                        File tempActual = File.createTempFile("junit-testReadThumbnails-" + i + "." + t + "-", ".png");
+                        System.out.println("tempActual.getAbsolutePath(): " + tempActual.getAbsolutePath());
+                        ImageIO.write(thumbnail, "PNG", tempActual);
 
                         Assertions.assertNotNull(thumbnail);
                     }
@@ -1686,8 +1689,8 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
                 Assertions.assertNotNull(resultImage);
             } catch (ImagingOpException e) {
                 Assertions.fail(e.getMessage() + ".\n\t"
-                    + originalImage + "\n\t"
-                    + testData);
+                                + originalImage + "\n\t"
+                                + testData);
             }
         }
 
