@@ -73,20 +73,25 @@ public class Heif {
             var data = arena.allocate(heifData.length);
             data.copyFrom(MemorySegment.ofArray(heifData));
 
-            var heifContext = heif_h.heif_context_alloc();
+            MemorySegment heifContext = null;
+            MemorySegment handle = null;
             try {
+                heif_h.heif_init(arena, MemorySegment.NULL);
+                heifContext = heif_h.heif_context_alloc();
                 checkError(heif_h.heif_context_read_from_memory_without_copy(arena, heifContext, data, heifData.length, MemorySegment.NULL));
                 var frameCount = heif_h.heif_context_get_number_of_top_level_images(heifContext);
                 var handlePtr = arena.allocate(C_POINTER);
                 checkError(heif_h.heif_context_get_primary_image_handle(arena, heifContext, handlePtr));
-                var handle = handlePtr.get(C_POINTER, 0);
+                handle = handlePtr.get(C_POINTER, 0);
                 var width = heif_h.heif_image_handle_get_width(handle);
                 var height = heif_h.heif_image_handle_get_height(handle);
                 var hasAlpha = heif_h.heif_image_handle_has_alpha_channel(handle) > 0;
 
                 return new BasicInfo(width, height, hasAlpha, null, frameCount);
             } finally {
-                heif_h.heif_context_free(heifContext);
+                if (heifContext != null) heif_h.heif_context_free(heifContext);
+                if (handle != null) heif_h.heif_image_handle_release(handle);
+                heif_h.heif_deinit();
             }
         } catch (IOException e) {
             throw new HeifException("Couldn't get stream content", e);
@@ -102,8 +107,11 @@ public class Heif {
             var data = arena.allocate(heifData.length);
             data.copyFrom(MemorySegment.ofArray(heifData));
 
-            var heifContext = heif_h.heif_context_alloc();
+            MemorySegment heifContext = null;
+            MemorySegment handle = null;
             try {
+                heif_h.heif_init(arena, MemorySegment.NULL);
+                heifContext = heif_h.heif_context_alloc();
                 checkError(heif_h.heif_context_read_from_memory_without_copy(arena, heifContext, data, heifData.length, MemorySegment.NULL));
 
                 var imageIds = arena.allocateArray(C_INT, info.frameCount());
@@ -112,7 +120,7 @@ public class Heif {
 
                 var handlePtr = arena.allocate(C_POINTER);
                 checkError(heif_h.heif_context_get_image_handle(arena, heifContext, imageId, handlePtr));
-                var handle = handlePtr.get(C_POINTER, 0);
+                handle = handlePtr.get(C_POINTER, 0);
                 var width = heif_h.heif_image_handle_get_width(handle);
                 var height = heif_h.heif_image_handle_get_height(handle);
 
@@ -136,7 +144,6 @@ public class Heif {
                 var ssOffX = param != null ? param.getSubsamplingXOffset() : 0;
                 var ssOffY = param != null ? param.getSubsamplingYOffset() : 0;
 
-                // heif_image_crop doesn't seem to work and produces garbage image - handling subimage manually
                 var offset = 0;
                 for (int row = sourceRegion.y + ssOffY; row < sourceRegion.y + sourceRegion.height; row += ssY) {
                     if (offset >= pixelsRaster.length) break;
@@ -144,7 +151,6 @@ public class Heif {
                         if (offset >= pixelsRaster.length) break;
                         int pixel = pixelsArray[(row * width) + col];
                         pixelsRaster[offset++] = pixel;
-//                        pixelsBuffer.get(pixelsRaster, offset++, 1);
 
                     }
                 }
@@ -156,7 +162,9 @@ public class Heif {
                     raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsRaster);
                 }
             } finally {
-                heif_h.heif_context_free(heifContext);
+                if (heifContext != null) heif_h.heif_context_free(heifContext);
+                if (handle != null) heif_h.heif_image_handle_release(handle);
+                heif_h.heif_deinit();
             }
 
         } catch (IOException e) {
