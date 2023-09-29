@@ -2,3 +2,4 @@ rootProject.name = 'NightMonkeys'
 include(':imageio-common')
 include(':imageio-jxl')
 include(':imageio-webp')
+include(':imageio-heif')

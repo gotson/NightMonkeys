@@ -19,10 +19,11 @@ This lets you add the dependencies in your project whatever the JDK used, and st
 
 ## Supported formats
 
-| Plugin               | Format                                           | Read | Write | Metadata | TwelveMonkeys Tests | Notes                              |
-|----------------------|--------------------------------------------------|------|-------|----------|---------------------|------------------------------------|
-| [jxl](imageio-jxl)   | [Jpeg XL](https://jpeg.org/jpegxl/)              | ✔    | -     | -        | -                   |                                    |
-| [webp](imageio-webp) | [WebP](https://developers.google.com/speed/webp) | ✔    | -     | -        | ✔                   | See limitations in the plugin page |
+| Plugin               | Format                                                                                                               | Read | Write | Metadata | TwelveMonkeys Tests | Notes                              |
+|----------------------|----------------------------------------------------------------------------------------------------------------------|------|-------|----------|---------------------|------------------------------------|
+| [jxl](imageio-jxl)   | [Jpeg XL](https://jpeg.org/jpegxl/)                                                                                  | ✔    | -     | -        | -                   |                                    |
+| [webp](imageio-webp) | [WebP](https://developers.google.com/speed/webp)                                                                     | ✔    | -     | -        | ✔                   | See limitations in the plugin page |
+| [heif](imageio-heif) | [HEIF](https://en.wikipedia.org/wiki/High_Efficiency_Image_File_Format) & [AVIF](https://en.wikipedia.org/wiki/AVIF) | ✔    | -     | -        | ✔                   | See limitations in the plugin page |
 
 When possible, the plugins will use the extensive test suite
 from [TwelveMonkeys](https://github.com/haraldk/TwelveMonkeys), which covers much more test cases than simple
