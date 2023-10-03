@@ -14,6 +14,8 @@ import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
+import java.nio.ByteOrder;
 
 import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
 import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.C_INT;
@@ -28,6 +30,8 @@ import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.heif_get_ver
  */
 public class Heif {
     private static final Logger LOGGER = LoggerFactory.getLogger(Heif.class);
+
+    private static final ValueLayout.OfInt pixelLayout = C_INT.withOrder(ByteOrder.BIG_ENDIAN);
 
     public static boolean isLibVersionSupported() {
         // heif_get_version_number_minor() does not return the correct value
@@ -116,7 +120,7 @@ public class Heif {
 
                 var imageIds = arena.allocateArray(C_INT, info.frameCount());
                 heif_h.heif_context_get_list_of_top_level_image_IDs(heifContext, imageIds, info.frameCount());
-                var imageId = imageIds.get(C_INT, imageIndex * 4L);
+                var imageId = imageIds.get(C_INT, imageIndex * C_INT.byteSize());
 
                 var handlePtr = arena.allocate(C_POINTER);
                 checkError(heif_h.heif_context_get_image_handle(arena, heifContext, imageId, handlePtr));
@@ -128,13 +132,7 @@ public class Heif {
                 checkError(heif_h.heif_decode_image(arena, handle, imagePtr, heif_colorspace_RGB(), heif_chroma_interleaved_RGBA(), MemorySegment.NULL));
                 var image = imagePtr.get(C_POINTER, 0);
 
-
                 var pixels = heif_h.heif_image_get_plane_readonly(image, heif_channel_interleaved(), MemorySegment.NULL);
-
-                var imageSizeBytes = width * height * 4;
-                var pixelsBuffer = pixels.asSlice(0, imageSizeBytes).asByteBuffer().asIntBuffer();
-                var pixelsArray = new int[width * height];
-                pixelsBuffer.get(pixelsArray);
                 var pixelsRaster = new int[Math.min(width, raster.getWidth()) * Math.min(height, raster.getHeight())];
 
                 var sourceRegion = param != null ? param.getSourceRegion() : null;
@@ -149,9 +147,8 @@ public class Heif {
                     if (offset >= pixelsRaster.length) break;
                     for (int col = sourceRegion.x + ssOffX; col < sourceRegion.x + sourceRegion.width; col += ssX) {
                         if (offset >= pixelsRaster.length) break;
-                        int pixel = pixelsArray[(row * width) + col];
+                        int pixel = pixels.get(pixelLayout, (((long) row * width) + col) * pixelLayout.byteSize());
                         pixelsRaster[offset++] = pixel;
-
                     }
                 }
 
