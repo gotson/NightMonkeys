@@ -26,9 +26,6 @@ import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-
-import static java.awt.color.ColorSpace.CS_sRGB;
-
 public class HeifImageReader extends ImageReaderBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeifImageReader.class);
@@ -46,19 +43,12 @@ public class HeifImageReader extends ImageReaderBase {
 
             try {
                 info = Heif.getBasicInfo((ImageInputStream) input);
-                if (info.iccProfile() != null) {
-                    ICC_ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
-                    imageTypes = List.of(
-                        ImageTypeSpecifiers.createPacked(colorSpace, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, DataBuffer.TYPE_INT, false),
-                        ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
-                    );
-                } else {
-                    imageTypes = List.of(
-                        // RGBA
-                        ImageTypeSpecifiers.createPacked(ColorSpace.getInstance(ColorSpace.CS_sRGB), 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff, DataBuffer.TYPE_INT,
-                            false)
-                    );
-                }
+
+                ColorSpace colorSpace = info.iccProfile() != null ? ColorSpaces.createColorSpace(info.iccProfile()) : ColorSpace.getInstance(ColorSpace.CS_sRGB);
+                imageTypes = List.of(
+                    // RGBA
+                    ImageTypeSpecifiers.createPacked(colorSpace, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff, DataBuffer.TYPE_INT, false)
+                );
             } catch (HeifException e) {
                 throw new IOException(e);
             }
