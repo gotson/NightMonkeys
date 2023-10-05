@@ -1,6 +1,6 @@
 package com.github.gotson.nightmonkeys.jxl;
 
-import java.awt.color.ICC_ColorSpace;
+import java.awt.color.ICC_Profile;
 
 public record BasicInfo(
     int width,
@@ -8,5 +8,6 @@ public record BasicInfo(
     boolean hasAlpha,
     boolean hasAnimation,
     int colorChannels,
-    ICC_ColorSpace iccSpace) {
+    ICC_Profile iccProfile,
+    int frameCount) {
 }

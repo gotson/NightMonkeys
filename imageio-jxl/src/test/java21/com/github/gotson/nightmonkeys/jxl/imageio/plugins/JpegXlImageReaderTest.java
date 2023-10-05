@@ -1,60 +1,45 @@
 package com.github.gotson.nightmonkeys.jxl.imageio.plugins;
 
-import com.github.gotson.nightmonkeys.common.imageio.ImageReaderBaseTest;
-import org.junit.jupiter.api.Test;
+import com.twelvemonkeys.imageio.util.ImageReaderAbstractTest;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
+import javax.imageio.spi.ImageReaderSpi;
+import java.awt.Dimension;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static java.util.Arrays.asList;
 
-class JpegXlImageReaderTest extends ImageReaderBaseTest<JxlImageReader> {
+class JpegXlImageReaderTest extends ImageReaderAbstractTest<JxlImageReader> {
 
-    @Test
-    public void testReaderIsRegistered() {
-        ArrayList<ImageReader> readers = new ArrayList<>();
-        ImageIO.getImageReadersBySuffix("jxl").forEachRemaining(readers::add);
-
-        assertThat(readers)
-            .isNotEmpty()
-            .hasAtLeastOneElementOfType(JxlImageReader.class);
-
-
-        readers.clear();
-        ImageIO.getImageReadersByMIMEType("image/jxl").forEachRemaining(readers::add);
-
-        assertThat(readers)
-            .isNotEmpty()
-            .hasAtLeastOneElementOfType(JxlImageReader.class);
-
-
-        readers.clear();
-        ImageIO.getImageReadersByFormatName("jxl").forEachRemaining(readers::add);
-
-        assertThat(readers)
-            .isNotEmpty()
-            .hasAtLeastOneElementOfType(JxlImageReader.class);
+    @Override
+    protected ImageReaderSpi createProvider() {
+        return new JxlImageReaderSpi();
     }
 
-    @Test
-    public void testRead() throws IOException {
-        BufferedImage img = getReader("/hills.jxl").read(0, null);
-        assertThat(img.getWidth()).isEqualTo(610);
-        assertThat(img.getHeight()).isEqualTo(407);
+    @Override
+    protected List<TestData> getTestData() {
+        return asList(
+            // JPEG XL image, 610x407, lossy, 8-bit RGB+Alpha
+            new TestData(getClassLoaderResource("/jxl/hills.jxl"), new Dimension(610, 407)),
+            // JPEG XL image, 1386x924, (possibly) lossless, 10-bit RGB+Alpha
+            // Orientation: 7 (Anti-Transposed) => we need to invert the width and height
+            new TestData(getClassLoaderResource("/jxl/island.jxl"), new Dimension(924, 1386)),
+            // Animation, 12 frames
+            new TestData(getClassLoaderResource("/jxl/animation.jxl"), new Dimension(256, 256))
+        );
     }
 
-    @Test
-    public void testCanReuseReader() throws Exception {
-        ImageReader reader = getReader("/hills.jxl");
-        BufferedImage rgbImg = reader.read(0, null);
+    @Override
+    protected List<String> getFormatNames() {
+        return List.of("jxl");
+    }
 
-        reader.setInput(
-            ImageIO.createImageInputStream(getClassLoaderResourceAsFile("/island.jxl")));
-        BufferedImage bwImg = reader.read(0, null);
+    @Override
+    protected List<String> getSuffixes() {
+        return List.of("jxl");
+    }
 
-        assertThat(rgbImg.getRGB(256, 256)).isNotEqualTo(bwImg.getRGB(256, 256));
+    @Override
+    protected List<String> getMIMETypes() {
+        return List.of("image/jxl");
     }
 }

@@ -8,3 +8,10 @@
 
 - Homebrew (Mac & Linux): `brew install jpeg-xl`
 
+## Features
+
+- Decode Jpeg XL images
+
+## Limitations
+
+- Animations are not supported. A single image is returned.

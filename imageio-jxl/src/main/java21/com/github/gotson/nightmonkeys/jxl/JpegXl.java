@@ -11,20 +11,20 @@ import com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageReadParam;
 import javax.imageio.stream.ImageInputStream;
-import java.awt.color.ICC_ColorSpace;
+import java.awt.Rectangle;
 import java.awt.color.ICC_Profile;
-import java.awt.image.BufferedImage;
-import java.awt.image.ComponentColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
+import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_CHAR;
 import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_INT;
 import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_LONG;
 
@@ -33,7 +33,9 @@ import static com.github.gotson.nightmonkeys.jxl.lib.panama.decode_h.C_LONG;
  */
 public class JpegXl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JpegXl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JpegXl.class);
+
+    private static final ValueLayout.OfInt pixelLayout = C_INT.withOrder(ByteOrder.BIG_ENDIAN);
 
     public static boolean canDecode(final ImageInputStream stream) throws JxlException {
         try (var arena = Arena.ofConfined()) {
@@ -69,7 +71,9 @@ public class JpegXl {
                     throw new JxlException("JxlDecoderCreate failed");
                 }
 
-                decode_h.JxlDecoderSetKeepOrientation(dec, 1);
+                // we want the image with its transformations
+                // this will return the correct width/height
+                decode_h.JxlDecoderSetKeepOrientation(dec, 0);
 
                 if (JxlDecoderStatus.JXL_DEC_SUCCESS != JxlDecoderStatus.fromId(
                     decode_h.JxlDecoderSubscribeEvents(dec, JxlDecoderStatus.JXL_DEC_BASIC_INFO.intValue() | JxlDecoderStatus.JXL_DEC_COLOR_ENCODING.intValue()))) {
@@ -125,7 +129,6 @@ public class JpegXl {
                 var iccData = new byte[iccProfile.remaining()];
                 iccProfile.get(iccData);
                 var icc = ICC_Profile.getInstance(iccData);
-                var iccSpace = new ICC_ColorSpace(icc);
 
                 return new BasicInfo(
                     JxlBasicInfo.xsize$get(info),
@@ -133,7 +136,8 @@ public class JpegXl {
                     JxlBasicInfo.alpha_bits$get(info) > 0,
                     JxlBasicInfo.have_animation$get(info) > 0,
                     JxlBasicInfo.num_color_channels$get(info),
-                    iccSpace
+                    icc,
+                    1 // no support for animations
                 );
 
             } catch (IOException e) {
@@ -144,7 +148,7 @@ public class JpegXl {
         }
     }
 
-    public static BufferedImage decode(final ImageInputStream stream, final BasicInfo info) throws JxlException {
+    public static void decode(final ImageInputStream stream, final BasicInfo info, WritableRaster raster, ImageReadParam param, int imageIndex) throws JxlException {
         var dec = decode_h.JxlDecoderCreate(MemorySegment.NULL.NULL);
 
         try {
@@ -158,6 +162,9 @@ public class JpegXl {
                 throw new JxlException("JxlDecoderSubscribeEvents failed");
             }
 
+            // we want the image with its transformations
+            decode_h.JxlDecoderSetKeepOrientation(dec, 0);
+
             try (var arena = Arena.ofConfined()) {
                 stream.mark();
                 var jxlData = byteArrayFromStream(stream);
@@ -169,12 +176,12 @@ public class JpegXl {
 
                 var dataType = JxlDataType.JXL_TYPE_UINT8;
                 var format = JxlPixelFormat.allocate(arena);
-                JxlPixelFormat.num_channels$set(format, info.colorChannels() + (info.hasAlpha() ? 1 : 0));
+                JxlPixelFormat.num_channels$set(format, 4);
                 JxlPixelFormat.data_type$set(format, dataType.intValue());
-                JxlPixelFormat.endianness$set(format, JxlEndianness.JXL_NATIVE_ENDIAN.intValue());
+                JxlPixelFormat.endianness$set(format, JxlEndianness.JXL_BIG_ENDIAN.intValue());
                 JxlPixelFormat.align$set(format, 0);
 
-                ByteBuffer pixels = ByteBuffer.allocate(0);
+                MemorySegment pixels = MemorySegment.NULL;
 
                 while (true) {
                     var status = JxlDecoderStatus.fromId(decode_h.JxlDecoderProcessInput(dec));
@@ -199,9 +206,9 @@ public class JpegXl {
                                 "Invalid out buffer size. Got: " + bufferSizeBytesValue + ", expected: " + bufferSizeExpected);
                         }
 
-                        pixels = ByteBuffer.allocateDirect(bufferSizeBytesValue);
+                        pixels = arena.allocateArray(C_CHAR, bufferSizeBytesValue);
                         if (JxlDecoderStatus.JXL_DEC_SUCCESS !=
-                            JxlDecoderStatus.fromId(decode_h.JxlDecoderSetImageOutBuffer(dec, format, MemorySegment.ofBuffer(pixels), bufferSizeBytes.get(C_LONG, 0)))) {
+                            JxlDecoderStatus.fromId(decode_h.JxlDecoderSetImageOutBuffer(dec, format, pixels, bufferSizeBytesValue))) {
                             throw new JxlException("JxlDecoderSetImageOutBuffer failed");
                         }
                     } else if (status == JxlDecoderStatus.JXL_DEC_FULL_IMAGE) {
@@ -218,14 +225,31 @@ public class JpegXl {
                     }
                 }
 
-                var colorModel = new ComponentColorModel(info.iccSpace(), info.hasAlpha(), false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
-                var sampleModel = colorModel.createCompatibleSampleModel(info.width(), info.height());
+                var pixelsRaster = new int[Math.min(info.width(), raster.getWidth()) * Math.min(info.height(), raster.getHeight())];
 
-                var pixelsArray = new byte[pixels.capacity()];
-                pixels.get(pixelsArray);
-                var db = new DataBufferByte(pixelsArray, info.width() * info.height());
-                var raster = WritableRaster.createWritableRaster(sampleModel, db, null);
-                return new BufferedImage(colorModel, raster, colorModel.isAlphaPremultiplied(), null);
+                var sourceRegion = param != null ? param.getSourceRegion() : null;
+                if (sourceRegion == null) sourceRegion = new Rectangle(0, 0, info.width(), info.height());
+                var ssX = param != null ? param.getSourceXSubsampling() : 1;
+                var ssY = param != null ? param.getSourceYSubsampling() : 1;
+                var ssOffX = param != null ? param.getSubsamplingXOffset() : 0;
+                var ssOffY = param != null ? param.getSubsamplingYOffset() : 0;
+
+                var offset = 0;
+                for (int row = sourceRegion.y + ssOffY; row < sourceRegion.y + sourceRegion.height; row += ssY) {
+                    if (offset >= pixelsRaster.length) break;
+                    for (int col = sourceRegion.x + ssOffX; col < sourceRegion.x + sourceRegion.width; col += ssX) {
+                        if (offset >= pixelsRaster.length) break;
+                        int pixel = pixels.get(pixelLayout, (((long) row * info.width()) + col) * pixelLayout.byteSize());
+                        pixelsRaster[offset++] = pixel;
+                    }
+                }
+
+                if (param != null && param.getDestinationOffset() != null) {
+                    raster.setDataElements(param.getDestinationOffset().x, param.getDestinationOffset().y, raster.getWidth() - param.getDestinationOffset().x,
+                        raster.getHeight() - param.getDestinationOffset().y, pixelsRaster);
+                } else {
+                    raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsRaster);
+                }
             } catch (IOException e) {
                 throw new JxlException("Couldn't get stream content", e);
             }
