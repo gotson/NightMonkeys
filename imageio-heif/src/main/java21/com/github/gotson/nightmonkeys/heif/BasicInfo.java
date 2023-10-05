@@ -9,9 +9,4 @@ public record BasicInfo(
     ICC_Profile iccProfile,
     int frameCount
 ) {
-    enum Format {
-        UNDEFINED_OR_MIXED,
-        LOSSY,
-        LOSSLESS
-    }
 }
