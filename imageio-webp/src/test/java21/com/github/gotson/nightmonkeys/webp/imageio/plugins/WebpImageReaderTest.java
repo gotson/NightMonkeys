@@ -48,7 +48,9 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
             new TestData(getClassLoaderResource("/webp/1_webp_a.webp"), new Dimension(400, 301)),
             // Extendad format: Anim
             new TestData(getClassLoaderResource("/webp/animated-webp-supported.webp"), Collections.nCopies(12, new Dimension(400, 400)), null),
-            new TestData(getClassLoaderResource("/webp/animated-banana.webp"), Collections.nCopies(8, new Dimension(990, 1050)), null)
+            new TestData(getClassLoaderResource("/webp/animated-banana.webp"), Collections.nCopies(8, new Dimension(990, 1050)), null),
+            // Grayscale
+            new TestData(getClassLoaderResource("/webp/gray.webp"), new Dimension(766, 1100))
         );
     }
 

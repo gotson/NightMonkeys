@@ -15,6 +15,7 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
+import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.awt.image.BufferedImage;
@@ -47,19 +48,23 @@ public class WebpImageReader extends ImageReaderBase {
                 info = WebP.getBasicInfo((ImageInputStream) input);
                 if (info.iccProfile() != null) {
                     ICC_ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
-                    imageTypes = List.of(
-                        ImageTypeSpecifiers.createPacked(colorSpace, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, DataBuffer.TYPE_INT, false),
-                        ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
-                    );
-                } else if (info.hasAnimation()) {
+                    if (colorSpace.getType() == ColorSpace.TYPE_RGB) {
+                        imageTypes = List.of(
+                            ImageTypeSpecifiers.createPacked(colorSpace, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000, DataBuffer.TYPE_INT, false),
+                            ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
+                        );
+                        return;
+                    }
+                }
+                if (info.hasAnimation()) {
                     imageTypes = List.of(
                         ImageTypeSpecifiers.createPacked(ColorSpaces.getColorSpace(CS_sRGB), 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff, DataBuffer.TYPE_INT, false)
                     );
-                } else {
-                    imageTypes = List.of(
-                        ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
-                    );
+                    return;
                 }
+                imageTypes = List.of(
+                    ImageTypeSpecifier.createFromBufferedImageType(info.hasAlpha() ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB)
+                );
             } catch (WebpException e) {
                 throw new IOException(e);
             }
@@ -165,6 +170,9 @@ public class WebpImageReader extends ImageReaderBase {
 
     private void applyICCProfileIfNeeded(final BufferedImage destination) {
         if (info.iccProfile() != null) {
+            ICC_ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
+            if (colorSpace.getType() != ColorSpace.TYPE_RGB) return;
+
             ColorModel colorModel = destination.getColorModel();
             ICC_Profile destinationProfile = ((ICC_ColorSpace) colorModel.getColorSpace()).getProfile();
 
