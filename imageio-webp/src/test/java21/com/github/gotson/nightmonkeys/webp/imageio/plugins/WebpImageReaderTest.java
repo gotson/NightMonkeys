@@ -44,11 +44,22 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
             new TestData(getClassLoaderResource("/webp/very_short.webp"), new Dimension(63, 66)),
             // Lossless
             new TestData(getClassLoaderResource("/webp/1_webp_ll.webp"), new Dimension(400, 301)),
+            new TestData(getClassLoaderResource("/webp/2_webp_ll.webp"), new Dimension(386, 395)),
+            new TestData(getClassLoaderResource("/webp/2_webp_ll_alt.webp"), new Dimension(386, 395)),
+            new TestData(getClassLoaderResource("/webp/3_webp_ll.webp"), new Dimension(800, 600)),
+            new TestData(getClassLoaderResource("/webp/4_webp_ll.webp"), new Dimension(421, 163)),
+            new TestData(getClassLoaderResource("/webp/5_webp_ll.webp"), new Dimension(300, 300)),
             // Extended format: Alpha + VP8
             new TestData(getClassLoaderResource("/webp/1_webp_a.webp"), new Dimension(400, 301)),
+            new TestData(getClassLoaderResource("/webp/2_webp_a.webp"), new Dimension(386, 395)),
+            new TestData(getClassLoaderResource("/webp/3_webp_a.webp"), new Dimension(800, 600)),
+            new TestData(getClassLoaderResource("/webp/4_webp_a.webp"), new Dimension(421, 163)),
+            new TestData(getClassLoaderResource("/webp/5_webp_a.webp"), new Dimension(300, 300)),
             // Extendad format: Anim
             new TestData(getClassLoaderResource("/webp/animated-webp-supported.webp"), Collections.nCopies(12, new Dimension(400, 400)), null),
             new TestData(getClassLoaderResource("/webp/animated-banana.webp"), Collections.nCopies(8, new Dimension(990, 1050)), null),
+            // Alpha transparency and Alpha filtering
+            new TestData(getClassLoaderResource("/webp/alpha_filter.webp"), new Dimension(1600, 1600)),
             // Grayscale
             new TestData(getClassLoaderResource("/webp/gray.webp"), new Dimension(766, 1100))
         );
