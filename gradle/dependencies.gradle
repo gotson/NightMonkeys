@@ -3,7 +3,7 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation 'com.twelvemonkeys.imageio:imageio-core:3.9.3'
+    implementation 'com.twelvemonkeys.imageio:imageio-core:3.10.0'
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation project(':imageio-common')
 
