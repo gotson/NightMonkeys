@@ -1,14 +1,9 @@
 package com.github.gotson.nightmonkeys.heif.imageio.plugins;
 
 import com.twelvemonkeys.imageio.util.ImageReaderAbstractTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.imageio.spi.ImageReaderSpi;
 import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +54,11 @@ public class HeifImageReaderTest extends ImageReaderAbstractTest<HeifImageReader
 
             // AVIF Animation (from http://188.121.162.14/avif/)
             // Status: not supported by libheif, only 1 image will be available
-            new TestData(getClassLoaderResource("/avif/animation2.avif"), new Dimension(640, 640))
+            new TestData(getClassLoaderResource("/avif/animation2.avif"), new Dimension(640, 640)),
+
+            // AVIF with stride != from width
+            new TestData(getClassLoaderResource("/avif/kk.avif"), new Dimension(2535, 4167)),
+            new TestData(getClassLoaderResource("/avif/monster.avif"), new Dimension(846, 1200))
         );
     }
 

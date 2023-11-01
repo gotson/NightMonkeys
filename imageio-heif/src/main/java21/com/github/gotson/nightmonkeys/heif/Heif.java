@@ -1,6 +1,8 @@
 package com.github.gotson.nightmonkeys.heif;
 
 import com.github.gotson.nightmonkeys.heif.lib.HeifError;
+import com.github.gotson.nightmonkeys.heif.lib.enums.HeifChroma;
+import com.github.gotson.nightmonkeys.heif.lib.enums.HeifColorSpace;
 import com.github.gotson.nightmonkeys.heif.lib.enums.HeifErrorCode;
 import com.github.gotson.nightmonkeys.heif.lib.enums.HeifFiletypeResult;
 import com.github.gotson.nightmonkeys.heif.lib.panama.heif_h;
@@ -21,8 +23,6 @@ import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFro
 import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.C_INT;
 import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.C_POINTER;
 import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.heif_channel_interleaved;
-import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.heif_chroma_interleaved_RGBA;
-import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.heif_colorspace_RGB;
 import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.heif_get_version;
 
 /**
@@ -129,10 +129,14 @@ public class Heif {
                 var height = heif_h.heif_image_handle_get_height(handle);
 
                 var imagePtr = arena.allocate(C_POINTER);
-                checkError(heif_h.heif_decode_image(arena, handle, imagePtr, heif_colorspace_RGB(), heif_chroma_interleaved_RGBA(), MemorySegment.NULL));
+                checkError(
+                    heif_h.heif_decode_image(arena, handle, imagePtr, HeifColorSpace.HEIF_COLOR_SPACE_RGB.intValue(), HeifChroma.HEIF_CHROMA_INTERLEAVED_RGBA.intValue(),
+                        MemorySegment.NULL));
                 var image = imagePtr.get(C_POINTER, 0);
 
-                var pixels = heif_h.heif_image_get_plane_readonly(image, heif_channel_interleaved(), MemorySegment.NULL);
+                var stridePtr = arena.allocate(C_INT);
+                var pixels = heif_h.heif_image_get_plane_readonly(image, heif_channel_interleaved(), stridePtr);
+                var stride = stridePtr.get(C_INT, 0);
                 var pixelsRaster = new int[Math.min(width, raster.getWidth()) * Math.min(height, raster.getHeight())];
 
                 var sourceRegion = param != null ? param.getSourceRegion() : null;
@@ -147,7 +151,7 @@ public class Heif {
                     if (offset >= pixelsRaster.length) break;
                     for (int col = sourceRegion.x + ssOffX; col < sourceRegion.x + sourceRegion.width; col += ssX) {
                         if (offset >= pixelsRaster.length) break;
-                        int pixel = pixels.get(pixelLayout, (((long) row * width) + col) * pixelLayout.byteSize());
+                        int pixel = pixels.get(pixelLayout, (long) row * stride + (col * pixelLayout.byteSize()));
                         pixelsRaster[offset++] = pixel;
                     }
                 }
