@@ -39,7 +39,8 @@ public class JxlImageReader extends ImageReaderBase {
             try {
                 info = JpegXl.getBasicInfo((ImageInputStream) input);
 
-                ColorSpace colorSpace = info.iccProfile() != null ? ColorSpaces.createColorSpace(info.iccProfile()) : ColorSpace.getInstance(ColorSpace.CS_sRGB);
+                ColorSpace colorSpace = ColorSpaces.createColorSpace(info.iccProfile());
+                if (colorSpace == null || colorSpace.getType() != ColorSpace.TYPE_RGB) colorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
                 imageTypes = List.of(
                     // RGBA
                     ImageTypeSpecifiers.createPacked(colorSpace, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff, DataBuffer.TYPE_INT, false)

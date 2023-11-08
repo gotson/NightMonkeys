@@ -24,7 +24,9 @@ class JpegXlImageReaderTest extends ImageReaderAbstractTest<JxlImageReader> {
             // Orientation: 7 (Anti-Transposed) => we need to invert the width and height
             new TestData(getClassLoaderResource("/jxl/island.jxl"), new Dimension(924, 1386)),
             // Animation, 12 frames
-            new TestData(getClassLoaderResource("/jxl/animation.jxl"), new Dimension(256, 256))
+            new TestData(getClassLoaderResource("/jxl/animation.jxl"), new Dimension(256, 256)),
+            // Grayscale ICC profile
+            new TestData(getClassLoaderResource("/jxl/gray.jxl"), new Dimension(1561, 2240))
         );
     }
 
