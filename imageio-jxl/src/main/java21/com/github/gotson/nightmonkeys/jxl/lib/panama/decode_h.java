@@ -1865,8 +1865,12 @@ public class decode_h {
         }
     }
 
-    public static MethodHandle JxlDecoderGetICCProfileSize$MH() {
+    public static MethodHandle JxlDecoderGetICCProfileSizeLegacy$MH() {
         return RuntimeHelper.requireNonNull(constants$21.const$4, "JxlDecoderGetICCProfileSize");
+    }
+
+    public static MethodHandle JxlDecoderGetICCProfileSize$MH() {
+        return RuntimeHelper.requireNonNull(constants$21.const$4a, "JxlDecoderGetICCProfileSize");
     }
 
     /**
@@ -1874,8 +1878,8 @@ public class decode_h {
      * JxlDecoderStatus JxlDecoderGetICCProfileSize(const JxlDecoder* dec, const JxlPixelFormat* format, JxlColorProfileTarget target, size_t* size);
      *}
      */
-    public static int JxlDecoderGetICCProfileSize(MemorySegment dec, MemorySegment format, int target, MemorySegment size) {
-        var mh$ = JxlDecoderGetICCProfileSize$MH();
+    public static int JxlDecoderGetICCProfileSizeLegacy(MemorySegment dec, MemorySegment format, int target, MemorySegment size) {
+        var mh$ = JxlDecoderGetICCProfileSizeLegacy$MH();
         try {
             return (int) mh$.invokeExact(dec, format, target, size);
         } catch (Throwable ex$) {
@@ -1883,8 +1887,21 @@ public class decode_h {
         }
     }
 
-    public static MethodHandle JxlDecoderGetColorAsICCProfile$MH() {
+    public static int JxlDecoderGetICCProfileSize(MemorySegment dec, int target, MemorySegment size) {
+        var mh$ = JxlDecoderGetICCProfileSize$MH();
+        try {
+            return (int) mh$.invokeExact(dec, target, size);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static MethodHandle JxlDecoderGetColorAsICCProfileLegacy$MH() {
         return RuntimeHelper.requireNonNull(constants$21.const$6, "JxlDecoderGetColorAsICCProfile");
+    }
+
+    public static MethodHandle JxlDecoderGetColorAsICCProfile$MH() {
+        return RuntimeHelper.requireNonNull(constants$21.const$6a, "JxlDecoderGetColorAsICCProfile");
     }
 
     /**
@@ -1892,10 +1909,19 @@ public class decode_h {
      * JxlDecoderStatus JxlDecoderGetColorAsICCProfile(const JxlDecoder* dec, const JxlPixelFormat* format, JxlColorProfileTarget target, uint8_t* icc_profile, size_t size);
      *}
      */
-    public static int JxlDecoderGetColorAsICCProfile(MemorySegment dec, MemorySegment format, int target, MemorySegment icc_profile, long size) {
-        var mh$ = JxlDecoderGetColorAsICCProfile$MH();
+    public static int JxlDecoderGetColorAsICCProfileLegacy(MemorySegment dec, MemorySegment format, int target, MemorySegment icc_profile, long size) {
+        var mh$ = JxlDecoderGetColorAsICCProfileLegacy$MH();
         try {
             return (int) mh$.invokeExact(dec, format, target, icc_profile, size);
+        } catch (Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    public static int JxlDecoderGetColorAsICCProfile(MemorySegment dec, int target, MemorySegment icc_profile, long size) {
+        var mh$ = JxlDecoderGetColorAsICCProfile$MH();
+        try {
+            return (int) mh$.invokeExact(dec, target, icc_profile, size);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

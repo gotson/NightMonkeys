@@ -30,6 +30,12 @@ final class constants$21 {
         JAVA_INT,
         RuntimeHelper.POINTER
     );
+
+    static final FunctionDescriptor const$2a = FunctionDescriptor.of(JAVA_INT,
+        RuntimeHelper.POINTER,
+        JAVA_INT,
+        RuntimeHelper.POINTER
+    );
     static final MethodHandle const$3 = RuntimeHelper.downcallHandle(
         "JxlDecoderGetColorAsEncodedProfile",
         constants$21.const$2
@@ -38,8 +44,20 @@ final class constants$21 {
         "JxlDecoderGetICCProfileSize",
         constants$21.const$2
     );
+
+    static final MethodHandle const$4a = RuntimeHelper.downcallHandle(
+        "JxlDecoderGetICCProfileSize",
+        constants$21.const$2a
+    );
+
     static final FunctionDescriptor const$5 = FunctionDescriptor.of(JAVA_INT,
         RuntimeHelper.POINTER,
+        RuntimeHelper.POINTER,
+        JAVA_INT,
+        RuntimeHelper.POINTER,
+        JAVA_LONG
+    );
+    static final FunctionDescriptor const$5a = FunctionDescriptor.of(JAVA_INT,
         RuntimeHelper.POINTER,
         JAVA_INT,
         RuntimeHelper.POINTER,
@@ -48,6 +66,10 @@ final class constants$21 {
     static final MethodHandle const$6 = RuntimeHelper.downcallHandle(
         "JxlDecoderGetColorAsICCProfile",
         constants$21.const$5
+    );
+    static final MethodHandle const$6a = RuntimeHelper.downcallHandle(
+        "JxlDecoderGetColorAsICCProfile",
+        constants$21.const$5a
     );
 }
 

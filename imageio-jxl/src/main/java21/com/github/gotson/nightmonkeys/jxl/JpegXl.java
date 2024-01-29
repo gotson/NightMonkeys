@@ -37,6 +37,16 @@ public class JpegXl {
 
     private static final ValueLayout.OfInt pixelLayout = C_INT.withOrder(ByteOrder.BIG_ENDIAN);
 
+    private static int[] version;
+
+    private static void getLibVersionInt() {
+        int versionInt = decode_h.JxlDecoderVersion();
+        int major = versionInt / 1000000;
+        int minor = (versionInt - major * 1000000) / 1000;
+        int patch = versionInt - major * 1000000 - minor * 1000;
+        version = new int[] {major, minor, patch};
+    }
+
     public static boolean canDecode(final ImageInputStream stream) throws JxlException {
         try (var arena = Arena.ofConfined()) {
             stream.mark();
@@ -55,11 +65,13 @@ public class JpegXl {
     }
 
     public static String getLibVersion() {
-        int versionInt = decode_h.JxlDecoderVersion();
-        int major = versionInt / 1000000;
-        int minor = (versionInt - major * 1000000) / 1000;
-        int patch = versionInt - major * 1000000 - minor * 1000;
-        return String.format("%d.%d.%d", major, minor, patch);
+        if (version == null) getLibVersionInt();
+        return String.format("%d.%d.%d", version[0], version[1], version[2]);
+    }
+
+    private static boolean legacyIcc() {
+        if (version == null) getLibVersionInt();
+        return version[0] == 0 && version[1] < 9;
     }
 
     public static BasicInfo getBasicInfo(final ImageInputStream stream) throws JxlException {
@@ -109,17 +121,31 @@ public class JpegXl {
                     } else if (status == JxlDecoderStatus.JXL_DEC_COLOR_ENCODING) {
                         // Get the ICC color profile of the pixel data
                         var iccSize = arena.allocate(C_LONG, 0);
+                        int iccSizeResult;
+                        if (legacyIcc()) {
+                            iccSizeResult = decode_h.JxlDecoderGetICCProfileSizeLegacy(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(), iccSize);
+                        } else {
+                            iccSizeResult = decode_h.JxlDecoderGetICCProfileSize(dec, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(), iccSize);
+                        }
                         if (JxlDecoderStatus.JXL_DEC_SUCCESS != JxlDecoderStatus.fromId(
-                            decode_h.JxlDecoderGetICCProfileSize(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(), iccSize))) {
+                            iccSizeResult)) {
                             throw new JxlException("JxlDecoderGetICCProfileSize failed");
                         }
 
                         iccProfile = ByteBuffer.allocateDirect(iccSize.get(C_INT, 0));
+                        int iccProfileResult;
+                        if (legacyIcc()) {
+                            iccProfileResult = decode_h.JxlDecoderGetColorAsICCProfileLegacy(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(),
+                                MemorySegment.ofBuffer(iccProfile),
+                                iccSize.get(C_LONG, 0));
+                        } else {
+                            iccProfileResult = decode_h.JxlDecoderGetColorAsICCProfile(dec, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(),
+                                MemorySegment.ofBuffer(iccProfile),
+                                iccSize.get(C_LONG, 0));
+                        }
                         if (JxlDecoderStatus.JXL_DEC_SUCCESS !=
                             JxlDecoderStatus.fromId(
-                                decode_h.JxlDecoderGetColorAsICCProfile(dec, format, JxlColorProfileTarget.JXL_COLOR_PROFILE_TARGET_DATA.intValue(),
-                                    MemorySegment.ofBuffer(iccProfile),
-                                    iccSize.get(C_LONG, 0)))) {
+                                iccProfileResult)) {
                             throw new JxlException("JxlDecoderGetColorAsICCProfile failed");
                         }
                         break;
