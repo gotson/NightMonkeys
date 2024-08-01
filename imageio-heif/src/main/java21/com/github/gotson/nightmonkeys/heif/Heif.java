@@ -113,6 +113,7 @@ public class Heif {
 
             MemorySegment heifContext = null;
             MemorySegment handle = null;
+            MemorySegment image = null;
             try {
                 heif_h.heif_init(arena, MemorySegment.NULL);
                 heifContext = heif_h.heif_context_alloc();
@@ -132,7 +133,7 @@ public class Heif {
                 checkError(
                     heif_h.heif_decode_image(arena, handle, imagePtr, HeifColorSpace.HEIF_COLOR_SPACE_RGB.intValue(), HeifChroma.HEIF_CHROMA_INTERLEAVED_RGBA.intValue(),
                         MemorySegment.NULL));
-                var image = imagePtr.get(C_POINTER, 0);
+                image = imagePtr.get(C_POINTER, 0);
 
                 var stridePtr = arena.allocate(C_INT);
                 var pixels = heif_h.heif_image_get_plane_readonly(image, heif_channel_interleaved(), stridePtr);
@@ -163,6 +164,7 @@ public class Heif {
                     raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsRaster);
                 }
             } finally {
+                if (image != null) heif_h.heif_image_release(image);
                 if (heifContext != null) heif_h.heif_context_free(heifContext);
                 if (handle != null) heif_h.heif_image_handle_release(handle);
                 heif_h.heif_deinit();
