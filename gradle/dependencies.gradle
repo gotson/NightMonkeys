@@ -9,7 +9,7 @@ dependencies {
 
     testImplementation(testFixtures(project(':imageio-common')))
     testImplementation 'org.assertj:assertj-core:3.26.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
     testImplementation 'org.slf4j:slf4j-simple:1.7.36'
     testImplementation 'org.mockito:mockito-core:4.8.1'
     testImplementation 'org.apache.commons:commons-collections4:4.4'
