@@ -64,6 +64,36 @@ jobs:
           name: test-reports-${{ matrix.os }}
           path: '**/build/reports/tests/'
 
+  test-windows:
+    runs-on: windows-latest
+    name: Test windows
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup test-libraries in path
+        run: Add-Content $env:GITHUB_PATH $env:GITHUB_WORKSPACE\test-libraries\windows\x64\
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'liberica'
+          java-version: '21'
+      - name: Gradle build
+        uses: gradle/actions/setup-gradle@v3
+        env:
+          LD_LIBRARY_PATH: /home/linuxbrew/.linuxbrew/lib
+          JAVA_LIBRARY_PATH: /usr/local/lib/
+        with:
+          arguments: build
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            jdks
+      - name: Upload Unit Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-windows
+          path: '**/build/reports/tests/'
+
   version:
     runs-on: macos-latest
     if: github.repository_owner == 'gotson' && github.ref == 'refs/heads/main'
