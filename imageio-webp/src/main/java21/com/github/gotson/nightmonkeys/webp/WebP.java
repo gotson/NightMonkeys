@@ -3,15 +3,16 @@ package com.github.gotson.nightmonkeys.webp;
 import com.github.gotson.nightmonkeys.webp.lib.enums.VP8StatusCode;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFeatureFlags;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFormatFeature;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPAnimDecoderOptions;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPAnimInfo;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPChunkIterator;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPData;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecBuffer;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderConfig;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPDecoderOptions;
-import com.github.gotson.nightmonkeys.webp.lib.panama.WebPRGBABuffer;
-import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPAnimDecoderOptions;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPAnimInfo;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPChunkIterator;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPData;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPDecBuffer;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webp.WebPDecoderConfig;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webp.WebPDecoderOptions;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webp.WebPRGBABuffer;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webp.decode_h;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +25,8 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
-import static com.github.gotson.nightmonkeys.webp.lib.panama.demux_h.C_INT;
-import static com.github.gotson.nightmonkeys.webp.lib.panama.demux_h.C_POINTER;
+import static com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h.C_INT;
+import static com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h.C_POINTER;
 
 /**
  * Java bindings for libwebp via Foreign Linker API *
@@ -46,14 +47,14 @@ public class WebP {
             var data = arena.allocate(webpData.length);
             data.copyFrom(MemorySegment.ofArray(webpData));
 
-            return demux_h.WebPGetInfo(data, webpData.length, MemorySegment.NULL, MemorySegment.NULL) > 0;
+            return decode_h.WebPGetInfo(data, webpData.length, MemorySegment.NULL, MemorySegment.NULL) > 0;
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }
     }
 
     public static String getDecoderVersion() {
-        return parseVersionInt(demux_h.WebPGetDecoderVersion());
+        return parseVersionInt(decode_h.WebPGetDecoderVersion());
     }
 
     public static String getDemuxVersion() {
@@ -130,7 +131,7 @@ public class WebP {
     public static void decodeVP8(final ImageInputStream stream, BasicInfo info, final WritableRaster raster, ImageReadParam param) throws WebpException {
         try (var arena = Arena.ofConfined()) {
             var config = WebPDecoderConfig.allocate(arena);
-            if (demux_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
+            if (decode_h.WebPInitDecoderConfigInternal(config, minDecoderAbi) == 0) {
                 throw new WebpException("Could not init decoder config");
             }
 
@@ -142,7 +143,7 @@ public class WebP {
             data.copyFrom(MemorySegment.ofArray(webpData));
 
             var features = WebPDecoderConfig.input$slice(config);
-            var statusCode = VP8StatusCode.fromId(demux_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
+            var statusCode = VP8StatusCode.fromId(decode_h.WebPGetFeaturesInternal(data, webpData.length, features, minDecoderAbi));
             if (statusCode != VP8StatusCode.VP8_STATUS_OK) {
                 throw new WebpException("Couldn't get WebpFeatures: " + statusCode);
             }
@@ -164,7 +165,7 @@ public class WebP {
             }
 
             var output = WebPDecoderConfig.output$slice(config);
-            WebPDecBuffer.colorspace$set(output, demux_h.MODE_ARGB());
+            WebPDecBuffer.colorspace$set(output, decode_h.MODE_ARGB());
             WebPDecBuffer.width$set(output, raster.getWidth());
             WebPDecBuffer.height$set(output, raster.getHeight());
 
@@ -172,7 +173,7 @@ public class WebP {
             WebPRGBABuffer.stride$set(rgba, raster.getWidth() * 4);
             WebPRGBABuffer.size$set(rgba, (long) raster.getWidth() * raster.getHeight() * 4);
 
-            statusCode = VP8StatusCode.fromId(demux_h.WebPDecode(data, webpData.length, config));
+            statusCode = VP8StatusCode.fromId(decode_h.WebPDecode(data, webpData.length, config));
             if (statusCode != VP8StatusCode.VP8_STATUS_OK) {
                 throw new WebpException("Couldn't decode: " + statusCode);
             }
@@ -182,7 +183,7 @@ public class WebP {
 
             raster.setDataElements(0, 0, raster.getWidth(), raster.getHeight(), pixelsArray);
 
-            demux_h.WebPFreeDecBuffer(output);
+            decode_h.WebPFreeDecBuffer(output);
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
         }

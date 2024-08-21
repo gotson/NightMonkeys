@@ -1,7 +1,7 @@
 package com.github.gotson.nightmonkeys.webp.lib.enums;
 
 
-import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
+import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h;
 
 import java.util.Arrays;
 import java.util.EnumSet;
