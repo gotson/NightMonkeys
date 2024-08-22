@@ -37,3 +37,12 @@ ImageReadParam param=reader.getDefaultReadParam();
 ImageReadParam param=reader.getDefaultReadParam();
     param.setSourceRegion(new Rectangle(3,3,9,9));
 ```
+
+## Implementation notes
+
+The `panama` package bindings were generated using:
+- jextract 22
+- from the https://github.com/webmproject/libwebp repository, version 1.2.4
+- based on:
+  - the `decode.h` header file for `panama.webp`
+  - the `demux.h` header file for `panama.webpdemux`

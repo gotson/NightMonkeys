@@ -47,7 +47,7 @@ public class JxlImageReaderSpi extends ImageReaderSpi {
 
     @Override
     public void onRegistration(ServiceRegistry registry, Class<?> category) {
-        LOGGER.info("This plugin only supports Java 21, plugin will be disabled");
+        LOGGER.info("This plugin only supports Java 22, plugin will be disabled");
         registry.deregisterServiceProvider(this);
         super.onRegistration(registry, category);
     }

@@ -20,3 +20,10 @@
   - Color profiles
   - EXIF and XMP
   - Thumbnails
+
+## Implementation notes
+
+The `panama` package bindings were generated using:
+- jextract 22
+- from the https://github.com/strukturag/libheif repository, version 1.16.0
+- based on the `heif.f` header file

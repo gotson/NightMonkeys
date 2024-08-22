@@ -1,23 +1,15 @@
 apply plugin: 'me.champeau.mrjar'
 
 multiRelease {
-    targetVersions 8, 21
+    targetVersions 8, 22
 }
 
-compileJava21Java {
-    options.compilerArgs += ["--enable-preview"]
-}
-
-compileJava21TestJava {
-    options.compilerArgs += ["--enable-preview"]
-}
-
-java21Test {
-    jvmArgs += ["--enable-preview", "--enable-native-access=ALL-UNNAMED"]
+java22Test {
+    jvmArgs += ["--enable-native-access=ALL-UNNAMED"]
 }
 
 configurations {
-    java21Implementation.extendsFrom(implementation)
+    java22Implementation.extendsFrom(implementation)
 }
 
 def noLibTestTask = tasks.register('noLibTest', Test) {
@@ -25,15 +17,15 @@ def noLibTestTask = tasks.register('noLibTest', Test) {
     group = 'verification'
 
     classpath = files(jar.archiveFile.get().asFile) +
-            configurations[sourceSets.java21.runtimeClasspathConfigurationName] +
+            configurations[sourceSets.java22.runtimeClasspathConfigurationName] +
             configurations[sourceSets.test.runtimeClasspathConfigurationName] +
             sourceSets.test.output
     testClassesDirs = sourceSets.test.output.classesDirs
 
-    jvmArgs += ["--enable-preview", "--enable-native-access=ALL-UNNAMED"]
+    jvmArgs += ["--enable-native-access=ALL-UNNAMED"]
     systemProperty "java.library.path", ''
     javaLauncher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(22)
     }
 
     dependsOn jar

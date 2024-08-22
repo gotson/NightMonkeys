@@ -5,14 +5,14 @@
 # NightMonkeys
 
 A collection of ImageIO plugins, adding support for newer image formats. NightMonkeys uses the newer Foreign Linker API
-available in JDK 21 to access native libraries.
+available in JDK 22 to access native libraries.
 
 ## How it works
 
 NightMonkeys plugins are released as multi-release JARs:
 
-- with Java < 21, a no-op version of the plugin will unregister itself on load, basically doing nothing
-- with Java 21, the plugin will be available
+- with Java < 22, a no-op version of the plugin will unregister itself on load, basically doing nothing
+- with Java 22, the plugin will be available
 - the plugins are not compatible with other Java versions, as the Foreign Linker APIs are still changing
 
 This lets you add the dependencies in your project whatever the JDK used, and still enable the plugin at runtime if the necessary JDK is used. 
@@ -33,10 +33,10 @@ decoding/encoding.
 
 In order for the plugins to run properly, you will need to:
 
-- Run Java 21 with the following options:
+- Run Java 22 with the following options:
 
 ```
---enable-preview --enable-native-access=ALL-UNNAMED
+--enable-native-access=ALL-UNNAMED
 ```
 
 - Make sure the path to the directory containing the native libraries is contained in the Java system
