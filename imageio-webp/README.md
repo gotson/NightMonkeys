@@ -2,13 +2,12 @@
 
 ## Requirements
 
-`libwebpdemux` must be installed on the target system.
+`libwebp` and `libwebpdemux` version 1.2.4+ must be installed on the target system.
 
 ## Known installations methods
 
 - Homebrew (Mac & Linux): `brew install webp`
-- Scoop (Windows): `scoop install libwebp`
-- Chocolatey (Windows): `choco install webp`
+- apt (Linux): `apt-get install libwebp-dev`
 
 ## Features
 

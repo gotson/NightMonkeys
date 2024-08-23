@@ -2,11 +2,12 @@
 
 ## Requirements
 
-`libjxl` must be installed on the target system. At the time of writing (Apr 2022), `libjxl` is not available in most package managers. 
+`libjxl` version 0.6.1+ must be installed on the target system. 
 
 ## Known installations methods
 
 - Homebrew (Mac & Linux): `brew install jpeg-xl`
+- apt (Linux): `apt-get install libjxl-dev`
 
 ## Features
 
