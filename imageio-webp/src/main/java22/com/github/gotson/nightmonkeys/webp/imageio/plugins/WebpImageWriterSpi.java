@@ -1,35 +1,30 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
 import com.github.gotson.nightmonkeys.webp.WebP;
-import com.github.gotson.nightmonkeys.webp.WebpException;
-import com.twelvemonkeys.imageio.spi.ImageReaderSpiBase;
+import com.twelvemonkeys.imageio.spi.ImageWriterSpiBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.spi.ImageReaderSpi;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
 import javax.imageio.spi.ServiceRegistry;
-import javax.imageio.stream.ImageInputStream;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.util.Locale;
 
-public class WebpImageReaderSpi extends ImageReaderSpiBase {
+public class WebpImageWriterSpi extends ImageWriterSpiBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebpImageReaderSpi.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebpImageWriterSpi.class);
+
     private boolean libLoaded = false;
 
-    /**
-     * Construct the SPI. Boilerplate.
-     */
-    public WebpImageReaderSpi() {
+    public WebpImageWriterSpi() {
         super(new WebpProviderInfo());
     }
 
     private boolean loadLibrary() {
         if (!libLoaded) {
             try {
-                LOGGER.info("Loaded libwebp: decoder v{}, demux v{}", WebP.getDecoderVersion(), WebP.getDemuxVersion());
+                LOGGER.info("Loaded libwebp: encoder v{}", WebP.getEncoderVersion());
                 libLoaded = true;
             } catch (UnsatisfiedLinkError e) {
                 LOGGER.warn("Could not load libwebp, plugin will be disabled. {}", e.getMessage());
@@ -52,28 +47,18 @@ public class WebpImageReaderSpi extends ImageReaderSpiBase {
     }
 
     @Override
-    public boolean canDecodeInput(Object input) throws IOException {
-        if (!(input instanceof ImageInputStream)) {
-            input = ImageIO.createImageInputStream(input);
-        }
-        if (input == null) {
-            return false;
-        }
-
-        try {
-            return WebP.canDecode((ImageInputStream) input);
-        } catch (WebpException e) {
-            throw new IOException(e);
-        }
+    public boolean canEncodeImage(ImageTypeSpecifier type) {
+        int bufferedImageType = type.getBufferedImageType();
+        return bufferedImageType == BufferedImage.TYPE_INT_RGB || bufferedImageType == BufferedImage.TYPE_INT_ARGB;
     }
 
     @Override
-    public ImageReader createReaderInstance(Object extension) {
-        return new WebpImageReader(this);
+    public ImageWriter createWriterInstance(Object extension) {
+        return new WebpImageWriter(this);
     }
 
     @Override
     public String getDescription(Locale locale) {
-        return "WebP reader plugin based on libwebp.";
+        return "WebP writer plugin based on libwebp.";
     }
 }
