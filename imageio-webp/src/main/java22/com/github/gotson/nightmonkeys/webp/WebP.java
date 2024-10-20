@@ -239,11 +239,12 @@ public final class WebP {
      * @param stream the output stream.
      * @param raster the image raster.
      * @param param the encoding parameters.
+     * @param progressCallback the progress callback.
      * @throws WebpException if the encoding fails.
      */
-    public static void encode(final ImageOutputStream stream, final Raster raster, WebpImageWriteParam param) throws WebpException {
+    public static void encode(final ImageOutputStream stream, final Raster raster, WebpImageWriteParam param, ProgressCallback progressCallback) throws WebpException {
         // TODO add animation support
-        encodeVP8(stream, raster, param);
+        encodeVP8(stream, raster, param, progressCallback);
     }
 
     /**
@@ -252,9 +253,10 @@ public final class WebP {
      * @param stream the output stream.
      * @param raster the image raster.
      * @param param the encoding parameters.
+     * @param progressCallback the progress callback.
      * @throws WebpException if the encoding fails.
      */
-    public static void encodeVP8(final ImageOutputStream stream, final Raster raster, final WebpImageWriteParam param) throws WebpException {
+    public static void encodeVP8(final ImageOutputStream stream, final Raster raster, final WebpImageWriteParam param, ProgressCallback progressCallback) throws WebpException {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment config = WebPConfig.allocate(arena);
             if (encode_h.WebPConfigInitInternal(config, param.getPreset().ordinal(), param.getCompressionQuality() * 100F, encode_h.WEBP_ENCODER_ABI_VERSION()) == 0) {
@@ -287,6 +289,9 @@ public final class WebP {
             encode_h.WebPMemoryWriterInit(writer);
             WebPPicture.writer(picture, WebPWriterFunction.allocate(encode_h::WebPMemoryWrite, arena));
             WebPPicture.custom_ptr(picture, writer);
+
+            MemorySegment progressHook = WebPProgressHook.allocate((percent, _) -> progressCallback.onProgress(percent / 100F) ? 1 : 0, arena);
+            WebPPicture.progress_hook(picture, progressHook);
 
             if (encode_h.WebPEncode(config, picture) == 0) {
                 throw new WebpException("Couldn't encode: " + VP8StatusCode.fromId(WebPPicture.error_code(picture)));

@@ -52,7 +52,10 @@ public class WebpImageWriter extends ImageWriterBase {
             processWriteAborted();
         } else {
             try {
-                WebP.encode(imageOutput, raster, webpParam);
+                WebP.encode(imageOutput, raster, webpParam, progress -> {
+                    processImageProgress(progress);
+                    return !abortRequested();
+                });
                 if (abortRequested()) {
                     processWriteAborted();
                 } else {
