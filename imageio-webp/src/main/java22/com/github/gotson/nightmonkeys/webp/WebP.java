@@ -1,17 +1,13 @@
 package com.github.gotson.nightmonkeys.webp;
 
-import com.github.gotson.nightmonkeys.webp.imageio.plugins.WebpImageWriteParam;
 import com.github.gotson.nightmonkeys.webp.lib.enums.VP8StatusCode;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFeatureFlags;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFormatFeature;
-import com.github.gotson.nightmonkeys.webp.lib.enums.WebpLosslessPresets;
 import com.github.gotson.nightmonkeys.webp.lib.panama.*;
 
 import javax.imageio.ImageReadParam;
 import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.color.ICC_Profile;
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.lang.foreign.Arena;
@@ -23,10 +19,6 @@ import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFro
  * Java bindings for libwebp via Foreign Linker API *
  */
 public final class WebP {
-
-    public static final WebpLosslessPresets DEFAULT_LOSSLESS_LEVEL = WebpLosslessPresets.LEVEL_6;
-    public static final float DEFAULT_LOSSY_QUALITY = 0.75F;
-    public static final int DEFAULT_LOSSY_METHOD = 4;
 
     private static final int minDecoderAbi = Integer.parseInt("0200", 16);
     private static final int minDemuxAbi = Integer.parseInt("0100", 16);
@@ -230,80 +222,6 @@ public final class WebP {
 
         } catch (IOException e) {
             throw new WebpException("Couldn't get stream content", e);
-        }
-    }
-
-    /**
-     * Encode a raster image to a stream.
-     *
-     * @param stream the output stream.
-     * @param raster the image raster.
-     * @param param the encoding parameters.
-     * @param progressCallback the progress callback.
-     * @throws WebpException if the encoding fails.
-     */
-    public static void encode(final ImageOutputStream stream, final Raster raster, WebpImageWriteParam param, ProgressCallback progressCallback) throws WebpException {
-        // TODO add animation support
-        encodeVP8(stream, raster, param, progressCallback);
-    }
-
-    /**
-     * Encode a VP8 image.
-     *
-     * @param stream the output stream.
-     * @param raster the image raster.
-     * @param param the encoding parameters.
-     * @param progressCallback the progress callback.
-     * @throws WebpException if the encoding fails.
-     */
-    public static void encodeVP8(final ImageOutputStream stream, final Raster raster, final WebpImageWriteParam param, ProgressCallback progressCallback) throws WebpException {
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment config = WebPConfig.allocate(arena);
-            if (encode_h.WebPConfigInitInternal(config, param.getPreset().ordinal(), param.getCompressionQuality() * 100F, encode_h.WEBP_ENCODER_ABI_VERSION()) == 0) {
-                throw new WebpException("Could not init encoder config");
-            }
-            WebPConfig.method(config, param.getMethod());
-            WebPConfig.lossless(config, param.isCompressionLossless() ? 1 : 0);
-
-            int width = raster.getWidth();
-            int height = raster.getHeight();
-            int numBands = raster.getNumBands();
-
-            MemorySegment picture = WebPPicture.allocate(arena);
-            WebPPicture.width(picture, width);
-            WebPPicture.height(picture, height);
-            WebPPicture.use_argb(picture, 1);
-
-            int[] intPixelArray = raster.getPixels(0, 0, width, height, (int[]) null);
-            byte[] pixelArray = new byte[intPixelArray.length];
-            for (int i = 0; i < intPixelArray.length; i++) {
-                pixelArray[i] = (byte) intPixelArray[i];
-            }
-            MemorySegment data = arena.allocateFrom(encode_h.C_CHAR, pixelArray);
-
-            if ((numBands > 3 ? encode_h.WebPPictureImportRGBA(picture, data, width * numBands) : encode_h.WebPPictureImportRGB(picture, data, width * numBands)) == 0) {
-                throw new WebpException("Could not import picture");
-            }
-
-            MemorySegment writer = WebPMemoryWriter.allocate(arena);
-            encode_h.WebPMemoryWriterInit(writer);
-            WebPPicture.writer(picture, WebPWriterFunction.allocate(encode_h::WebPMemoryWrite, arena));
-            WebPPicture.custom_ptr(picture, writer);
-
-            MemorySegment progressHook = WebPProgressHook.allocate((percent, _) -> progressCallback.onProgress(percent / 100F) ? 1 : 0, arena);
-            WebPPicture.progress_hook(picture, progressHook);
-
-            if (encode_h.WebPEncode(config, picture) == 0) {
-                throw new WebpException("Couldn't encode: " + VP8StatusCode.fromId(WebPPicture.error_code(picture)));
-            }
-
-            byte[] bytes = new byte[(int) WebPMemoryWriter.size(writer)];
-            WebPMemoryWriter.mem(writer).asSlice(0, bytes.length).asByteBuffer().get(bytes);
-            stream.write(bytes);
-
-            encode_h.WebPPictureFree(picture);
-        } catch (IOException e) {
-            throw new WebpException("Couldn't write to stream", e);
         }
     }
 }
