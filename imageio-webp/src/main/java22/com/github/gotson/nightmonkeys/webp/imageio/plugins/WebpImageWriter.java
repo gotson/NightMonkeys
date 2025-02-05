@@ -11,6 +11,7 @@ import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.spi.ImageWriterSpi;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
@@ -90,7 +91,7 @@ public class WebpImageWriter extends ImageWriterBase {
 		}
 
 		MemorySegment config = createWebpConfig(arena, webpParam);
-		MemorySegment picture = createWebpPicture(raster, arena, raster.getWidth(), raster.getHeight(), raster.getNumBands(), progress -> {
+		MemorySegment picture = createWebpPicture(raster, webpParam, arena, progress -> {
 			processImageProgress(progress);
 			return !abortRequested();
 		});
@@ -158,7 +159,7 @@ public class WebpImageWriter extends ImageWriterBase {
 		try (Arena localArena = Arena.ofConfined()) {
 			MemorySegment config = createWebpConfig(localArena, webpParam);
 
-			MemorySegment picture = createWebpPicture(raster, localArena, raster.getWidth(), raster.getHeight(), raster.getNumBands(), progress -> {
+			MemorySegment picture = createWebpPicture(raster, webpParam, localArena, progress -> {
 				processImageProgress(progress);
 				return !abortRequested();
 			});
@@ -212,21 +213,46 @@ public class WebpImageWriter extends ImageWriterBase {
 	 * Creates and initializes a WebP picture segment.
 	 *
 	 * @param raster The raster containing the image data.
+	 * @param param The parameters for WebP image writing.
 	 * @param arena The memory arena to allocate the picture segment.
-	 * @param width The width of the image.
-	 * @param height The height of the image.
-	 * @param numBands The number of bands in the image.
 	 * @param progressCallback The callback to report progress.
 	 * @return The initialized WebP picture segment.
 	 * @throws IOException If the picture initialization fails.
 	 */
-	private static MemorySegment createWebpPicture(Raster raster, Arena arena, int width, int height, int numBands, ProgressCallback progressCallback) throws IOException {
+	private static MemorySegment createWebpPicture(Raster raster, ImageWriteParam param, Arena arena, ProgressCallback progressCallback) throws IOException {
+		int xOffset = raster.getMinX();
+		int yOffset = raster.getMinY();
+		int width = raster.getWidth();
+		int height = raster.getHeight();
+		int numBands = raster.getNumBands();
+		if (param != null) {
+			Rectangle sourceRegion = param.getSourceRegion();
+			if (sourceRegion != null) {
+				Rectangle imageBounds = new Rectangle(raster.getMinX(),
+						raster.getMinY(),
+						raster.getWidth(),
+						raster.getHeight());
+				sourceRegion = sourceRegion.intersection(imageBounds);
+				xOffset = sourceRegion.x;
+				yOffset = sourceRegion.y;
+				width = sourceRegion.width;
+				height = sourceRegion.height;
+			}
+
+			int gridX = param.getSubsamplingXOffset();
+			int gridY = param.getSubsamplingYOffset();
+			xOffset += gridX;
+			yOffset += gridY;
+			width -= gridX;
+			height -= gridY;
+		}
+
 		MemorySegment picture = WebPPicture.allocate(arena);
 		WebPPicture.width(picture, width);
 		WebPPicture.height(picture, height);
 		WebPPicture.use_argb(picture, 1);
 
-		int[] intPixelArray = raster.getPixels(0, 0, width, height, (int[]) null);
+		int[] intPixelArray = raster.getPixels(xOffset, yOffset, width, height, (int[]) null);
 		byte[] pixelArray = new byte[intPixelArray.length];
 		for (int i = 0; i < intPixelArray.length; i++) {
 			pixelArray[i] = (byte) intPixelArray[i];
