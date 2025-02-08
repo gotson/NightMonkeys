@@ -1,21 +1,21 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
-import com.twelvemonkeys.imageio.spi.ImageReaderSpiBase;
+import com.twelvemonkeys.imageio.spi.ImageWriterSpiBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
 import javax.imageio.spi.ServiceRegistry;
 import java.util.Locale;
 
-public class WebpImageReaderSpi extends ImageReaderSpiBase {
+public class WebpImageWriterSpi extends ImageWriterSpiBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebpImageReaderSpi.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebpImageWriterSpi.class);
 
-    /**
-     * Construct the SPI. Boilerplate.
-     */
-    public WebpImageReaderSpi() {
+    private boolean libLoaded = false;
+
+    public WebpImageWriterSpi() {
         super(new WebpProviderInfo());
     }
 
@@ -27,17 +27,17 @@ public class WebpImageReaderSpi extends ImageReaderSpiBase {
     }
 
     @Override
-    public boolean canDecodeInput(Object input) {
+    public boolean canEncodeImage(ImageTypeSpecifier type) {
         return false;
     }
 
     @Override
-    public ImageReader createReaderInstance(Object extension) {
-        return new WebpImageReader(this);
+    public ImageWriter createWriterInstance(Object extension) {
+        return new WebpImageWriter(this);
     }
 
     @Override
     public String getDescription(Locale locale) {
-        return "WebP reader plugin based on libwebp.";
+        return "WebP writer plugin based on libwebp.";
     }
 }

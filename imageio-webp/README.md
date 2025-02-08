@@ -2,7 +2,7 @@
 
 ## Requirements
 
-`libwebp` and `libwebpdemux` version 1.2.4+ must be installed on the target system.
+`libwebp` and `libwebpdemux` version 1.4.0+ must be installed on the target system.
 
 ## Known installations methods
 
@@ -14,6 +14,8 @@
 - Decode WebP images (lossless, lossy, and alpha)
 - Decode WebP animations. The reader returns the number of images in the animation, and can read individual frames.
 - For WebP Containers containing ICC Profile, that profile will be applied on the decoded image.
+- Encode WebP images (lossless, lossy, and alpha)
+- Encode WebP animations.
 
 ## Limitations
 
@@ -40,8 +42,7 @@ ImageReadParam param=reader.getDefaultReadParam();
 ## Implementation notes
 
 The `panama` package bindings were generated using:
+
 - jextract 22
-- from the https://github.com/webmproject/libwebp repository, version 1.2.4
-- based on:
-  - the `decode.h` header file for `panama.webp`
-  - the `demux.h` header file for `panama.webpdemux`
+- from the [libwebp repository](https://github.com/webmproject/libwebp), version 1.4.0
+- based on the `decode.h`, `encode.h`, `demux.h` and `mux.h` header file for `panama`

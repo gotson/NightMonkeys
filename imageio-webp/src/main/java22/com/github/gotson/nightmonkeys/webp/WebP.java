@@ -3,18 +3,7 @@ package com.github.gotson.nightmonkeys.webp;
 import com.github.gotson.nightmonkeys.webp.lib.enums.VP8StatusCode;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFeatureFlags;
 import com.github.gotson.nightmonkeys.webp.lib.enums.WebPFormatFeature;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPAnimDecoderOptions;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPAnimInfo;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPChunkIterator;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPData;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.WebPDecBuffer;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webp.WebPDecoderConfig;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webp.WebPDecoderOptions;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webp.WebPRGBABuffer;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h;
-import com.github.gotson.nightmonkeys.webp.lib.panama.webp.decode_h;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.gotson.nightmonkeys.webp.lib.panama.*;
 
 import javax.imageio.ImageReadParam;
 import javax.imageio.stream.ImageInputStream;
@@ -25,17 +14,18 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
-import static com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h.C_INT;
-import static com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h.C_POINTER;
 
 /**
  * Java bindings for libwebp via Foreign Linker API *
  */
-public class WebP {
+public final class WebP {
+
     private static final int minDecoderAbi = Integer.parseInt("0200", 16);
     private static final int minDemuxAbi = Integer.parseInt("0100", 16);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebP.class);
+    private WebP() {
+        // Static helper class
+    }
 
     public static boolean canDecode(final ImageInputStream stream) throws WebpException {
         try (var arena = Arena.ofConfined()) {
@@ -55,6 +45,10 @@ public class WebP {
 
     public static String getDecoderVersion() {
         return parseVersionInt(decode_h.WebPGetDecoderVersion());
+    }
+
+    public static String getEncoderVersion() {
+        return parseVersionInt(encode_h.WebPGetEncoderVersion());
     }
 
     public static String getDemuxVersion() {
@@ -213,11 +207,11 @@ public class WebP {
             int i = 0;
             var pixelsArray = new int[info.width() * info.height()];
             do {
-                var buf = arena.allocate(C_POINTER);
-                var timestamp = arena.allocate(C_INT);
+                var buf = arena.allocate(demux_h.C_POINTER);
+                var timestamp = arena.allocate(demux_h.C_INT);
                 demux_h.WebPAnimDecoderGetNext(dec, buf, timestamp);
                 if (i == imageIndex) {
-                    buf.get(C_POINTER, 0).asSlice(0, (long) info.width() * info.height() * 4).asByteBuffer().asIntBuffer().get(pixelsArray);
+                    buf.get(demux_h.C_POINTER, 0).asSlice(0, (long) info.width() * info.height() * 4).asByteBuffer().asIntBuffer().get(pixelsArray);
                     break;
                 }
                 i++;

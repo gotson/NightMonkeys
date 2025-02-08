@@ -1,7 +1,7 @@
 package com.github.gotson.nightmonkeys.webp.lib.enums;
 
 
-import com.github.gotson.nightmonkeys.webp.lib.panama.webpdemux.demux_h;
+import com.github.gotson.nightmonkeys.webp.lib.panama.demux_h;
 
 public enum VP8StatusCode {
     VP8_STATUS_OK(demux_h.VP8_STATUS_OK()),
