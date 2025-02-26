@@ -1,5 +1,6 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
+import com.github.gotson.nightmonkeys.common.imageio.ImageReaderSpiBase;
 import com.github.gotson.nightmonkeys.webp.WebP;
 import com.github.gotson.nightmonkeys.webp.WebpException;
 import org.slf4j.Logger;
@@ -13,42 +14,13 @@ import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-public class WebpImageReaderSpi extends ImageReaderSpi {
+public class WebpImageReaderSpi extends ImageReaderSpiBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebpImageReaderSpi.class);
-    private static final String vendorName = "NightMonkeys";
-    private static final String version = "0.1.0";
-    private static final String readerClassName = "com.github.gotson.nightmonkeys.webp.imageio.plugins.WebpImageReader";
-    private static final String[] names = {"WebP", "webp"};
-    private static final String[] suffixes = {"webp"};
-    private static final String[] MIMETypes = {"image/webp"};
-    private static final String[] writerSpiNames = null;
-
     private boolean libLoaded = false;
 
-    /**
-     * Construct the SPI. Boilerplate.
-     */
     public WebpImageReaderSpi() {
-        super(
-            vendorName,
-            version,
-            names,
-            suffixes,
-            MIMETypes,
-            readerClassName,
-            new Class[] {ImageInputStream.class},
-            writerSpiNames,
-            false,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            null);
+        super(new WebpProviderInfo());
     }
 
     private boolean loadLibrary() {

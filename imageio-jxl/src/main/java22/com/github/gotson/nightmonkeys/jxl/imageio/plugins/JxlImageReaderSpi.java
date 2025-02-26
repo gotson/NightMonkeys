@@ -1,5 +1,6 @@
 package com.github.gotson.nightmonkeys.jxl.imageio.plugins;
 
+import com.github.gotson.nightmonkeys.common.imageio.ImageReaderSpiBase;
 import com.github.gotson.nightmonkeys.jxl.JpegXl;
 import com.github.gotson.nightmonkeys.jxl.JxlException;
 import org.slf4j.Logger;
@@ -13,42 +14,13 @@ import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-public class JxlImageReaderSpi extends ImageReaderSpi {
+public class JxlImageReaderSpi extends ImageReaderSpiBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JxlImageReaderSpi.class);
-    private static final String vendorName = "NightMonkeys";
-    private static final String version = "0.1.0";
-    private static final String readerClassName = "com.github.gotson.nightmonkeys.jxl.imageio.JxlImageReader";
-    private static final String[] names = {"Jpeg XL", "jxl"};
-    private static final String[] suffixes = {"jxl"};
-    private static final String[] MIMETypes = {"image/jxl"};
-    private static final String[] writerSpiNames = null;
-
     private boolean libLoaded = false;
 
-    /**
-     * Construct the SPI. Boilerplate.
-     */
     public JxlImageReaderSpi() {
-        super(
-            vendorName,
-            version,
-            names,
-            suffixes,
-            MIMETypes,
-            readerClassName,
-            new Class[] {ImageInputStream.class},
-            writerSpiNames,
-            false,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            null);
+        super(new JxlProviderInfo());
     }
 
     private boolean loadLibrary() {

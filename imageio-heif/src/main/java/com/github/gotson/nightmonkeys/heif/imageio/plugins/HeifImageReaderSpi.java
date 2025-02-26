@@ -1,48 +1,19 @@
 package com.github.gotson.nightmonkeys.heif.imageio.plugins;
 
+import com.github.gotson.nightmonkeys.common.imageio.ImageReaderSpiBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageReader;
-import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.spi.ServiceRegistry;
-import javax.imageio.stream.ImageInputStream;
 import java.util.Locale;
 
-public class HeifImageReaderSpi extends ImageReaderSpi {
+public class HeifImageReaderSpi extends ImageReaderSpiBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeifImageReaderSpi.class);
-    private static final String vendorName = "NightMonkeys";
-    private static final String version = "0.1.0";
-    private static final String readerClassName = "com.github.gotson.nightmonkeys.heif.imageio.plugins.HeifImageReader";
-    private static final String[] names = {"Avif", "Heif"};
-    private static final String[] suffixes = {"avif", "heif"};
-    private static final String[] MIMETypes = {"image/avif", "image/heif"};
-    private static final String[] writerSpiNames = null;
 
-    /**
-     * Construct the SPI. Boilerplate.
-     */
     public HeifImageReaderSpi() {
-        super(
-            vendorName,
-            version,
-            names,
-            suffixes,
-            MIMETypes,
-            readerClassName,
-            new Class[] {ImageInputStream.class},
-            writerSpiNames,
-            false,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            null);
+        super(new HeifProviderInfo());
     }
 
     @Override

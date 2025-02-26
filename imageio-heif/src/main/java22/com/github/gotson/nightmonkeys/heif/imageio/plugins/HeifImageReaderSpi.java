@@ -1,5 +1,6 @@
 package com.github.gotson.nightmonkeys.heif.imageio.plugins;
 
+import com.github.gotson.nightmonkeys.common.imageio.ImageReaderSpiBase;
 import com.github.gotson.nightmonkeys.heif.Heif;
 import com.github.gotson.nightmonkeys.heif.HeifException;
 import org.slf4j.Logger;
@@ -13,42 +14,13 @@ import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-public class HeifImageReaderSpi extends ImageReaderSpi {
+public class HeifImageReaderSpi extends ImageReaderSpiBase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeifImageReaderSpi.class);
-    private static final String vendorName = "NightMonkeys";
-    private static final String version = "0.1.0";
-    private static final String readerClassName = "com.github.gotson.nightmonkeys.heif.imageio.plugins.HeifImageReader";
-    private static final String[] names = {"AVIF", "HEIF", "HEIC"};
-    private static final String[] suffixes = {"heif", "heifs", "heic", "heics", "avci", "avcs", "avif", "HIF"};
-    private static final String[] MIMETypes = {"image/avif", "image/heif", "image/heif-sequence", "image/heic", "image/heic-sequence"};
-    private static final String[] writerSpiNames = null;
-
     private boolean libLoaded = false;
 
-    /**
-     * Construct the SPI. Boilerplate.
-     */
     public HeifImageReaderSpi() {
-        super(
-            vendorName,
-            version,
-            names,
-            suffixes,
-            MIMETypes,
-            readerClassName,
-            new Class[] {ImageInputStream.class},
-            writerSpiNames,
-            false,
-            null,
-            null,
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
-            null);
+        super(new HeifProviderInfo());
     }
 
     private boolean loadLibrary() {
