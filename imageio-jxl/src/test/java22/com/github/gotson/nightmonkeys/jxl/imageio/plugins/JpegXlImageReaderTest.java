@@ -32,16 +32,16 @@ class JpegXlImageReaderTest extends ImageReaderAbstractTest<JxlImageReader> {
 
     @Override
     protected List<String> getFormatNames() {
-        return List.of("jxl");
+        return List.of(new JxlProviderInfo().getFormatNames());
     }
 
     @Override
     protected List<String> getSuffixes() {
-        return List.of("jxl");
+        return List.of(new JxlProviderInfo().getSuffixes());
     }
 
     @Override
     protected List<String> getMIMETypes() {
-        return List.of("image/jxl");
+        return List.of(new JxlProviderInfo().getMimeTypes());
     }
 }

@@ -67,17 +67,17 @@ public class WebpImageReaderTest extends ImageReaderAbstractTest<WebpImageReader
 
     @Override
     protected List<String> getFormatNames() {
-        return List.of("webp", "WebP");
+        return List.of(new WebpProviderInfo().getFormatNames());
     }
 
     @Override
     protected List<String> getSuffixes() {
-        return List.of("webp");
+        return List.of(new WebpProviderInfo().getSuffixes());
     }
 
     @Override
     protected List<String> getMIMETypes() {
-        return List.of("image/webp");
+        return List.of(new WebpProviderInfo().getMimeTypes());
     }
 
     @Test

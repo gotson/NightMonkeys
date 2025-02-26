@@ -11,6 +11,7 @@ import javax.imageio.ImageReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Spliterator;
@@ -21,11 +22,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class NoOpImageReaderAbstractTest<T extends ImageReader> {
-    protected abstract List<String> getFormatNames();
+    private final ProviderInfo provider = createProvider();
 
-    protected abstract List<String> getSuffixes();
+    protected abstract ProviderInfo createProvider();
 
-    protected abstract List<String> getMIMETypes();
+    private List<String> getFormatNames() {
+        return Arrays.asList(provider.getFormatNames());
+    }
+
+    private List<String> getSuffixes() {
+        return Arrays.asList(provider.getSuffixes());
+    }
+
+    private List<String> getMIMETypes() {
+        return Arrays.asList(provider.getMimeTypes());
+    }
 
     @BeforeAll
     public void printInformation() throws IOException {

@@ -4,7 +4,6 @@ import com.twelvemonkeys.imageio.util.ImageReaderAbstractTest;
 
 import javax.imageio.spi.ImageReaderSpi;
 import java.awt.Dimension;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,16 +63,16 @@ public class HeifImageReaderTest extends ImageReaderAbstractTest<HeifImageReader
 
     @Override
     protected List<String> getFormatNames() {
-        return Arrays.asList("AVIF", "HEIF", "HEIC");
+        return List.of(new HeifProviderInfo().getFormatNames());
     }
 
     @Override
     protected List<String> getSuffixes() {
-        return Arrays.asList("heif", "heifs", "heic", "heics", "avci", "avcs", "avif", "HIF");
+        return List.of(new HeifProviderInfo().getSuffixes());
     }
 
     @Override
     protected List<String> getMIMETypes() {
-        return Arrays.asList("image/avif", "image/heif", "image/heif-sequence", "image/heic", "image/heic-sequence");
+        return List.of(new HeifProviderInfo().getMimeTypes());
     }
 }

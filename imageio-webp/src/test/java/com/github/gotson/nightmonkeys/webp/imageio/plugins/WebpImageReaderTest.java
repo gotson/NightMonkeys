@@ -1,24 +1,11 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
 import com.github.gotson.nightmonkeys.common.imageio.NoOpImageReaderAbstractTest;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.github.gotson.nightmonkeys.common.imageio.ProviderInfo;
 
 class WebpImageReaderTest extends NoOpImageReaderAbstractTest<WebpImageReader> {
     @Override
-    protected List<String> getFormatNames() {
-        return Arrays.asList("webp", "WebP");
-    }
-
-    @Override
-    protected List<String> getSuffixes() {
-        return Collections.singletonList("webp");
-    }
-
-    @Override
-    protected List<String> getMIMETypes() {
-        return Collections.singletonList("image/webp");
+    protected ProviderInfo createProvider() {
+        return new WebpProviderInfo();
     }
 }

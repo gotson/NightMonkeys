@@ -156,25 +156,22 @@ public abstract class ImageReaderAbstractTest<T extends ImageReader> {
         return provider.getClass().isInstance(spi);
     }
 
-    @Test
-    public void testProviderInstalledForNames() {
-        for (String name : getFormatNames()) {
-            assertProviderInstalledForName(name, readerClass);
-        }
+    @ParameterizedTest
+    @MethodSource("getFormatNames")
+    public void testProviderInstalledForNames(String name) {
+        assertProviderInstalledForName(name, readerClass);
     }
 
-    @Test
-    public void testProviderInstalledForSuffixes() {
-        for (String suffix : getSuffixes()) {
-            assertProviderInstalledForSuffix(suffix, readerClass);
-        }
+    @ParameterizedTest
+    @MethodSource("getSuffixes")
+    public void testProviderInstalledForSuffixes(String suffix) {
+        assertProviderInstalledForSuffix(suffix, readerClass);
     }
 
-    @Test
-    public void testProviderInstalledForMIMETypes() {
-        for (String type : getMIMETypes()) {
-            assertProviderInstalledForMIMEType(type, readerClass);
-        }
+    @ParameterizedTest
+    @MethodSource("getMIMETypes")
+    public void testProviderInstalledForMIMETypes(String type) {
+        assertProviderInstalledForMIMEType(type, readerClass);
     }
 
     @ParameterizedTest
