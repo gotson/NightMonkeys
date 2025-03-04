@@ -1,23 +1,36 @@
 package com.github.gotson.nightmonkeys.heif;
 
+import com.github.gotson.nightmonkeys.heif.imageio.plugins.HeifWriteParam;
 import com.github.gotson.nightmonkeys.heif.lib.HeifError;
+import com.github.gotson.nightmonkeys.heif.lib.enums.HeifChannel;
 import com.github.gotson.nightmonkeys.heif.lib.enums.HeifChroma;
 import com.github.gotson.nightmonkeys.heif.lib.enums.HeifColorSpace;
+import com.github.gotson.nightmonkeys.heif.lib.enums.HeifCompressionFormat;
 import com.github.gotson.nightmonkeys.heif.lib.enums.HeifErrorCode;
 import com.github.gotson.nightmonkeys.heif.lib.enums.HeifFiletypeResult;
+import com.github.gotson.nightmonkeys.heif.lib.enums.HeifSuberrorCode;
+import com.github.gotson.nightmonkeys.heif.lib.panama.heif_error;
 import com.github.gotson.nightmonkeys.heif.lib.panama.heif_h;
+import com.github.gotson.nightmonkeys.heif.lib.panama.heif_writer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageReadParam;
+import javax.imageio.ImageWriteParam;
 import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.Rectangle;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static com.github.gotson.nightmonkeys.common.imageio.IIOUtil.byteArrayFromStream;
 import static com.github.gotson.nightmonkeys.heif.lib.panama.heif_h.C_INT;
@@ -32,6 +45,8 @@ public class Heif {
     private static final Logger LOGGER = LoggerFactory.getLogger(Heif.class);
 
     private static final ValueLayout.OfInt pixelLayout = C_INT.withOrder(ByteOrder.BIG_ENDIAN);
+
+    private static Collection<HeifEncoder> encoders;
 
     public static boolean isLibVersionSupported() {
         // heif_get_version_number_minor() does not return the correct value
@@ -173,6 +188,150 @@ public class Heif {
         } catch (IOException e) {
             throw new HeifException("Couldn't get stream content", e);
         }
+    }
+
+    public static void encode(final ImageOutputStream stream, IIOImage image, ImageWriteParam param) throws HeifException {
+        if (param == null) param = new HeifWriteParam(null);
+        HeifCompressionFormat compressionFormat = HeifCompressionFormat.HEIF_COMPRESSION_UNDEFINED;
+        if (param.getCompressionMode() == ImageWriteParam.MODE_EXPLICIT) {
+            compressionFormat = HeifCompressionFormat.valueOf(param.getCompressionType());
+        }
+
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment heifContext = null;
+            MemorySegment heifEncoder = null;
+            MemorySegment heifImage = null;
+
+            try {
+                var tile = image.getRenderedImage().getTile(0, 0);
+                if (tile.getTransferType() != DataBuffer.TYPE_INT) {
+                    throw new UnsupportedOperationException("TransferType is not INT");
+                }
+
+                heif_h.heif_init(arena, MemorySegment.NULL);
+                heifContext = heif_h.heif_context_alloc();
+                var heifEncoderPtr = arena.allocate(C_POINTER);
+                checkError(heif_h.heif_context_get_encoder_for_format(arena, heifContext, compressionFormat.intValue(), heifEncoderPtr));
+                heifEncoder = heifEncoderPtr.get(C_POINTER, 0);
+
+                if (param.isCompressionLossless()) {
+                    checkError(heif_h.heif_encoder_set_lossless(arena, heifEncoder, 1));
+                } else {
+                    checkError(heif_h.heif_encoder_set_lossy_quality(arena, heifEncoder, (int) (param.getCompressionQuality() * 100)));
+                }
+
+                ColorModel colorModel = image.getRenderedImage().getColorModel();
+
+                var sourceRegion = param.getSourceRegion();
+                if (sourceRegion == null) sourceRegion = new Rectangle(0, 0, image.getRenderedImage().getWidth(), image.getRenderedImage().getHeight());
+                var ssX = param.getSourceXSubsampling();
+                var ssY = param.getSourceYSubsampling();
+                var ssOffX = param.getSubsamplingXOffset();
+                var ssOffY = param.getSubsamplingYOffset();
+
+                // the heif image we need to write our source data to, before we can encode it
+                var heifImagePtr = arena.allocate(C_POINTER);
+                checkError(heif_h.heif_image_create(arena, sourceRegion.width, sourceRegion.height, HeifColorSpace.HEIF_COLOR_SPACE_RGB.intValue(),
+                    HeifChroma.HEIF_CHROMA_INTERLEAVED_RGBA.intValue(), heifImagePtr));
+                heifImage = heifImagePtr.get(C_POINTER, 0);
+                checkError(heif_h.heif_image_add_plane(arena, heifImage, HeifChannel.HEIF_CHANNEL_INTERLEAVED.intValue(), sourceRegion.width, sourceRegion.height, 32));
+
+                var stridePtr = arena.allocate(C_INT);
+                var heifPixels = heif_h.heif_image_get_plane(heifImage, heif_channel_interleaved(), stridePtr);
+                var heifStride = stridePtr.get(C_INT, 0);
+
+                int[] data =
+                    (int[]) tile.getSampleModel().getDataElements(sourceRegion.x, sourceRegion.y, sourceRegion.width, sourceRegion.height, null, tile.getDataBuffer());
+
+
+                var offset = 0;
+                for (int row = sourceRegion.y + ssOffY; row < sourceRegion.y + sourceRegion.height; row += ssY) {
+                    if (offset >= data.length) break;
+                    for (int col = sourceRegion.x + ssOffX; col < sourceRegion.x + sourceRegion.width; col += ssX) {
+                        if (offset >= data.length) break;
+                        int pixel = data[offset];
+
+                        // get the pixels from the color model, so we always get the correct value, whatever the source mask
+                        var a = colorModel.getAlpha(pixel);
+                        var r = colorModel.getRed(pixel);
+                        var g = colorModel.getGreen(pixel);
+                        var b = colorModel.getBlue(pixel);
+                        // repack in RGBA for HEIF
+                        int repack = (r << 24) | (g << 16) | (b << 8) | (a);
+
+                        heifPixels.set(pixelLayout, (long) row * heifStride + (col * pixelLayout.byteSize()), repack);
+
+                        offset++;
+                    }
+                }
+
+                // encode the data we provided from the source Java image
+                checkError(heif_h.heif_context_encode_image(arena, heifContext, heifImage, heifEncoder, MemorySegment.NULL, MemorySegment.NULL));
+
+                // the writer callback is called by heif_writer.write to write somewhere else than a file
+                var writerCallback = new heif_writer.write.Function() {
+                    @Override
+                    public MemorySegment apply(MemorySegment ctx, MemorySegment data, long size, MemorySegment userData) {
+                        var error = heif_error.allocate(arena);
+                        heif_error.subcode(error, HeifSuberrorCode.HEIF_SUBERROR_UNSPECIFIED.intValue());
+                        heif_error.message(error, arena.allocateFrom("success"));
+                        try {
+                            var slice = data.asSlice(0, size);
+                            stream.write(slice.toArray(ValueLayout.JAVA_BYTE), 0, (int) size);
+
+                            heif_error.code(error, HeifErrorCode.HEIF_ERROR_OK.intValue());
+                        } catch (Exception e) {
+                            heif_error.code(error, HeifErrorCode.HEIF_ERROR_USAGE_ERROR.intValue());
+                            heif_error.message(error, arena.allocateFrom("Error while writing to ImageOutputStream"));
+                        }
+                        return error;
+                    }
+                };
+
+                var writer = heif_writer.allocate(arena);
+                heif_writer.writer_api_version(writer, 1);
+                heif_writer.write(writer, heif_writer.write.allocate(writerCallback, arena));
+
+                checkError(heif_h.heif_context_write(arena, heifContext, writer, MemorySegment.NULL));
+            } finally {
+                if (heifImage != null) heif_h.heif_image_release(heifImage);
+                if (heifEncoder != null) heif_h.heif_encoder_release(heifEncoder);
+                if (heifContext != null) heif_h.heif_context_free(heifContext);
+                heif_h.heif_deinit();
+            }
+        } catch (Exception e) {
+            throw new HeifException("Couldn't encode", e);
+        }
+    }
+
+    public static Collection<HeifEncoder> getAvailableEncoders() throws HeifException {
+        if (encoders == null) {
+            synchronized (Heif.class) {
+                encoders = new ArrayList<>();
+                try (var arena = Arena.ofConfined()) {
+                    heif_h.heif_init(arena, MemorySegment.NULL);
+                    int maxEncoders = 20;
+                    var encoderDescriptorPtr = arena.allocate(C_POINTER, maxEncoders);
+                    int encoderCount =
+                        heif_h.heif_get_encoder_descriptors(HeifCompressionFormat.HEIF_COMPRESSION_UNDEFINED.intValue(), MemorySegment.NULL, encoderDescriptorPtr,
+                            maxEncoders);
+                    System.out.println("HEIF ENCODERS:" + encoderCount);
+                    for (int i = 0; i < encoderCount; i++) {
+                        var encoderDescriptor = encoderDescriptorPtr.get(C_POINTER, i * C_POINTER.byteSize());
+                        var name = heif_h.heif_encoder_descriptor_get_name(encoderDescriptor).getString(0);
+                        var id = heif_h.heif_encoder_descriptor_get_id_name(encoderDescriptor).getString(0);
+                        var format = HeifCompressionFormat.fromId(heif_h.heif_encoder_descriptor_get_compression_format(encoderDescriptor));
+                        boolean supportsLossless = heif_h.heif_encoder_descriptor_supports_lossless_compression(encoderDescriptor) > 0;
+                        boolean supportsLossy = heif_h.heif_encoder_descriptor_supports_lossy_compression(encoderDescriptor) > 0;
+
+                        if (format != null) encoders.add(new HeifEncoder(name, id, format, supportsLossless, supportsLossy));
+                    }
+                } finally {
+                    heif_h.heif_deinit();
+                }
+            }
+        }
+        return encoders;
     }
 
     private static void checkError(MemorySegment segment) throws HeifException {

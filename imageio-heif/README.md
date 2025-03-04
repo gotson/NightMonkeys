@@ -12,6 +12,27 @@
 ## Features
 
 - Decode HEIF and AVIF images
+- Encode HEIF and AVIF images
+
+## Encoding parameters
+
+In order to configure the encoding, you will need to use a `HeifWriteParam`:
+
+```java
+HeifWriteParam param = (HeifWriteParam) writer.getDefaultWriteParam();
+// you need to check the available compression types, and chose the one you want
+String compressionType = param.getCompressionTypes()[0];
+
+param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+param.setCompressionType(compressionType);
+
+// lossless
+param.setLossless(true);
+
+// lossy
+param.setLossless(false);
+param.setCompressionQuality(0.75F);
+```
 
 ## Limitations
 
