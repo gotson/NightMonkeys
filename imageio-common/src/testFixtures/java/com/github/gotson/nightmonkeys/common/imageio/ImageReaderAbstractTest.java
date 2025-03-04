@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.twelvemonkeys.imageio.util;
+package com.github.gotson.nightmonkeys.common.imageio;
 
 import com.twelvemonkeys.imageio.stream.URLImageInputStreamSpi;
 import org.junit.jupiter.api.Assertions;

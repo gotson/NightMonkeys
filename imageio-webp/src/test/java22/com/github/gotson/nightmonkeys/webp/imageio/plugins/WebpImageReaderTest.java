@@ -1,6 +1,6 @@
 package com.github.gotson.nightmonkeys.webp.imageio.plugins;
 
-import com.twelvemonkeys.imageio.util.ImageReaderAbstractTest;
+import com.github.gotson.nightmonkeys.common.imageio.ImageReaderAbstractTest;
 import org.apache.commons.collections4.IteratorUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

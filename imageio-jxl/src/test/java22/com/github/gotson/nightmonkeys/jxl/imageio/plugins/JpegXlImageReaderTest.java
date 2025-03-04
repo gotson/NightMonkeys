@@ -1,6 +1,6 @@
 package com.github.gotson.nightmonkeys.jxl.imageio.plugins;
 
-import com.twelvemonkeys.imageio.util.ImageReaderAbstractTest;
+import com.github.gotson.nightmonkeys.common.imageio.ImageReaderAbstractTest;
 
 import javax.imageio.spi.ImageReaderSpi;
 import java.awt.Dimension;
