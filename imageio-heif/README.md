@@ -14,13 +14,28 @@
 - Decode HEIF and AVIF images
 - Encode HEIF and AVIF images
 
+## Limitations
+
+- Decoding
+  - HEIC and AVIF animations are not supported. A single image is returned.
+  - Not implemented yet:
+    - Color profiles
+    - EXIF and XMP metadata
+    - Thumbnails
+- Encoding
+  - animations are not supported. A single image is written.
+  - Not implemented yet:
+    - Color profiles
+    - EXIF and XMP metadata
+    - Thumbnails
+
 ## Encoding parameters
 
 In order to configure the encoding, you will need to use a `HeifWriteParam`:
 
 ```java
 HeifWriteParam param = (HeifWriteParam) writer.getDefaultWriteParam();
-// you need to check the available compression types, and chose the one you want
+// you need to check the available compression types, and choose the one you want
 String compressionType = param.getCompressionTypes()[0];
 
 param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
@@ -33,14 +48,6 @@ param.setLossless(true);
 param.setLossless(false);
 param.setCompressionQuality(0.75F);
 ```
-
-## Limitations
-
-- HEIC and AVIF animations are not supported. A single image is returned.
-- Not implemented yet:
-  - Color profiles
-  - EXIF and XMP
-  - Thumbnails
 
 ## Implementation notes
 
