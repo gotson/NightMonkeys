@@ -9,7 +9,7 @@ java {
 
 dependencies {
     testFixturesImplementation 'com.twelvemonkeys.imageio:imageio-core:3.12.0'
-    testFixturesImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+    testFixturesImplementation 'org.junit.jupiter:junit-jupiter:5.13.3'
     testFixturesImplementation 'org.mockito:mockito-core:4.11.0'
     testFixturesImplementation 'org.assertj:assertj-core:3.27.3'
     testFixturesImplementation 'org.apache.commons:commons-collections4:4.5.0'
