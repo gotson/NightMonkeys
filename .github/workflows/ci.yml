@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
     name: Test ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up Homebrew for Linux/Mac
         if: contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos')
@@ -85,7 +85,7 @@ jobs:
       version_next: ${{ steps.versions.outputs.version_next }}
       should_release: ${{ steps.versions.outputs.should_release }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set up Homebrew
@@ -115,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.version.outputs.should_release
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Display versions
