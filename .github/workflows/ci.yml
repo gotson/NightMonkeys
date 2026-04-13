@@ -36,7 +36,7 @@ jobs:
       - name: Set up Homebrew for Linux/Mac
         if: contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos')
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
       - name: Install libraries for Linux/Mac
         if: contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos')
@@ -90,7 +90,7 @@ jobs:
           fetch-depth: 0
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
       - name: Install svu
         run: brew install --cask caarlos0/tap/svu
       - name: Compute next version for release
