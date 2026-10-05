@@ -3,6 +3,10 @@
 ![Maven Snapshots](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Fcom%2Fgithub%2Fgotson%2Fnightmonkeys%2Fimageio-jxl%2Fmaven-metadata.xml&label=maven%20snapshot&color=blue
 )
 
+> [!WARNING]
+> **Project Maintenance Mode**
+> This repository is currently in maintenance mode. Active feature development has paused, and we will only be issuing critical bug fixes and security patches.
+
 # NightMonkeys
 
 A collection of ImageIO plugins, adding support for newer image formats. NightMonkeys uses the Foreign Linker API
